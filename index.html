@@ -1216,22 +1216,26 @@ function startOnboarding() {
 // ═══════════════════════════════════════════
 // SYSTEM PROMPTS
 // ═══════════════════════════════════════════
-const ONBOARDING_SYSTEM = `You are Savor's warm onboarding guide. Your job: learn enough to build a personalised weekly meal plan. Ask ONE question at a time. Be warm, brief, conversational — like a smart friend, not a form.
+const ONBOARDING_SYSTEM = `You are Savor's warm onboarding guide. Learn enough to build a personalised weekly meal plan. Ask ONE question at a time. Be warm, brief — 2-3 sentences max per message.
 
-CRITICAL RULES:
-- ONE question per message. Never bundle questions.
-- Never use the word "diet". Say "food goals".
-- Never invent or assume — always ask.
-- Keep each message SHORT — 2-4 sentences max.
-- Never output JSON mid-conversation.
+STRICT RULES:
+- ONE question per message only. Never bundle.
+- Never say "diet". Say "food goals".
+- Keep messages SHORT — 2-3 sentences.
+- Never output JSON during the conversation.
+- When outputting the final profile, output NOTHING after the closing </profile> tag. Stop immediately.
 
-Cover these topics across 10-12 questions: name, age, city, where they grew up, cultural/food background, household members + cook situation, cuisine loves, hard food nos, meat preferences, health goal + current/target weight, medical restrictions, meal timing.
+Cover these 10-12 topics: name, age, city, grew up where, cultural/food background, household members + cook situation, cuisine loves, hard food nos, meat preference, health goal + current/target weight, medical restrictions, meal timing, seeds/supplements.
 
-FINAL MESSAGE: When you have enough info, end with a warm 2-sentence wrap-up, then output the profile JSON wrapped EXACTLY like this — no exceptions:
+FINAL MESSAGE FORMAT — follow exactly:
+1. One warm sentence summarising what you learned (e.g. "Perfect Anshul, I have everything I need!")
+2. Immediately output the profile JSON wrapped in tags — nothing else after it:
 
 <profile>{"personal":{"name":"","age":null,"city":"","grew_up_in":"","cultural_background":""},"household":{"members":[],"has_paid_cook":false,"cook_schedule":{"morning_minutes":null,"evening_minutes":null},"no_cook_day":null,"shared_meals":true},"body":{"current_weight_kg":null,"target_weight_kg":null,"primary_goal":""},"activity":{"level":"sedentary","description":""},"meal_timing":{"breakfast":"","lunch":"","snack":"","dinner":""},"cuisine_preferences":{"loves":[],"comfort_food":"","favourite_format":"","flavour_notes":""},"food_loves":[],"hard_nos":[],"dietary_restrictions":{"meat_preference":"","specific_avoids":[],"intolerances":[],"medical_avoids":[],"medical_context":""},"seeds_or_supplements":[],"joy_statement":"","macro_targets":{"calories":null,"protein_g":null,"carbs_g":null,"fat_g":null}}</profile>
 
-Fill every field. Calculate macro_targets: sedentary/weight loss ~1400 kcal women, ~1700 kcal men; protein 1.0-1.2g per kg target weight; carbs 35-40% calories; fat 28-32% calories.`;
+DO NOT write anything after </profile>. DO NOT generate a meal plan. DO NOT ask if they want to generate. Just output the tag and stop.
+
+Fill all fields with what you learned. Calculate macro_targets: ~1600-1800 kcal for weight loss; protein 1.0-1.2g per kg target weight; carbs 35-40% cals; fat 28-32% cals.`;
 
 const MEAL_PLAN_SYSTEM = `You are Savor's meal planning engine. You generate weekly meal plans that are joy-first, deeply personal, health-aware, cook-friendly, and varied.
 
@@ -1256,12 +1260,31 @@ async function startChat() {
   document.getElementById('chat-messages').innerHTML = '';
   showTyping();
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600);
+  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500);
   hideTyping();
 
   const clean = stripProfile(res);
   appendMessage('savor', clean);
   appState.chatMessages.push({ role: 'assistant', content: res });
+}
+
+function extractProfile(text) {
+  // Try <profile> tags first
+  const tagMatch = text.match(/<profile>([\s\S]*?)<\/profile>/);
+  if (tagMatch) {
+    try { return JSON.parse(tagMatch[1].trim()); } catch(e) {}
+  }
+  // Try ```json blocks
+  const codeMatch = text.match(/```json([\s\S]*?)```/);
+  if (codeMatch) {
+    try { return JSON.parse(codeMatch[1].trim()); } catch(e) {}
+  }
+  // Try raw JSON object containing "personal" and "macro_targets"
+  const rawMatch = text.match(/(\{[\s\S]*?"personal"[\s\S]*?"macro_targets"[\s\S]*?\})\s*$/);
+  if (rawMatch) {
+    try { return JSON.parse(rawMatch[1]); } catch(e) {}
+  }
+  return null;
 }
 
 async function sendMessage() {
@@ -1277,41 +1300,23 @@ async function sendMessage() {
   showTyping();
   appState.isTyping = true;
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600);
+  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500);
   hideTyping();
   appState.isTyping = false;
 
-  // Check for completed profile - handle both <profile> tags and raw JSON
-  const profileMatch = res.match(/<profile>([\s\S]*?)<\/profile>/);
-  if (profileMatch) {
-    try {
-      appState.userProfile = JSON.parse(profileMatch[1].trim());
-      const displayText = res.replace(/<profile>[\s\S]*?<\/profile>/g, '').trim();
-      if (displayText) appendMessage('savor', displayText);
-      appState.chatMessages.push({ role: 'assistant', content: res });
-      saveToSheet(appState.email, appState.userProfile);
-      setTimeout(() => { showScreen('holding'); startHolding(); }, 800);
-      return;
-    } catch(e) {
-      console.warn('Profile parse error', e);
-    }
-  }
-
-  // Also catch if model outputs JSON block without tags
-  const jsonMatch = res.match(/```json([\s\S]*?)```/) || res.match(/(\{[\s\S]*"personal"[\s\S]*"macro_targets"[\s\S]*\})/);
-  if (jsonMatch) {
-    try {
-      const jsonStr = jsonMatch[1].trim();
-      appState.userProfile = JSON.parse(jsonStr);
-      const displayText = res.replace(/```json[\s\S]*?```/, '').replace(/(\{[\s\S]*"personal"[\s\S]*\})/, '').trim();
-      if (displayText) appendMessage('savor', displayText);
-      appState.chatMessages.push({ role: 'assistant', content: res });
-      saveToSheet(appState.email, appState.userProfile);
-      setTimeout(() => { showScreen('holding'); startHolding(); }, 800);
-      return;
-    } catch(e) {
-      console.warn('JSON parse error', e);
-    }
+  // Check for completed profile - robust extraction
+  const extracted = extractProfile(res);
+  if (extracted) {
+    const displayText = res
+      .replace(/<profile>[\s\S]*?<\/profile>/g, '')
+      .replace(/```json[\s\S]*?```/g, '')
+      .trim();
+    if (displayText) appendMessage('savor', displayText);
+    appState.chatMessages.push({ role: 'assistant', content: res });
+    appState.userProfile = extracted;
+    saveToSheet(appState.email, extracted);
+    setTimeout(() => { showScreen('holding'); startHolding(); }, 800);
+    return;
   }
 
   const clean = stripProfile(res);
