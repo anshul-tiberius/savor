@@ -1826,8 +1826,12 @@ const DEMO_MEAL_PLAN = {
 // ═══════════════════════════════════════════
 // SAVE TO GOOGLE SHEET
 // ═══════════════════════════════════════════
-async function saveToSheet(email, profile) {
-  if (!GOOGLE_SHEET_WEBHOOK || GOOGLE_SHEET_WEBHOOK === 'YOUR_APPS_SCRIPT_URL') return;
+async function saveToSheet(email, profile, attempt) {
+  attempt = attempt || 1;
+  if (!GOOGLE_SHEET_WEBHOOK || GOOGLE_SHEET_WEBHOOK === 'YOUR_APPS_SCRIPT_URL') {
+    console.warn('Sheet webhook not configured');
+    return;
+  }
   try {
     await fetch(GOOGLE_SHEET_WEBHOOK, {
       method: 'POST',
@@ -1835,12 +1839,17 @@ async function saveToSheet(email, profile) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         timestamp: new Date().toISOString(),
-        email,
+        email: email,
         profile: JSON.stringify(profile),
       }),
     });
+    console.log('Sheet save OK — email:', email, 'attempt:', attempt);
   } catch(e) {
-    console.warn('Sheet save failed (non-critical):', e);
+    console.warn('Sheet save failed (attempt ' + attempt + '):', e);
+    // Retry once after 3 seconds
+    if (attempt < 2) {
+      setTimeout(() => saveToSheet(email, profile, 2), 3000);
+    }
   }
 }
 
