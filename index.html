@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Savor — Food You Love That Loves You Back</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231A3A2A'/><text x='50' y='72' text-anchor='middle' font-size='64' font-family='Georgia,serif' fill='%23FAF7F2'>S</text></svg>" />
+  <meta property="og:title" content="Savor — Food You Love That Loves You Back" />
+  <meta property="og:description" content="AI meal planning built for Indian kitchens. A 2-minute conversation gives you a full week of personalised, delicious meals." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://foodi-ashen.vercel.app" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=80" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Savor — Food You Love That Loves You Back" />
+  <meta name="twitter:description" content="AI meal planning built for Indian kitchens. A 2-minute conversation gives you a full week of personalised, delicious meals." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=80" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -521,13 +531,16 @@
       align-items: center;
       justify-content: center;
     }
-    .holding-gif img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .holding-gif-emoji {
+      font-size: 72px;
+      animation: chefBounce 1.6s ease-in-out infinite;
+      display: block;
+      line-height: 1;
     }
-    .holding-gif-fallback {
-      font-size: 60px;
+    @keyframes chefBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      45%       { transform: translateY(-14px) scale(1.05); }
+      65%       { transform: translateY(-8px) scale(1.02); }
     }
     .holding-dots {
       display: flex;
@@ -975,6 +988,29 @@
       cursor: pointer;
     }
 
+    /* ── MIC TOAST ── */
+    .mic-toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(26,26,26,0.85);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 24px;
+      font-size: 13px;
+      font-family: var(--font-body);
+      font-weight: 400;
+      white-space: nowrap;
+      z-index: 200;
+      pointer-events: none;
+      animation: toastIn 0.25s ease;
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
     /* ── UTILITIES ── */
     .hidden { display: none !important; }
     .fade-in { animation: fadeIn 0.4s ease forwards; }
@@ -1093,12 +1129,7 @@
   </div>
 
   <div class="holding-gif">
-    <img
-      src="https://media.tenor.com/your-gif-placeholder/chef.gif"
-      alt="Chef cooking"
-      id="chef-gif"
-      onerror="this.parentElement.innerHTML='<div class=\'holding-gif-fallback\'>👨‍🍳</div>'"
-    />
+    <span class="holding-gif-emoji">👨‍🍳</span>
   </div>
 
   <div class="holding-dots">
@@ -1216,26 +1247,22 @@ function startOnboarding() {
 // ═══════════════════════════════════════════
 // SYSTEM PROMPTS
 // ═══════════════════════════════════════════
-const ONBOARDING_SYSTEM = `You are Savor's warm onboarding guide. Learn enough to build a personalised weekly meal plan. Ask ONE question at a time. Be warm, brief — 2-3 sentences max per message.
+const ONBOARDING_SYSTEM = `You are Savor's warm onboarding guide. Your job: learn enough to build a personalised weekly meal plan. Ask ONE question at a time. Be warm, brief, conversational — like a smart friend, not a form.
 
-STRICT RULES:
-- ONE question per message only. Never bundle.
-- Never say "diet". Say "food goals".
-- Keep messages SHORT — 2-3 sentences.
-- Never output JSON during the conversation.
-- When outputting the final profile, output NOTHING after the closing </profile> tag. Stop immediately.
+CRITICAL RULES:
+- ONE question per message. Never bundle questions.
+- Never use the word "diet". Say "food goals".
+- Never invent or assume — always ask.
+- Keep each message SHORT — 2-4 sentences max.
+- Never output JSON mid-conversation.
 
-Cover these 10-12 topics: name, age, city, grew up where, cultural/food background, household members + cook situation, cuisine loves, hard food nos, meat preference, health goal + current/target weight, medical restrictions, meal timing, seeds/supplements.
+Cover these topics across 10-12 questions: name, age, city, where they grew up, cultural/food background, household members + cook situation, cuisine loves, hard food nos, meat preferences, health goal + current/target weight, medical restrictions, meal timing.
 
-FINAL MESSAGE FORMAT — follow exactly:
-1. One warm sentence summarising what you learned (e.g. "Perfect Anshul, I have everything I need!")
-2. Immediately output the profile JSON wrapped in tags — nothing else after it:
+FINAL MESSAGE: When you have enough info, end with a warm 2-sentence wrap-up, then output the profile JSON wrapped EXACTLY like this — no exceptions:
 
 <profile>{"personal":{"name":"","age":null,"city":"","grew_up_in":"","cultural_background":""},"household":{"members":[],"has_paid_cook":false,"cook_schedule":{"morning_minutes":null,"evening_minutes":null},"no_cook_day":null,"shared_meals":true},"body":{"current_weight_kg":null,"target_weight_kg":null,"primary_goal":""},"activity":{"level":"sedentary","description":""},"meal_timing":{"breakfast":"","lunch":"","snack":"","dinner":""},"cuisine_preferences":{"loves":[],"comfort_food":"","favourite_format":"","flavour_notes":""},"food_loves":[],"hard_nos":[],"dietary_restrictions":{"meat_preference":"","specific_avoids":[],"intolerances":[],"medical_avoids":[],"medical_context":""},"seeds_or_supplements":[],"joy_statement":"","macro_targets":{"calories":null,"protein_g":null,"carbs_g":null,"fat_g":null}}</profile>
 
-DO NOT write anything after </profile>. DO NOT generate a meal plan. DO NOT ask if they want to generate. Just output the tag and stop.
-
-Fill all fields with what you learned. Calculate macro_targets: ~1600-1800 kcal for weight loss; protein 1.0-1.2g per kg target weight; carbs 35-40% cals; fat 28-32% cals.`;
+Fill every field. Calculate macro_targets: sedentary/weight loss ~1400 kcal women, ~1700 kcal men; protein 1.0-1.2g per kg target weight; carbs 35-40% calories; fat 28-32% calories.`;
 
 const MEAL_PLAN_SYSTEM = `You are Savor's meal planning engine. You generate weekly meal plans that are joy-first, deeply personal, health-aware, cook-friendly, and varied.
 
@@ -1260,31 +1287,12 @@ async function startChat() {
   document.getElementById('chat-messages').innerHTML = '';
   showTyping();
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500);
+  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600);
   hideTyping();
 
   const clean = stripProfile(res);
   appendMessage('savor', clean);
   appState.chatMessages.push({ role: 'assistant', content: res });
-}
-
-function extractProfile(text) {
-  // Try <profile> tags first
-  const tagMatch = text.match(/<profile>([\s\S]*?)<\/profile>/);
-  if (tagMatch) {
-    try { return JSON.parse(tagMatch[1].trim()); } catch(e) {}
-  }
-  // Try ```json blocks
-  const codeMatch = text.match(/```json([\s\S]*?)```/);
-  if (codeMatch) {
-    try { return JSON.parse(codeMatch[1].trim()); } catch(e) {}
-  }
-  // Try raw JSON object containing "personal" and "macro_targets"
-  const rawMatch = text.match(/(\{[\s\S]*?"personal"[\s\S]*?"macro_targets"[\s\S]*?\})\s*$/);
-  if (rawMatch) {
-    try { return JSON.parse(rawMatch[1]); } catch(e) {}
-  }
-  return null;
 }
 
 async function sendMessage() {
@@ -1300,23 +1308,41 @@ async function sendMessage() {
   showTyping();
   appState.isTyping = true;
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500);
+  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600);
   hideTyping();
   appState.isTyping = false;
 
-  // Check for completed profile - robust extraction
-  const extracted = extractProfile(res);
-  if (extracted) {
-    const displayText = res
-      .replace(/<profile>[\s\S]*?<\/profile>/g, '')
-      .replace(/```json[\s\S]*?```/g, '')
-      .trim();
-    if (displayText) appendMessage('savor', displayText);
-    appState.chatMessages.push({ role: 'assistant', content: res });
-    appState.userProfile = extracted;
-    saveToSheet(appState.email, extracted);
-    setTimeout(() => { showScreen('holding'); startHolding(); }, 800);
-    return;
+  // Check for completed profile - handle both <profile> tags and raw JSON
+  const profileMatch = res.match(/<profile>([\s\S]*?)<\/profile>/);
+  if (profileMatch) {
+    try {
+      appState.userProfile = JSON.parse(profileMatch[1].trim());
+      const displayText = res.replace(/<profile>[\s\S]*?<\/profile>/g, '').trim();
+      if (displayText) appendMessage('savor', displayText);
+      appState.chatMessages.push({ role: 'assistant', content: res });
+      saveToSheet(appState.email, appState.userProfile);
+      setTimeout(() => { showScreen('holding'); startHolding(); }, 800);
+      return;
+    } catch(e) {
+      console.warn('Profile parse error', e);
+    }
+  }
+
+  // Also catch if model outputs JSON block without tags
+  const jsonMatch = res.match(/```json([\s\S]*?)```/) || res.match(/(\{[\s\S]*"personal"[\s\S]*"macro_targets"[\s\S]*\})/);
+  if (jsonMatch) {
+    try {
+      const jsonStr = jsonMatch[1].trim();
+      appState.userProfile = JSON.parse(jsonStr);
+      const displayText = res.replace(/```json[\s\S]*?```/, '').replace(/(\{[\s\S]*"personal"[\s\S]*\})/, '').trim();
+      if (displayText) appendMessage('savor', displayText);
+      appState.chatMessages.push({ role: 'assistant', content: res });
+      saveToSheet(appState.email, appState.userProfile);
+      setTimeout(() => { showScreen('holding'); startHolding(); }, 800);
+      return;
+    } catch(e) {
+      console.warn('JSON parse error', e);
+    }
   }
 
   const clean = stripProfile(res);
@@ -1389,10 +1415,21 @@ function stripProfile(text) {
 // ═══════════════════════════════════════════
 // VOICE INPUT
 // ═══════════════════════════════════════════
+function showMicToast(msg) {
+  const existing = document.getElementById('mic-toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = 'mic-toast';
+  toast.className = 'mic-toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => { if (toast.parentNode) toast.remove(); }, 3500);
+}
+
 function toggleMic() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    alert('Voice input is not supported in your browser. Please type your answer.');
+    showMicToast('Voice input works best in Chrome — please type your answer.');
     return;
   }
 
@@ -1460,13 +1497,6 @@ function startHolding() {
   lineIndex = 0;
   updateHoldingLine();
   holdingInterval = setInterval(updateHoldingLine, 2800);
-
-  // Set chef gif
-  const gifEl = document.getElementById('chef-gif');
-  // Using a cooking-themed animated gif
-  gifEl.src = 'https://media.tenor.com/2743027201642772728/transparent-food-cooking-penguin-chef.gif';
-
-  // Generate meal plan
   generateMealPlan();
 }
 
@@ -1826,12 +1856,8 @@ const DEMO_MEAL_PLAN = {
 // ═══════════════════════════════════════════
 // SAVE TO GOOGLE SHEET
 // ═══════════════════════════════════════════
-async function saveToSheet(email, profile, attempt) {
-  attempt = attempt || 1;
-  if (!GOOGLE_SHEET_WEBHOOK || GOOGLE_SHEET_WEBHOOK === 'YOUR_APPS_SCRIPT_URL') {
-    console.warn('Sheet webhook not configured');
-    return;
-  }
+async function saveToSheet(email, profile) {
+  if (!GOOGLE_SHEET_WEBHOOK || GOOGLE_SHEET_WEBHOOK === 'YOUR_APPS_SCRIPT_URL') return;
   try {
     await fetch(GOOGLE_SHEET_WEBHOOK, {
       method: 'POST',
@@ -1839,17 +1865,12 @@ async function saveToSheet(email, profile, attempt) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         timestamp: new Date().toISOString(),
-        email: email,
+        email,
         profile: JSON.stringify(profile),
       }),
     });
-    console.log('Sheet save OK — email:', email, 'attempt:', attempt);
   } catch(e) {
-    console.warn('Sheet save failed (attempt ' + attempt + '):', e);
-    // Retry once after 3 seconds
-    if (attempt < 2) {
-      setTimeout(() => saveToSheet(email, profile, 2), 3000);
-    }
+    console.warn('Sheet save failed (non-critical):', e);
   }
 }
 
