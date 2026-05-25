@@ -1314,7 +1314,7 @@ async function startChat() {
   document.getElementById('chat-messages').innerHTML = '';
   showTyping();
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600, 'claude-haiku-4-5');
+  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600, 'claude-haiku-4-5-20251001');
   hideTyping();
 
   const clean = stripProfile(res);
@@ -1336,7 +1336,7 @@ async function sendMessage() {
   appState.isTyping = true;
   updateChatStatus();
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600, 'claude-haiku-4-5');
+  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600, 'claude-haiku-4-5-20251001');
   hideTyping();
   appState.isTyping = false;
   updateChatStatus();
@@ -1614,33 +1614,43 @@ function startHolding() {
   generateMealPlan();
 }
 
-function updateHoldingLine() {
+function updateHoldingLine(override) {
   const el = document.getElementById('holding-line');
+  if (!el) return;
   el.style.opacity = 0;
   setTimeout(() => {
-    el.textContent = LOADING_LINES[lineIndex % LOADING_LINES.length];
+    el.textContent = override || LOADING_LINES[lineIndex % LOADING_LINES.length];
     el.style.opacity = 1;
-    lineIndex++;
+    if (!override) lineIndex++;
   }, 350);
 }
 
-async function generateMealPlan(feedback = null) {
+async function generateMealPlan(feedback = null, attempt = 1) {
   const profileStr = JSON.stringify(appState.userProfile);
   const userMsg = feedback
-    ? `Here is the user profile: ${profileStr}\n\nThe user has given this feedback on their previous plan: "${feedback}"\n\nPlease generate a new 7-day meal plan incorporating this feedback.`
+    ? `User profile: ${profileStr}\n\nFeedback on previous plan: "${feedback}"\n\nGenerate a new 7-day meal plan incorporating this feedback.`
     : `Generate a 7-day meal plan for this person: ${profileStr}`;
 
   try {
-    const res = await callClaude(MEAL_PLAN_SYSTEM, [{ role: 'user', content: userMsg }], 4000);
+    const res = await callClaude(MEAL_PLAN_SYSTEM, [{ role: 'user', content: userMsg }], 2500);
     const clean = res.replace(/```json|```/g, '').trim();
     appState.mealPlan = JSON.parse(clean);
     clearInterval(holdingInterval);
     renderPlan();
     showScreen('plan');
   } catch(e) {
-    console.error('Meal plan generation error', e);
-    // Retry once
-    setTimeout(() => generateMealPlan(feedback), 2000);
+    console.error('Meal plan generation error (attempt ' + attempt + ')', e);
+    if (attempt < 3) {
+      updateHoldingLine('Trying again — this sometimes takes a moment…');
+      setTimeout(() => generateMealPlan(feedback, attempt + 1), 3000);
+    } else {
+      clearInterval(holdingInterval);
+      const lineEl = document.getElementById('holding-line');
+      if (lineEl) {
+        lineEl.style.color = 'rgba(255,180,180,0.9)';
+        lineEl.textContent = 'Something went wrong. Please refresh and try again.';
+      }
+    }
   }
 }
 
@@ -1831,6 +1841,10 @@ async function callClaude(system, messages, maxTokens = 800, model = 'claude-son
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ system, messages, max_tokens: maxTokens, model }),
   });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error('API error ' + res.status + (body ? ': ' + body.slice(0, 120) : ''));
+  }
   const data = await res.json();
   if (data.error) throw new Error(data.error);
   return data.text;
