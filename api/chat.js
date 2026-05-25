@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   if (!key) return res.status(500).json({ error: 'API key not configured' });
 
   try {
-    const { system, messages, max_tokens } = req.body;
+    const { system, messages, max_tokens, model } = req.body;
 
     const msgs = (messages && messages.length > 0)
       ? messages
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: model || 'claude-sonnet-4-6',
         max_tokens: max_tokens || 1000,
         system,
         messages: msgs,

@@ -326,7 +326,31 @@
       font-size: 18px;
       color: var(--white);
       flex-shrink: 0;
+      transition: box-shadow 0.3s;
     }
+    .chat-avatar.speaking {
+      animation: avatarSpeak 1.2s ease-in-out infinite;
+    }
+    @keyframes avatarSpeak {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(26,58,42,0.5); }
+      50%       { box-shadow: 0 0 0 10px rgba(26,58,42,0); }
+    }
+    .btn-voice {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid var(--cream-dark);
+      background: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: auto;
+      flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .btn-voice svg { stroke: var(--text-light); width: 16px; height: 16px; }
+    .btn-voice.voice-on { background: var(--green-light); border-color: var(--green); }
+    .btn-voice.voice-on svg { stroke: var(--green); }
     .chat-header-info h3 {
       font-family: var(--font-display);
       font-size: 18px;
@@ -1082,11 +1106,19 @@
 <div id="screen-onboarding" class="screen">
 
   <div class="chat-header">
-    <div class="chat-avatar">S</div>
+    <div class="chat-avatar" id="chat-avatar">S</div>
     <div class="chat-header-info">
       <h3>Savor</h3>
       <div class="chat-status" id="chat-status">Getting to know you…</div>
     </div>
+    <button class="btn-voice voice-on" id="btn-voice" onclick="toggleVoiceMode()" title="Voice on — tap to mute">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+        <line x1="12" y1="19" x2="12" y2="23"/>
+        <line x1="8" y1="23" x2="16" y2="23"/>
+      </svg>
+    </button>
   </div>
 
   <div class="chat-messages" id="chat-messages"></div>
@@ -1215,6 +1247,8 @@ let appState = {
   isTyping: false,
   recognition: null,
   isRecording: false,
+  voiceMode: true,         // voice-first by default
+  isSpeaking: false,
 };
 
 // ═══════════════════════════════════════════
@@ -1247,22 +1281,15 @@ function startOnboarding() {
 // ═══════════════════════════════════════════
 // SYSTEM PROMPTS
 // ═══════════════════════════════════════════
-const ONBOARDING_SYSTEM = `You are Savor's warm onboarding guide. Your job: learn enough to build a personalised weekly meal plan. Ask ONE question at a time. Be warm, brief, conversational — like a smart friend, not a form.
+const ONBOARDING_SYSTEM = `You are Savor's voice onboarding guide. Learn enough to build a personalised weekly meal plan. Ask ONE question at a time — warm, brief, like a smart friend. 2-3 sentences max.
 
-CRITICAL RULES:
-- ONE question per message. Never bundle questions.
-- Never use the word "diet". Say "food goals".
-- Never invent or assume — always ask.
-- Keep each message SHORT — 2-4 sentences max.
-- Never output JSON mid-conversation.
+Rules: ONE question per message. Never say "diet" (say "food goals"). Never invent. No JSON until the final message.
 
-Cover these topics across 10-12 questions: name, age, city, where they grew up, cultural/food background, household members + cook situation, cuisine loves, hard food nos, meat preferences, health goal + current/target weight, medical restrictions, meal timing.
+Cover in 10-12 questions: name · age · city · grew up where · cultural/food background · household + cook situation · cuisine loves · hard nos · meat preference · health goal + weight · medical restrictions · meal timing.
 
-FINAL MESSAGE: When you have enough info, end with a warm 2-sentence wrap-up, then output the profile JSON wrapped EXACTLY like this — no exceptions:
-
+When done, give a warm 2-sentence wrap-up then output EXACTLY this (nothing after the closing tag):
 <profile>{"personal":{"name":"","age":null,"city":"","grew_up_in":"","cultural_background":""},"household":{"members":[],"has_paid_cook":false,"cook_schedule":{"morning_minutes":null,"evening_minutes":null},"no_cook_day":null,"shared_meals":true},"body":{"current_weight_kg":null,"target_weight_kg":null,"primary_goal":""},"activity":{"level":"sedentary","description":""},"meal_timing":{"breakfast":"","lunch":"","snack":"","dinner":""},"cuisine_preferences":{"loves":[],"comfort_food":"","favourite_format":"","flavour_notes":""},"food_loves":[],"hard_nos":[],"dietary_restrictions":{"meat_preference":"","specific_avoids":[],"intolerances":[],"medical_avoids":[],"medical_context":""},"seeds_or_supplements":[],"joy_statement":"","macro_targets":{"calories":null,"protein_g":null,"carbs_g":null,"fat_g":null}}</profile>
-
-Fill every field. Calculate macro_targets: sedentary/weight loss ~1400 kcal women, ~1700 kcal men; protein 1.0-1.2g per kg target weight; carbs 35-40% calories; fat 28-32% calories.`;
+Fill every field. Macro targets: weight loss ~1400 kcal women/~1700 men; protein 1.1g/kg target weight; carbs 37% cals; fat 30% cals.`;
 
 const MEAL_PLAN_SYSTEM = `You are Savor's meal planning engine. You generate weekly meal plans that are joy-first, deeply personal, health-aware, cook-friendly, and varied.
 
@@ -1287,7 +1314,7 @@ async function startChat() {
   document.getElementById('chat-messages').innerHTML = '';
   showTyping();
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600);
+  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600, 'claude-haiku-4-5');
   hideTyping();
 
   const clean = stripProfile(res);
@@ -1307,10 +1334,12 @@ async function sendMessage() {
 
   showTyping();
   appState.isTyping = true;
+  updateChatStatus();
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600);
+  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600, 'claude-haiku-4-5');
   hideTyping();
   appState.isTyping = false;
+  updateChatStatus();
 
   // Check for completed profile - handle both <profile> tags and raw JSON
   const profileMatch = res.match(/<profile>([\s\S]*?)<\/profile>/);
@@ -1348,12 +1377,7 @@ async function sendMessage() {
   const clean = stripProfile(res);
   appendMessage('savor', clean);
   appState.chatMessages.push({ role: 'assistant', content: res });
-
-  // Update status line
-  const msgCount = appState.chatMessages.filter(m => m.role === 'user').length;
-  const statusEl = document.getElementById('chat-status');
-  if (msgCount >= 8) statusEl.textContent = 'Almost there...';
-  else if (msgCount >= 4) statusEl.textContent = 'Getting to know you better...';
+  updateChatStatus();
 }
 
 function handleChatKey(e) {
@@ -1377,6 +1401,7 @@ function appendMessage(role, text) {
     div.innerHTML = `
       <div class="msg-avatar">S</div>
       <div class="msg-bubble">${escapeHtml(text).replace(/\n/g, '<br>')}</div>`;
+    speakText(text);
   } else {
     div.innerHTML = `<div class="msg-bubble">${escapeHtml(text)}</div>`;
   }
@@ -1452,20 +1477,109 @@ function toggleMic() {
     const input = document.getElementById('chat-input');
     input.value = transcript;
     autoResize(input);
+    if (appState.voiceMode) {
+      setTimeout(() => sendMessage(), 500);
+    }
   };
   rec.onend = () => {
     appState.isRecording = false;
     btn.classList.remove('recording');
+    updateChatStatus();
   };
   rec.onerror = () => {
     appState.isRecording = false;
     btn.classList.remove('recording');
+    updateChatStatus();
   };
 
   rec.start();
   appState.recognition = rec;
   appState.isRecording = true;
   btn.classList.add('recording');
+  updateChatStatus();
+}
+
+// ═══════════════════════════════════════════
+// VOICE-FIRST (TTS + STATUS)
+// ═══════════════════════════════════════════
+function getVoices() {
+  return new Promise(resolve => {
+    const v = window.speechSynthesis.getVoices();
+    if (v.length) { resolve(v); return; }
+    window.speechSynthesis.onvoiceschanged = () => resolve(window.speechSynthesis.getVoices());
+  });
+}
+
+async function speakText(text) {
+  if (!window.speechSynthesis || !appState.voiceMode) return;
+  window.speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-IN';
+  utterance.rate = 0.93;
+
+  const voices = await getVoices();
+  const preferred = voices.find(v => v.lang === 'en-IN') ||
+                    voices.find(v => v.lang === 'en-GB' && v.localService) ||
+                    voices.find(v => v.lang.startsWith('en') && v.localService) ||
+                    null;
+  if (preferred) utterance.voice = preferred;
+
+  appState.isSpeaking = true;
+  updateChatStatus();
+
+  utterance.onend = () => {
+    appState.isSpeaking = false;
+    updateChatStatus();
+    if (appState.voiceMode && !appState.isTyping) {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SR && !appState.isRecording) setTimeout(() => toggleMic(), 300);
+    }
+  };
+  utterance.onerror = () => {
+    appState.isSpeaking = false;
+    updateChatStatus();
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
+function toggleVoiceMode() {
+  appState.voiceMode = !appState.voiceMode;
+  const btn = document.getElementById('btn-voice');
+  if (appState.voiceMode) {
+    btn.classList.add('voice-on');
+    btn.title = 'Voice on — tap to mute';
+  } else {
+    btn.classList.remove('voice-on');
+    btn.title = 'Voice off — tap to enable';
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    if (appState.isRecording && appState.recognition) appState.recognition.stop();
+  }
+  updateChatStatus();
+}
+
+function updateChatStatus() {
+  const statusEl = document.getElementById('chat-status');
+  const avatar = document.getElementById('chat-avatar');
+  if (!statusEl) return;
+
+  if (appState.isSpeaking) {
+    statusEl.textContent = 'Speaking…';
+    avatar && avatar.classList.add('speaking');
+  } else if (appState.isRecording) {
+    statusEl.textContent = 'Listening…';
+    avatar && avatar.classList.remove('speaking');
+  } else if (appState.isTyping) {
+    statusEl.textContent = 'Thinking…';
+    avatar && avatar.classList.remove('speaking');
+  } else {
+    avatar && avatar.classList.remove('speaking');
+    const msgCount = appState.chatMessages.filter(m => m.role === 'user').length;
+    if (msgCount >= 8) statusEl.textContent = 'Almost there…';
+    else if (msgCount >= 4) statusEl.textContent = 'Getting to know you better…';
+    else statusEl.textContent = 'Getting to know you…';
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1711,12 +1825,11 @@ function startHoldingLines() {
 // ═══════════════════════════════════════════
 // CLAUDE API CALL
 // ═══════════════════════════════════════════
-async function callClaude(system, messages, maxTokens = 800) {
-  // Route through serverless function - keeps API key secure on server
+async function callClaude(system, messages, maxTokens = 800, model = 'claude-sonnet-4-6') {
   const res = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ system, messages, max_tokens: maxTokens }),
+    body: JSON.stringify({ system, messages, max_tokens: maxTokens, model }),
   });
   const data = await res.json();
   if (data.error) throw new Error(data.error);
