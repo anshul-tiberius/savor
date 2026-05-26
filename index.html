@@ -1632,7 +1632,7 @@ async function generateMealPlan(feedback = null, attempt = 1) {
     : `Generate a 7-day meal plan for this person: ${profileStr}`;
 
   try {
-    const res = await callClaude(MEAL_PLAN_SYSTEM, [{ role: 'user', content: userMsg }], 2500);
+    const res = await callClaude(MEAL_PLAN_SYSTEM, [{ role: 'user', content: userMsg }], 4500);
     const clean = res.replace(/```json|```/g, '').trim();
     appState.mealPlan = JSON.parse(clean);
     clearInterval(holdingInterval);
@@ -1647,6 +1647,7 @@ async function generateMealPlan(feedback = null, attempt = 1) {
       clearInterval(holdingInterval);
       const lineEl = document.getElementById('holding-line');
       if (lineEl) {
+        lineEl.style.opacity = 1;
         lineEl.style.color = 'rgba(255,180,180,0.9)';
         lineEl.textContent = 'Something went wrong. Please refresh and try again.';
       }
