@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Savor — Food You Love That Loves You Back</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231A3A2A'/><text x='50' y='72' text-anchor='middle' font-size='64' font-family='Georgia,serif' fill='%23FAF7F2'>S</text></svg>" />
-  <meta property="og:title" content="Savor — Food You Love That Loves You Back" />
+  <title>What's Cooking — Food You Love That Loves You Back</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231A3A2A'/><text x='50' y='72' text-anchor='middle' font-size='64' font-family='Georgia,serif' fill='%23FAF7F2'>W</text></svg>" />
+  <meta property="og:title" content="What's Cooking — Food You Love That Loves You Back" />
   <meta property="og:description" content="AI meal planning built for Indian kitchens. A 2-minute conversation gives you a full week of personalised, delicious meals." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://foodi-ashen.vercel.app" />
   <meta property="og:image" content="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=80" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Savor — Food You Love That Loves You Back" />
+  <meta name="twitter:title" content="What's Cooking — Food You Love That Loves You Back" />
   <meta name="twitter:description" content="AI meal planning built for Indian kitchens. A 2-minute conversation gives you a full week of personalised, delicious meals." />
   <meta name="twitter:image" content="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=80" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1106,9 +1106,9 @@
 <div id="screen-onboarding" class="screen">
 
   <div class="chat-header">
-    <div class="chat-avatar" id="chat-avatar">S</div>
+    <div class="chat-avatar" id="chat-avatar">W</div>
     <div class="chat-header-info">
-      <h3>Savor</h3>
+      <h3>What's Cooking</h3>
       <div class="chat-status" id="chat-status">Getting to know you…</div>
     </div>
     <button class="btn-voice voice-on" id="btn-voice" onclick="toggleVoiceMode()" title="Voice on — tap to mute">
@@ -1153,7 +1153,7 @@
 
 <!-- ════════ SCREEN 3: HOLDING ════════ -->
 <div id="screen-holding" class="screen">
-  <div class="holding-logo">Savor</div>
+  <div class="holding-logo">What's Cooking</div>
   <p class="holding-sub">Building your week</p>
 
   <div class="holding-line-wrap">
@@ -1177,12 +1177,12 @@
 
   <div class="plan-header">
     <div class="plan-header-top">
-      <div class="plan-logo">Savor</div>
+      <div class="plan-logo">What's Cooking</div>
       <button class="btn-talk" onclick="openFeedback()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
-        Talk to Savor
+        Give feedback
       </button>
     </div>
     <p class="week-vibe" id="week-vibe"></p>
@@ -1281,7 +1281,7 @@ function startOnboarding() {
 // ═══════════════════════════════════════════
 // SYSTEM PROMPTS
 // ═══════════════════════════════════════════
-const ONBOARDING_SYSTEM = `You are Savor's voice onboarding guide. Learn enough to build a personalised weekly meal plan. Ask ONE question at a time — warm, brief, like a smart friend. 2-3 sentences max.
+const ONBOARDING_SYSTEM = `You are What's Cooking's voice onboarding guide. Learn enough to build a personalised weekly meal plan. Ask ONE question at a time — warm, brief, like a smart friend. 2-3 sentences max.
 
 Rules: ONE question per message. Never say "diet" (say "food goals"). Never invent. No JSON until the final message.
 
@@ -1291,7 +1291,7 @@ When done, give a warm 2-sentence wrap-up then output EXACTLY this (nothing afte
 <profile>{"personal":{"name":"","age":null,"city":"","grew_up_in":"","cultural_background":""},"household":{"members":[],"has_paid_cook":false,"cook_schedule":{"morning_minutes":null,"evening_minutes":null},"no_cook_day":null,"shared_meals":true},"body":{"current_weight_kg":null,"target_weight_kg":null,"primary_goal":""},"activity":{"level":"sedentary","description":""},"meal_timing":{"breakfast":"","lunch":"","snack":"","dinner":""},"cuisine_preferences":{"loves":[],"comfort_food":"","favourite_format":"","flavour_notes":""},"food_loves":[],"hard_nos":[],"dietary_restrictions":{"meat_preference":"","specific_avoids":[],"intolerances":[],"medical_avoids":[],"medical_context":""},"seeds_or_supplements":[],"joy_statement":"","macro_targets":{"calories":null,"protein_g":null,"carbs_g":null,"fat_g":null}}</profile>
 Fill every field. Macro targets: weight loss ~1400 kcal women/~1700 men; protein 1.1g/kg target weight; carbs 37% cals; fat 30% cals.`;
 
-const MEAL_PLAN_SYSTEM = `You are Savor's meal planning engine. You generate weekly meal plans that are joy-first, deeply personal, health-aware, cook-friendly, and varied.
+const MEAL_PLAN_SYSTEM = `You are What's Cooking's meal planning engine. You generate weekly meal plans that are joy-first, deeply personal, health-aware, cook-friendly, and varied.
 
 Critical rules:
 - Medical avoids are ABSOLUTE — never include them anywhere, even as a garnish
@@ -1304,7 +1304,7 @@ Critical rules:
 Respond with valid JSON only. No markdown, no preamble.
 
 JSON structure:
-{"week_vibe":"one warm line capturing the spirit of this person's food week","days":[{"day":"Monday","vibe":"one-line mood","meals":[{"type":"breakfast","time":"9:00 am","name":"Dish name","description":"2-line description that makes you want to eat it","kcal":350,"protein_g":18,"carbs_g":40,"fat_g":10,"tags":["cuisine","format"],"allergens":[],"recipe_search":"search term for YouTube or Google","prep_note":null}],"totals":{"kcal":1800,"protein_g":120}}]}`;
+{"week_vibe":"one warm line capturing the spirit of this person's food week","days":[{"day":"Monday","vibe":"one-line mood","meals":[{"type":"breakfast","time":"9:00 am","name":"Dish name","description":"2-line description that makes you want to eat it","kcal":350,"protein_g":18,"carbs_g":40,"fat_g":10,"tags":["cuisine","format"],"allergens":[]}],"totals":{"kcal":1800,"protein_g":120}}]}`;
 
 // ═══════════════════════════════════════════
 // CHAT ENGINE
@@ -1399,7 +1399,7 @@ function appendMessage(role, text) {
 
   if (role === 'savor') {
     div.innerHTML = `
-      <div class="msg-avatar">S</div>
+      <div class="msg-avatar">W</div>
       <div class="msg-bubble">${escapeHtml(text).replace(/\n/g, '<br>')}</div>`;
     speakText(text);
   } else {
@@ -1416,7 +1416,7 @@ function showTyping() {
   div.className = 'msg savor';
   div.id = 'typing-msg';
   div.innerHTML = `
-    <div class="msg-avatar">S</div>
+    <div class="msg-avatar">W</div>
     <div class="msg-bubble">
       <div class="typing-indicator">
         <div class="typing-dot"></div>
@@ -1748,7 +1748,7 @@ function showDish(dayIdx, mealIdx) {
   document.getElementById('dish-header-name').textContent = meal.name;
 
   const body = document.getElementById('dish-body');
-  const recipeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(meal.recipe_search || meal.name)}`;
+  const recipeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(meal.name + ' recipe')}`;
   const tagsHtml = (meal.tags || []).map(t => `<span class="dish-tag">${t}</span>`).join('');
 
   body.innerHTML = `
@@ -1795,7 +1795,7 @@ function showDish(dayIdx, mealIdx) {
 // ═══════════════════════════════════════════
 function shareDish(dayIdx, mealIdx) {
   const meal = appState.mealPlan.days[dayIdx].meals[mealIdx];
-  const text = `${meal.name}\n${meal.description}\n\n${meal.kcal} kcal · ${meal.protein_g}g protein\n\nvia Savor — food you love that loves you back 🍃`;
+  const text = `${meal.name}\n${meal.description}\n\n${meal.kcal} kcal · ${meal.protein_g}g protein\n\nvia What's Cooking — food you love that loves you back 🍃`;
 
   if (navigator.share) {
     navigator.share({ title: meal.name, text }).catch(() => {});
@@ -1892,7 +1892,7 @@ function demoResponse(system, messages) {
         resolve("How active are you right now — gym, walking, or mostly at a desk?");
       } else {
         const demoProfile = JSON.stringify({"personal":{"name": appState.demoName||"Friend","age":32,"city":"Mumbai","grew_up_in":"Mumbai","cultural_background":"Indian"},"household":{"members":[],"has_paid_cook":false,"cook_schedule":{"morning_minutes":30,"evening_minutes":30},"no_cook_day":null,"shared_meals":true},"body":{"current_weight_kg":75,"target_weight_kg":65,"primary_goal":"weight loss"},"activity":{"level":"light","description":"walks daily"},"meal_timing":{"breakfast":"9:00 am","lunch":"1:30 pm","snack":"5:00 pm","dinner":"9:00 pm"},"cuisine_preferences":{"loves":["Indian","Mediterranean","Asian"],"comfort_food":"dal rice","favourite_format":"bowls","flavour_notes":"bold and savoury"},"food_loves":["paneer","chicken","salads"],"hard_nos":["bitter gourd"],"dietary_restrictions":{"meat_preference":"chicken and eggs","specific_avoids":[],"intolerances":[],"medical_avoids":[],"medical_context":""},"seeds_or_supplements":[],"joy_statement":"A week I actually look forward to","macro_targets":{"calories":1800,"protein_g":120,"carbs_g":160,"fat_g":58}});
-        resolve("Last one — if Savor could do one thing that made you feel understood — what would that be? I have everything I need. <profile>" + demoProfile + "</profile>");
+        resolve("Last one — if What's Cooking could do one thing that made you feel understood — what would that be? I have everything I need. <profile>" + demoProfile + "</profile>");
       }
     }, 900 + Math.random() * 600);
   });
