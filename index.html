@@ -1632,7 +1632,7 @@ async function generateMealPlan(feedback = null, attempt = 1) {
     : `Generate a 7-day meal plan for this person: ${profileStr}`;
 
   try {
-    const res = await callClaude(MEAL_PLAN_SYSTEM, [{ role: 'user', content: userMsg }], 6000);
+    const res = await callClaude(MEAL_PLAN_SYSTEM, [{ role: 'user', content: userMsg }], 6000, 'claude-haiku-4-5-20251001');
     const clean = res.replace(/```json|```/g, '').trim();
     // Collapse literal newlines — invalid inside JSON string values when model uses "2-line" style
     const sanitized = clean.replace(/\r?\n/g, ' ');
