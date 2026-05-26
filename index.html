@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>What's Cooking — Food You Love That Loves You Back</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231A3A2A'/><text x='50' y='72' text-anchor='middle' font-size='64' font-family='Georgia,serif' fill='%23FAF7F2'>W</text></svg>" />
   <meta property="og:title" content="What's Cooking — Food You Love That Loves You Back" />
@@ -14,6 +14,22 @@
   <meta name="twitter:title" content="What's Cooking — Food You Love That Loves You Back" />
   <meta name="twitter:description" content="AI meal planning built for Indian kitchens. A 2-minute conversation gives you a full week of personalised, delicious meals." />
   <meta name="twitter:image" content="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=80" />
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#1A3A2A" />
+  <link rel="apple-touch-icon" href="/icon.svg" />
+
+  <!-- Error monitoring — sign up at sentry.io, then uncomment and replace DSN -->
+  <!--
+  <script src="https://js.sentry-cdn.com/YOUR_PUBLIC_KEY.min.js" crossorigin="anonymous"></script>
+  <script>Sentry.init({ dsn: 'https://YOUR_DSN@o0.ingest.sentry.io/0', tracesSampleRate: 0 });</script>
+  -->
+
+  <!-- Analytics — sign up at plausible.io, then uncomment -->
+  <!--
+  <script defer data-domain="foodi-ashen.vercel.app" src="https://plausible.io/js/script.js"></script>
+  -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -609,22 +625,6 @@
       font-weight: 500;
       color: var(--green);
     }
-    .btn-talk {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border-radius: 24px;
-      border: 1.5px solid var(--green);
-      background: transparent;
-      color: var(--green);
-      font-family: var(--font-body);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-    }
-    .btn-talk:active { background: var(--green); color: white; }
     .week-vibe {
       font-family: var(--font-display);
       font-size: 15px;
@@ -929,92 +929,6 @@
     .btn-recipe:active { opacity: 0.85; }
     .btn-recipe svg { width: 18px; height: 18px; stroke: white; fill: none; }
 
-    /* ════════════════════════════════════════
-       FEEDBACK MODAL
-    ════════════════════════════════════════ */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
-      z-index: 100;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal-sheet {
-      background: var(--white);
-      border-radius: 24px 24px 0 0;
-      padding: 24px 20px 36px;
-      width: 100%;
-      max-width: 480px;
-      animation: sheetUp 0.3s ease;
-    }
-    @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-    .modal-handle {
-      width: 36px; height: 4px;
-      border-radius: 2px;
-      background: var(--cream-dark);
-      margin: 0 auto 20px;
-    }
-    .modal-title {
-      font-family: var(--font-display);
-      font-size: 22px;
-      font-weight: 500;
-      color: var(--green);
-      margin-bottom: 6px;
-    }
-    .modal-sub {
-      font-size: 13px;
-      color: var(--text-light);
-      font-weight: 300;
-      margin-bottom: 16px;
-    }
-    .feedback-input {
-      width: 100%;
-      min-height: 100px;
-      padding: 14px 16px;
-      border-radius: var(--radius-sm);
-      border: 1.5px solid var(--cream-dark);
-      background: var(--cream);
-      font-family: var(--font-body);
-      font-size: 15px;
-      color: var(--text);
-      outline: none;
-      resize: none;
-      margin-bottom: 12px;
-      line-height: 1.5;
-    }
-    .feedback-input:focus { border-color: var(--green-mid); }
-    .modal-btns {
-      display: flex;
-      gap: 10px;
-    }
-    .btn-cancel {
-      flex: 1;
-      padding: 14px;
-      border-radius: var(--radius-sm);
-      border: 1.5px solid var(--cream-dark);
-      background: none;
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: var(--text-mid);
-      cursor: pointer;
-    }
-    .btn-regen {
-      flex: 2;
-      padding: 14px;
-      border-radius: var(--radius-sm);
-      border: none;
-      background: var(--green);
-      color: white;
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
     /* ── MIC TOAST ── */
     .mic-toast {
       position: fixed;
@@ -1232,7 +1146,6 @@
         box-shadow: 0 8px 60px rgba(0,0,0,0.15);
         min-height: 100dvh;
       }
-      .modal-sheet { max-width: 420px; }
     }
   </style>
 </head>
@@ -1516,12 +1429,21 @@ async function startChat() {
   document.getElementById('chat-messages').innerHTML = '';
   showTyping();
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500, 'claude-haiku-4-5-20251001');
-  hideTyping();
-
-  const clean = stripProfile(res);
-  appendMessage('savor', clean);
-  appState.chatMessages.push({ role: 'assistant', content: res });
+  try {
+    const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500, 'claude-haiku-4-5-20251001');
+    hideTyping();
+    const clean = stripProfile(res);
+    appendMessage('savor', clean);
+    appState.chatMessages.push({ role: 'assistant', content: res });
+  } catch(e) {
+    hideTyping();
+    if (e.message && e.message.startsWith('rate_limit:')) {
+      appendMessage('savor', rateLimitMessage(e));
+    } else {
+      appendMessage('savor', 'Something went wrong starting up. Please refresh and try again.');
+      console.error('startChat error:', e);
+    }
+  }
 }
 
 async function sendMessage() {
@@ -1538,7 +1460,22 @@ async function sendMessage() {
   appState.isTyping = true;
   updateChatStatus();
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500, 'claude-haiku-4-5-20251001');
+  let res;
+  try {
+    res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500, 'claude-haiku-4-5-20251001');
+  } catch(e) {
+    hideTyping();
+    appState.isTyping = false;
+    updateChatStatus();
+    if (e.message && e.message.startsWith('rate_limit:')) {
+      appendMessage('savor', rateLimitMessage(e));
+    } else {
+      appendMessage('savor', 'Something went wrong — please try again in a moment.');
+      console.error('sendMessage error:', e);
+    }
+    return;
+  }
+
   hideTyping();
   appState.isTyping = false;
   updateChatStatus();
@@ -1871,6 +1808,17 @@ async function generateMealPlan(feedback = null, attempt = 1) {
     selectBNav('menu');
   } catch(e) {
     console.error('Meal plan generation error (attempt ' + attempt + ')', e);
+    // Rate limit — show warm message, don't retry
+    if (e.message && e.message.startsWith('rate_limit:')) {
+      clearInterval(holdingInterval);
+      const lineEl = document.getElementById('holding-line');
+      if (lineEl) {
+        lineEl.style.opacity = 1;
+        lineEl.style.color = 'rgba(255,230,180,0.95)';
+        lineEl.textContent = rateLimitMessage(e);
+      }
+      return;
+    }
     if (attempt < 3) {
       updateHoldingLine('Trying again — this sometimes takes a moment…');
       setTimeout(() => generateMealPlan(feedback, attempt + 1), 3000);
@@ -2225,8 +2173,12 @@ async function sendChefMessage() {
     appState.chefMessages.push({ role: 'assistant', content: res });
   } catch(e) {
     hideChefTyping();
-    appendChefMessage('chef', 'Something went wrong — try again in a moment.');
-    console.error('Chef error:', e);
+    if (e.message && e.message.startsWith('rate_limit:')) {
+      appendChefMessage('chef', rateLimitMessage(e));
+    } else {
+      appendChefMessage('chef', 'Something went wrong — try again in a moment.');
+      console.error('Chef error:', e);
+    }
   }
 }
 
@@ -2291,13 +2243,40 @@ async function callClaude(system, messages, maxTokens = 800, model = 'claude-son
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ system, messages, max_tokens: maxTokens, model }),
   });
+
+  // Rate limit — surface a structured error so callers can show friendly messages
+  if (res.status === 429) {
+    const data = await res.json().catch(() => ({}));
+    const mins = data.minutesLeft || 5;
+    const tier = data.isExpensive ? 'expensive' : 'cheap';
+    throw new Error('rate_limit:' + tier + ':' + mins);
+  }
+
   if (!res.ok) {
     const body = await res.text().catch(() => '');
     throw new Error('API error ' + res.status + (body ? ': ' + body.slice(0, 120) : ''));
   }
+
   const data = await res.json();
+  if (data.error === 'rate_limit') {
+    const mins = data.minutesLeft || 5;
+    const tier = data.isExpensive ? 'expensive' : 'cheap';
+    throw new Error('rate_limit:' + tier + ':' + mins);
+  }
   if (data.error) throw new Error(data.error);
   return data.text;
+}
+
+// Parse a rate_limit error string → human-readable toast message
+function rateLimitMessage(err) {
+  const parts = err.message.split(':');
+  // parts: ['rate_limit', 'cheap'|'expensive', minutesLeft]
+  const isExpensive = parts[1] === 'expensive';
+  const mins = parseInt(parts[2], 10) || 5;
+  if (isExpensive) {
+    return 'You\'ve generated a few plans already — come back in about ' + mins + ' minute' + (mins === 1 ? '' : 's') + ' for a fresh start.';
+  }
+  return 'Give me a moment to catch my breath — try again in a few minutes.';
 }
 
 // DEMO: simulated onboarding conversation
@@ -2463,8 +2442,10 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-// ?skip — jump straight to meal plan generation using the demo profile (dev shortcut)
-if (new URLSearchParams(window.location.search).has('skip')) {
+// ?skip — dev shortcut: jumps straight to meal plan generation using a demo profile.
+// Disabled on the production URL so real users can't stumble into it.
+if (new URLSearchParams(window.location.search).has('skip') &&
+    window.location.hostname !== 'foodi-ashen.vercel.app') {
   appState.email = 'test@skip.dev';
   appState.userProfile = {"personal":{"name":"Anshul","age":32,"city":"Mumbai","grew_up_in":"Mumbai","cultural_background":"Indian"},"household":{"members":[],"has_paid_cook":false,"cook_schedule":{"morning_minutes":30,"evening_minutes":30},"no_cook_day":null,"shared_meals":true},"body":{"current_weight_kg":75,"target_weight_kg":65,"primary_goal":"weight loss"},"activity":{"level":"light","description":"walks daily"},"meal_timing":{"breakfast":"9:00 am","lunch":"1:30 pm","snack":"5:00 pm","dinner":"9:00 pm"},"cuisine_preferences":{"loves":["Indian","Mediterranean"],"comfort_food":"dal rice","favourite_format":"bowls","flavour_notes":"bold and savoury"},"food_loves":["paneer","chicken","salads"],"hard_nos":["bitter gourd"],"dietary_restrictions":{"meat_preference":"chicken and eggs","specific_avoids":[],"intolerances":[],"medical_avoids":[],"medical_context":""},"seeds_or_supplements":[],"joy_statement":"A week I actually look forward to","macro_targets":{"calories":1800,"protein_g":120,"carbs_g":160,"fat_g":58}};
   showScreen('holding');
