@@ -1304,7 +1304,7 @@ Critical rules:
 Respond with valid JSON only. No markdown, no preamble.
 
 JSON structure:
-{"week_vibe":"one warm line capturing the spirit of this person's food week","days":[{"day":"Monday","vibe":"one-line mood","meals":[{"type":"breakfast","time":"9:00 am","name":"Dish name","description":"2-line description that makes you want to eat it","kcal":350,"protein_g":18,"carbs_g":40,"fat_g":10,"tags":["cuisine","format"],"allergens":[]}],"totals":{"kcal":1800,"protein_g":120}}]}`;
+{"week_vibe":"one warm line capturing the spirit of this person's food week","days":[{"day":"Monday","vibe":"one-line mood","meals":[{"type":"breakfast","time":"9:00 am","name":"Dish name","description":"2-sentence description that makes you want to eat it (no newlines)","kcal":350,"protein_g":18,"carbs_g":40,"fat_g":10,"tags":["cuisine","format"],"allergens":[]}],"totals":{"kcal":1800,"protein_g":120}}]}`;
 
 // ═══════════════════════════════════════════
 // CHAT ENGINE
@@ -1632,9 +1632,11 @@ async function generateMealPlan(feedback = null, attempt = 1) {
     : `Generate a 7-day meal plan for this person: ${profileStr}`;
 
   try {
-    const res = await callClaude(MEAL_PLAN_SYSTEM, [{ role: 'user', content: userMsg }], 4500);
+    const res = await callClaude(MEAL_PLAN_SYSTEM, [{ role: 'user', content: userMsg }], 6000);
     const clean = res.replace(/```json|```/g, '').trim();
-    appState.mealPlan = JSON.parse(clean);
+    // Collapse literal newlines — invalid inside JSON string values when model uses "2-line" style
+    const sanitized = clean.replace(/\r?\n/g, ' ');
+    appState.mealPlan = JSON.parse(sanitized);
     clearInterval(holdingInterval);
     renderPlan();
     showScreen('plan');
