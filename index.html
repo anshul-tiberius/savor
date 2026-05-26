@@ -560,6 +560,7 @@
       animation: chefBounce 1.6s ease-in-out infinite;
       display: block;
       line-height: 1;
+      transition: opacity 0.7s ease;
     }
     @keyframes chefBounce {
       0%, 100% { transform: translateY(0) scale(1); }
@@ -589,6 +590,8 @@
     #screen-plan {
       background: var(--cream);
       flex-direction: column;
+      height: 100dvh;
+      overflow: hidden;
     }
     .plan-header {
       padding: 20px 20px 0;
@@ -1040,6 +1043,181 @@
     .fade-in { animation: fadeIn 0.4s ease forwards; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+    /* ════════════════════════════════════════
+       BOTTOM NAV
+    ════════════════════════════════════════ */
+    .bottom-nav {
+      flex-shrink: 0;
+      display: flex;
+      background: var(--white);
+      border-top: 1px solid var(--cream-dark);
+      z-index: 10;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .bnav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 10px 4px 12px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--text-light);
+      font-size: 11px;
+      font-family: var(--font-body);
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+    .bnav-btn.active { color: var(--green); }
+    .bnav-btn svg {
+      width: 22px; height: 22px;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ════════════════════════════════════════
+       GROCERY VIEW
+    ════════════════════════════════════════ */
+    #view-groceries { flex: 1; overflow-y: auto; display: none; }
+    .grocery-view { padding: 16px; }
+    .grocery-intro {
+      font-size: 13px;
+      color: var(--text-light);
+      font-weight: 300;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    .gcat-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin: 20px 0 8px;
+    }
+    .gcat-title:first-of-type { margin-top: 0; }
+    .gitem {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--cream-dark);
+      transition: opacity 0.2s;
+    }
+    .gcheck {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid #D0CCC6;
+      flex-shrink: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .gcheck.done { background: var(--green); border-color: var(--green); }
+    .gcheck.done::after { content: '\2713'; color: white; font-size: 12px; font-weight: 700; }
+    .gitem-text { flex: 1; font-size: 14px; color: var(--text); }
+    .gitem.done .gitem-text { text-decoration: line-through; color: var(--text-light); }
+    .gdel {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: none;
+      background: var(--cream-dark);
+      color: var(--text-light);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+      line-height: 1;
+    }
+    .gdel:active { background: #e0cfc4; color: #8B3A2A; }
+
+    /* ════════════════════════════════════════
+       ASK CHEF VIEW
+    ════════════════════════════════════════ */
+    #view-chef {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chef-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .chef-input-area {
+      padding: 10px 16px 14px;
+      background: var(--white);
+      border-top: 1px solid var(--cream-dark);
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+    .btn-apply-changes {
+      margin: 0 16px 10px;
+      padding: 14px;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--amber);
+      color: white;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      width: calc(100% - 32px);
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* ════════════════════════════════════════
+       PROFILE VIEW
+    ════════════════════════════════════════ */
+    #view-profile { flex: 1; overflow-y: auto; display: none; }
+    .profile-view { padding: 20px 16px; }
+    .profile-avatar {
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      background: var(--green-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 12px;
+    }
+    .profile-name {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .profile-sub { font-size: 13px; color: var(--text-light); text-align: center; margin-bottom: 20px; }
+    .profile-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 10px;
+    }
+    .profile-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+    .profile-val { font-size: 15px; color: var(--text); font-weight: 400; }
+
     /* ── MOBILE SAFE AREA ── */
     @supports (padding-bottom: env(safe-area-inset-bottom)) {
       .chat-input-area, .email-section { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
@@ -1175,21 +1353,54 @@
 <!-- ════════ SCREEN 4: WEEKLY PLAN ════════ -->
 <div id="screen-plan" class="screen">
 
-  <div class="plan-header">
+  <div class="plan-header" id="plan-header">
     <div class="plan-header-top">
       <div class="plan-logo">What's Cooking</div>
-      <button class="btn-talk" onclick="openFeedback()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-        Give feedback
-      </button>
     </div>
     <p class="week-vibe" id="week-vibe"></p>
     <div class="day-tabs" id="day-tabs"></div>
   </div>
 
   <div class="plan-body" id="plan-body"></div>
+
+  <div id="view-groceries"></div>
+
+  <div id="view-chef">
+    <div class="chef-messages" id="chef-messages"></div>
+    <div id="chef-regen-wrap" style="display:none;">
+      <button class="btn-apply-changes" onclick="applyChefChanges()">Regenerate my plan with these changes &rarr;</button>
+    </div>
+    <div class="chef-input-area">
+      <textarea id="chef-input" class="chat-input" rows="1" placeholder="Ask about your meals&hellip;" onkeydown="handleChefKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="btn-send" onclick="sendChefMessage()" title="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="view-profile"></div>
+
+  <nav class="bottom-nav">
+    <button class="bnav-btn active" id="bnav-menu" onclick="selectBNav('menu')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Menu</span>
+    </button>
+    <button class="bnav-btn" id="bnav-groceries" onclick="selectBNav('groceries')">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span>Groceries</span>
+    </button>
+    <button class="bnav-btn" id="bnav-chef" onclick="selectBNav('chef')">
+      <svg viewBox="0 0 24 24"><path d="M6 13.87A4 4 0 017.41 6a5.11 5.11 0 019.18 0A4 4 0 0118 13.87V21H6V13.87z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
+      <span>Ask Chef</span>
+    </button>
+    <button class="bnav-btn" id="bnav-profile" onclick="selectBNav('profile')">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Profile</span>
+    </button>
+  </nav>
 
 </div><!-- /screen-plan -->
 
@@ -1211,19 +1422,6 @@
 </div><!-- /screen-dish -->
 
 
-<!-- ════════ FEEDBACK MODAL ════════ -->
-<div class="modal-overlay" id="feedback-modal" onclick="closeFeedbackOnOverlay(event)">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <h3 class="modal-title">Give feedback</h3>
-    <p class="modal-sub">Tell us what to change — more variety, different cuisines, swap a meal. We'll rebuild your week.</p>
-    <textarea class="feedback-input" id="feedback-input" placeholder="E.g. 'Too much paneer this week' or 'Add more South Indian food'…"></textarea>
-    <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeFeedback()">Cancel</button>
-      <button class="btn-regen" onclick="regeneratePlan()">Regenerate Plan →</button>
-    </div>
-  </div>
-</div>
 
 
 <script>
@@ -1249,6 +1447,10 @@ let appState = {
   isRecording: false,
   voiceMode: true,         // voice-first by default
   isSpeaking: false,
+  groceryItems: [],        // [{id, category, text, done}]
+  chefMessages: [],        // [{role, content}] for Ask Chef
+  pendingChanges: null,    // text from <changes> tag in chef response
+  activeBNav: 'menu',
 };
 
 // ═══════════════════════════════════════════
@@ -1304,7 +1506,7 @@ Critical rules:
 Respond with valid JSON only. No markdown, no preamble.
 
 JSON structure:
-{"week_vibe":"one warm line capturing the spirit of this person's food week","days":[{"day":"Monday","vibe":"one-line mood","meals":[{"type":"breakfast","time":"9:00 am","name":"Dish name","description":"2-sentence description that makes you want to eat it (no newlines)","kcal":350,"protein_g":18,"carbs_g":40,"fat_g":10,"tags":["cuisine","format"],"allergens":[]}],"totals":{"kcal":1800,"protein_g":120}}]}`;
+{"week_vibe":"one warm line capturing the spirit of this person's food week","days":[{"day":"Monday","vibe":"one-line mood","meals":[{"type":"breakfast","time":"9:00 am","name":"Dish name","description":"2-sentence description that makes you want to eat it (no newlines)","kcal":350,"protein_g":18,"carbs_g":40,"fat_g":10,"tags":["cuisine","format"],"allergens":[]}],"totals":{"kcal":1800,"protein_g":120}}],"groceries":[{"category":"Vegetables & Produce","items":["2 onions","1 bunch spinach"]},{"category":"Proteins","items":["200g paneer","6 eggs"]},{"category":"Pantry & Grains","items":["1 cup masoor dal","500g basmati rice"]},{"category":"Dairy & Fats","items":["1 cup yogurt","2 tbsp ghee"]}]}`;
 
 // ═══════════════════════════════════════════
 // CHAT ENGINE
@@ -1604,6 +1806,11 @@ const LOADING_LINES = [
   "Making sure Sunday takes care of itself...",
 ];
 
+const LOADING_EMOJIS = [
+  '🥦', '🫙', '🏠', '🌶️', '👵', '🥬', '🥣', '🔥',
+  '🫙', '💭', '⚖️', '📱', '🧈', '🌿', '🍱', '😌'
+];
+
 let holdingInterval = null;
 let lineIndex = 0;
 
@@ -1616,11 +1823,17 @@ function startHolding() {
 
 function updateHoldingLine(override) {
   const el = document.getElementById('holding-line');
+  const emojiEl = document.querySelector('.holding-gif-emoji');
   if (!el) return;
   el.style.opacity = 0;
+  if (emojiEl && !override) emojiEl.style.opacity = 0;
   setTimeout(() => {
     el.textContent = override || LOADING_LINES[lineIndex % LOADING_LINES.length];
     el.style.opacity = 1;
+    if (emojiEl && !override) {
+      emojiEl.textContent = LOADING_EMOJIS[lineIndex % LOADING_EMOJIS.length];
+      emojiEl.style.opacity = 1;
+    }
     if (!override) lineIndex++;
   }, 350);
 }
@@ -1637,9 +1850,25 @@ async function generateMealPlan(feedback = null, attempt = 1) {
     // Collapse literal newlines — invalid inside JSON string values when model uses "2-line" style
     const sanitized = clean.replace(/\r?\n/g, ' ');
     appState.mealPlan = JSON.parse(sanitized);
+    // Build grocery items array from plan
+    appState.groceryItems = [];
+    if (appState.mealPlan.groceries) {
+      appState.mealPlan.groceries.forEach(function(cat) {
+        (cat.items || []).forEach(function(item) {
+          appState.groceryItems.push({
+            id: 'g' + Math.random().toString(36).slice(2, 8),
+            category: cat.category,
+            text: item,
+            done: false
+          });
+        });
+      });
+    }
+    appState.chefMessages = []; // reset chef chat for fresh plan
     clearInterval(holdingInterval);
     renderPlan();
     showScreen('plan');
+    selectBNav('menu');
   } catch(e) {
     console.error('Meal plan generation error (attempt ' + attempt + ')', e);
     if (attempt < 3) {
@@ -1807,32 +2036,250 @@ function shareDish(dayIdx, mealIdx) {
 }
 
 // ═══════════════════════════════════════════
-// FEEDBACK + REGENERATE
+// HOLDING LINES (used when regenerating)
 // ═══════════════════════════════════════════
-function openFeedback() {
-  document.getElementById('feedback-input').value = '';
-  document.getElementById('feedback-modal').classList.add('open');
-}
-function closeFeedback() {
-  document.getElementById('feedback-modal').classList.remove('open');
-}
-function closeFeedbackOnOverlay(e) {
-  if (e.target === e.currentTarget) closeFeedback();
-}
-
-async function regeneratePlan() {
-  const feedback = document.getElementById('feedback-input').value.trim();
-  if (!feedback) return;
-  closeFeedback();
-  showScreen('holding');
-  startHoldingLines();
-  await generateMealPlan(feedback);
-}
-
 function startHoldingLines() {
   lineIndex = 0;
   updateHoldingLine();
   holdingInterval = setInterval(updateHoldingLine, 2800);
+}
+
+// ═══════════════════════════════════════════
+// BOTTOM NAV
+// ═══════════════════════════════════════════
+function selectBNav(tab) {
+  appState.activeBNav = tab;
+  ['menu', 'groceries', 'chef', 'profile'].forEach(function(t) {
+    var btn = document.getElementById('bnav-' + t);
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+
+  // Day tabs + week vibe only show on Menu
+  var dayTabs = document.getElementById('day-tabs');
+  if (dayTabs) dayTabs.style.display = tab === 'menu' ? '' : 'none';
+
+  // Show/hide body areas
+  var planBody = document.getElementById('plan-body');
+  if (planBody) planBody.style.display = tab === 'menu' ? '' : 'none';
+  var vGroceries = document.getElementById('view-groceries');
+  if (vGroceries) vGroceries.style.display = tab === 'groceries' ? 'block' : 'none';
+  var vChef = document.getElementById('view-chef');
+  if (vChef) vChef.style.display = tab === 'chef' ? 'flex' : 'none';
+  var vProfile = document.getElementById('view-profile');
+  if (vProfile) vProfile.style.display = tab === 'profile' ? 'block' : 'none';
+
+  if (tab === 'groceries') renderGroceries();
+  else if (tab === 'chef') initChefChat();
+  else if (tab === 'profile') renderProfile();
+}
+
+// ═══════════════════════════════════════════
+// GROCERY VIEW
+// ═══════════════════════════════════════════
+function renderGroceries() {
+  var el = document.getElementById('view-groceries');
+  if (!el) return;
+
+  var items = appState.groceryItems || [];
+  var byCategory = {};
+  var catOrder = [];
+
+  items.forEach(function(item) {
+    if (!byCategory[item.category]) {
+      byCategory[item.category] = [];
+      catOrder.push(item.category);
+    }
+    byCategory[item.category].push(item);
+  });
+
+  var html = '<div class="grocery-view">';
+  html += '<p class="grocery-intro">Your full week\'s shopping list &mdash; tap to check off, &times; to remove</p>';
+
+  catOrder.forEach(function(cat) {
+    html += '<div class="gcat-title">' + escapeHtml(cat) + '</div>';
+    byCategory[cat].forEach(function(item) {
+      var dc = item.done ? ' done' : '';
+      html += '<div class="gitem' + dc + '" id="' + item.id + '">';
+      html += '<div class="gcheck' + dc + '" onclick="toggleGrocery(\'' + item.id + '\')"></div>';
+      html += '<span class="gitem-text">' + escapeHtml(item.text) + '</span>';
+      html += '<button class="gdel" onclick="deleteGrocery(\'' + item.id + '\')">&times;</button>';
+      html += '</div>';
+    });
+  });
+
+  if (items.length === 0) {
+    html += '<p style="text-align:center;color:var(--text-light);margin-top:48px;font-size:14px;">Generate a plan to see your grocery list.</p>';
+  }
+
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function toggleGrocery(id) {
+  var item = appState.groceryItems.find(function(i) { return i.id === id; });
+  if (!item) return;
+  item.done = !item.done;
+  var el = document.getElementById(id);
+  if (el) {
+    el.classList.toggle('done', item.done);
+    var check = el.querySelector('.gcheck');
+    if (check) check.classList.toggle('done', item.done);
+  }
+}
+
+function deleteGrocery(id) {
+  appState.groceryItems = appState.groceryItems.filter(function(i) { return i.id !== id; });
+  var el = document.getElementById(id);
+  if (el) {
+    el.style.opacity = '0';
+    setTimeout(function() { if (el.parentNode) el.remove(); }, 200);
+  }
+}
+
+// ═══════════════════════════════════════════
+// ASK CHEF
+// ═══════════════════════════════════════════
+const CHEF_SYSTEM = 'You are What\'s Cooking\'s personal chef assistant. You know the user\'s current meal plan in detail. Help them swap meals, understand ingredients, adjust their week, or answer nutrition questions in a warm, direct way. If the user wants to change their plan, confirm what you\'d do differently and end your message with:\n<changes>Brief description of what to change.</changes>\nKeep responses short — 2-4 sentences. Never clinical. Never say "diet". Use Indian food references naturally.';
+
+function initChefChat() {
+  var msgs = document.getElementById('chef-messages');
+  if (!msgs) return;
+  if (appState.chefMessages.length > 0) { renderChefHistory(); return; }
+
+  var name = '';
+  if (appState.userProfile && appState.userProfile.personal) {
+    name = appState.userProfile.personal.name || '';
+  }
+  var greeting = name ? ('Hey ' + name + '!') : 'Hey!';
+  var welcome = greeting + ' I know your plan inside out. Ask me anything — want to swap a meal, make a day lighter, or just know what\'s in your Tuesday lunch? I\'ve got you.';
+  appendChefMessage('chef', welcome, true);
+}
+
+function renderChefHistory() {
+  var msgs = document.getElementById('chef-messages');
+  if (!msgs) return;
+  msgs.innerHTML = '';
+  appState.chefMessages.forEach(function(m) {
+    appendChefMessage(m.role === 'user' ? 'user' : 'chef', m.content, true);
+  });
+}
+
+function appendChefMessage(role, text, skipHistory) {
+  var msgs = document.getElementById('chef-messages');
+  if (!msgs) return;
+  var div = document.createElement('div');
+  div.className = 'msg ' + (role === 'user' ? 'user' : 'savor');
+  if (role !== 'user') {
+    div.innerHTML = '<div class="msg-avatar" style="font-size:14px;">&#x1F468;&#x200D;&#x1F373;</div><div class="msg-bubble">' + escapeHtml(text).replace(/\n/g, '<br>') + '</div>';
+  } else {
+    div.innerHTML = '<div class="msg-bubble">' + escapeHtml(text) + '</div>';
+  }
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showChefTyping() {
+  var msgs = document.getElementById('chef-messages');
+  if (!msgs) return;
+  var div = document.createElement('div');
+  div.className = 'msg savor';
+  div.id = 'chef-typing';
+  div.innerHTML = '<div class="msg-avatar" style="font-size:14px;">&#x1F468;&#x200D;&#x1F373;</div><div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideChefTyping() {
+  var el = document.getElementById('chef-typing');
+  if (el) el.remove();
+}
+
+async function sendChefMessage() {
+  var input = document.getElementById('chef-input');
+  var text = input ? input.value.trim() : '';
+  if (!text) return;
+  input.value = '';
+  autoResize(input);
+
+  appendChefMessage('user', text);
+  appState.chefMessages.push({ role: 'user', content: text });
+  showChefTyping();
+
+  var planSnippet = appState.mealPlan ? JSON.stringify(appState.mealPlan).slice(0, 3500) : '';
+  var system = CHEF_SYSTEM + (planSnippet ? '\n\nCurrent meal plan:\n' + planSnippet : '');
+
+  try {
+    var res = await callClaude(system, appState.chefMessages, 600, 'claude-haiku-4-5-20251001');
+    hideChefTyping();
+
+    var changesMatch = res.match(/<changes>([\s\S]*?)<\/changes>/);
+    var displayText = res;
+    if (changesMatch) {
+      appState.pendingChanges = changesMatch[1].trim();
+      displayText = res.replace(/<changes>[\s\S]*?<\/changes>/g, '').trim();
+      var rw = document.getElementById('chef-regen-wrap');
+      if (rw) rw.style.display = 'block';
+    }
+
+    appendChefMessage('chef', displayText);
+    appState.chefMessages.push({ role: 'assistant', content: res });
+  } catch(e) {
+    hideChefTyping();
+    appendChefMessage('chef', 'Something went wrong — try again in a moment.');
+    console.error('Chef error:', e);
+  }
+}
+
+function handleChefKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChefMessage(); }
+}
+
+function applyChefChanges() {
+  var changes = appState.pendingChanges || 'Update the plan based on our conversation.';
+  appState.pendingChanges = null;
+  appState.chefMessages = [];
+  var rw = document.getElementById('chef-regen-wrap');
+  if (rw) rw.style.display = 'none';
+  showScreen('holding');
+  startHoldingLines();
+  generateMealPlan(changes);
+}
+
+// ═══════════════════════════════════════════
+// PROFILE VIEW
+// ═══════════════════════════════════════════
+function renderProfile() {
+  var el = document.getElementById('view-profile');
+  if (!el) return;
+
+  var p = appState.userProfile;
+  if (!p) {
+    el.innerHTML = '<div class="profile-view"><p style="text-align:center;color:var(--text-light);margin-top:48px;font-size:14px;">Complete onboarding to see your profile.</p></div>';
+    return;
+  }
+
+  var name = (p.personal && p.personal.name) || 'You';
+  var city = (p.personal && p.personal.city) || '';
+  var age = (p.personal && p.personal.age) || '';
+  var goal = (p.body && p.body.primary_goal) || '';
+  var kcal = (p.macro_targets && p.macro_targets.calories) || '';
+  var protein = (p.macro_targets && p.macro_targets.protein_g) || '';
+  var cuisines = (p.cuisine_preferences && p.cuisine_preferences.loves) || [];
+  var hardNos = p.hard_nos || [];
+  var meat = (p.dietary_restrictions && p.dietary_restrictions.meat_preference) || '';
+  var sub = [city, age ? age + ' years' : ''].filter(Boolean).join(' · ');
+
+  var html = '<div class="profile-view">';
+  html += '<div class="profile-avatar">&#x1F9D1;&#x200D;&#x1F373;</div>';
+  html += '<div class="profile-name">' + escapeHtml(name) + '</div>';
+  if (sub) html += '<div class="profile-sub">' + escapeHtml(sub) + '</div>';
+  if (goal) html += '<div class="profile-card"><div class="profile-label">Goal</div><div class="profile-val">' + escapeHtml(goal) + '</div></div>';
+  if (kcal) html += '<div class="profile-card"><div class="profile-label">Weekly target</div><div class="profile-val">~' + kcal + ' kcal/day' + (protein ? ' · ' + protein + 'g+ protein' : '') + '</div></div>';
+  if (cuisines.length) html += '<div class="profile-card"><div class="profile-label">Cuisine loves</div><div class="profile-val">' + escapeHtml(cuisines.join(', ')) + '</div></div>';
+  if (hardNos.length) html += '<div class="profile-card"><div class="profile-label">Avoids</div><div class="profile-val">' + escapeHtml(hardNos.join(', ')) + '</div></div>';
+  if (meat) html += '<div class="profile-card"><div class="profile-label">Meat preference</div><div class="profile-val">' + escapeHtml(meat) + '</div></div>';
+  html += '</div>';
+  el.innerHTML = html;
 }
 
 // ═══════════════════════════════════════════
