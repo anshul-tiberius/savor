@@ -1314,7 +1314,7 @@ async function startChat() {
   document.getElementById('chat-messages').innerHTML = '';
   showTyping();
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600, 'claude-haiku-4-5-20251001');
+  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500, 'claude-haiku-4-5-20251001');
   hideTyping();
 
   const clean = stripProfile(res);
@@ -1336,7 +1336,7 @@ async function sendMessage() {
   appState.isTyping = true;
   updateChatStatus();
 
-  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 600, 'claude-haiku-4-5-20251001');
+  const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500, 'claude-haiku-4-5-20251001');
   hideTyping();
   appState.isTyping = false;
   updateChatStatus();
