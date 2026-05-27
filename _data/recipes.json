@@ -1,0 +1,227 @@
+[
+  {
+    "slug": "high-protein-masoor-dal-tadka",
+    "title": "Masoor Dal Tadka — The High-Protein Weekday Fix",
+    "subtitle": "26g of protein per bowl. Ready in 25 minutes. This is the dal your gym schedule deserves.",
+    "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
+    "image_alt": "A bowl of masoor dal tadka with a swirl of ghee",
+    "prep_time": "10 mins",
+    "cook_time": "20 mins",
+    "servings": 2,
+    "cuisine": "North Indian",
+    "tags": ["high-protein", "vegetarian", "weeknight", "weight-loss"],
+    "intro": "There is no dal more misunderstood than masoor. People reach for moong or chana when they want protein, but cooked masoor dal — red lentils, not the whole brown ones — delivers 26 grams of protein per serving and practically cooks itself. My grandmother in Lucknow called it the poor man's meat. She was not wrong about the nutrition.",
+    "nutrition_per_serving": {
+      "calories": 280,
+      "protein_g": 26,
+      "carbs_g": 38,
+      "fat_g": 6,
+      "fibre_g": 12
+    },
+    "ingredients": [
+      { "group": "Dal", "items": ["1 cup split red masoor dal (washed, soaked 15 min)", "2.5 cups water", "1/2 tsp turmeric", "1 tsp salt"] },
+      { "group": "Tadka", "items": ["1 tbsp ghee", "1 tsp cumin seeds", "4 garlic cloves, thinly sliced", "1 medium onion, finely chopped", "2 medium tomatoes, chopped", "1 green chilli, slit", "1/2 tsp red chilli powder", "1 tsp coriander powder"] },
+      { "group": "Finish", "items": ["Fresh coriander leaves", "1 tsp lemon juice"] }
+    ],
+    "steps": [
+      "Pressure cook the masoor with water, turmeric, and salt — 2 whistles on medium flame, or 8 minutes in an Instant Pot. The dal should be fully soft with no bite left. If it looks too thick, add 1/4 cup water now.",
+      "Heat ghee in a heavy kadai over medium-high until shimmering — not smoking. Add cumin seeds and listen for the instant sizzle. If they don't sizzle, the oil isn't hot enough. Add garlic slices and let them go golden, about 45 seconds.",
+      "Add onion. Cook until edges brown properly, 6–7 minutes. Do not rush this — the sweetness that develops here is what makes the dal taste like it cooked for an hour.",
+      "Add tomatoes, green chilli, chilli powder, and coriander powder. Cook until the tomatoes completely break down and the oil separates to the sides. This takes another 5–6 minutes and is non-negotiable.",
+      "Pour the cooked dal into the tadka pan — not the other way around. Stir, taste for salt, and let it bubble together for 2 minutes.",
+      "Finish with lemon juice and coriander. The acid wakes everything up. Serve over rice or with two rotis."
+    ],
+    "pro_tips": [
+      "Masoor cooks faster than any other dal. More than 2 whistles and it turns to paste — which is fine for dal makhani style but not for this.",
+      "The difference between okay masoor and great masoor is the tadka temperature. Cold ghee into hot dal makes it taste boiled. Hot tadka poured over cooked dal blooms every spice.",
+      "Adding a small piece of kokum or a teaspoon of tamarind pulp with the tomatoes gives a subtle sour note that cuts through the earthiness beautifully — popular in Maharashtra."
+    ],
+    "variations": [
+      { "name": "Bengali style", "description": "Skip the tadka entirely. Just cook the dal with panch phoron (equal parts cumin, mustard, fennel, fenugreek, nigella), a slit green chilli, and finish with mustard oil. Serve with white rice." },
+      { "name": "High-protein boost", "description": "Add 50g paneer cubes in the last 2 minutes. Brings total protein to 34g per serving." }
+    ],
+    "cta_text": "Want a full week of meals like this — designed around your goals and what you love to eat?",
+    "meta_description": "Masoor dal tadka recipe with full macros: 26g protein, 280 calories per serving. High-protein Indian vegetarian recipe ready in 25 minutes.",
+    "schema_keywords": ["masoor dal recipe", "masoor dal tadka", "high protein dal", "red lentil recipe Indian", "masoor dal calories protein"]
+  },
+  {
+    "slug": "moong-dal-cheela-protein-pancakes",
+    "title": "Moong Dal Cheela — Indian Protein Pancakes That Actually Work",
+    "subtitle": "22g protein per serving. Better than oats for muscle. The breakfast North India has been sleeping on.",
+    "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80",
+    "image_alt": "Crispy moong dal cheela with green chutney",
+    "prep_time": "5 mins (+ 4hr soak)",
+    "cook_time": "15 mins",
+    "servings": 2,
+    "cuisine": "North Indian",
+    "tags": ["high-protein", "vegetarian", "breakfast", "weight-loss", "gluten-free"],
+    "intro": "Two cheelas made from soaked whole moong give you 22 grams of complete protein at breakfast — more than three eggs. This is not a health-food compromise. When made properly, the batter crisps at the edges while staying soft inside, and the cumin-ginger base makes it smell like Sunday morning in a Punjabi kitchen. The 4-hour soak is the only inconvenience; everything else takes 20 minutes.",
+    "nutrition_per_serving": {
+      "calories": 240,
+      "protein_g": 22,
+      "carbs_g": 30,
+      "fat_g": 5,
+      "fibre_g": 8
+    },
+    "ingredients": [
+      { "group": "Batter", "items": ["1 cup whole green moong dal (soaked 4-6 hours or overnight)", "1/2 cup water (adjust for batter consistency)", "1/2 inch ginger, roughly chopped", "1 green chilli", "1/2 tsp cumin seeds", "1/2 tsp salt"] },
+      { "group": "Mix-ins", "items": ["1 small onion, finely chopped", "2 tbsp fresh coriander, chopped", "1/4 tsp red chilli powder"] },
+      { "group": "Cooking", "items": ["1 tsp oil per cheela (use a neutral oil — sunflower or refined groundnut)"] }
+    ],
+    "steps": [
+      "Drain soaked moong and blend with water, ginger, green chilli, and cumin to a smooth batter. The consistency should coat the back of a spoon — thinner than idli batter, thicker than dosa batter.",
+      "Stir in the onion, coriander, and chilli powder. Taste and adjust salt.",
+      "Heat a non-stick tawa or cast iron pan over medium-high. A drop of water should skitter across the surface — that is hot enough. If you use cast iron, get it properly seasoned or the cheela will stick no matter how much oil you add.",
+      "Pour a ladle of batter and spread it quickly in circular motions outward. This batter is thicker than dosa batter — you cannot spread it thin. Aim for 6-7mm thickness.",
+      "Drizzle oil around the edges. Cook until the top loses its wet sheen, about 3 minutes. Flip and cook another 90 seconds until light brown patches appear.",
+      "Serve immediately with green chutney or a spoon of dahi. Cheelas do not sit well — make and eat."
+    ],
+    "pro_tips": [
+      "The soak is essential. Unsoaked moong will give you a thick, dense, slightly bitter cheela. Soaking also improves digestibility significantly.",
+      "If the cheela tears when flipping, it needed more time on side one — the edges should look dry and slightly curled up before you flip.",
+      "For softer cheelas with more body, add 2 tablespoons of besan (chickpea flour) to the batter."
+    ],
+    "variations": [
+      { "name": "Paneer stuffed", "description": "Crumble 40g paneer with chilli and coriander, place on half the cheela once flipped, fold over. Protein goes up to 32g per serving." },
+      { "name": "Sprout version", "description": "Use sprouted moong instead of soaked. Blend roughly so there are small pieces of sprouted moong in the batter. Adds a fresh, slightly nutty taste and bumps up the protein a further 2g." }
+    ],
+    "cta_text": "Want a personalised week of breakfasts like this — matched to your health goals and taste?",
+    "meta_description": "Moong dal cheela recipe with macros: 22g protein, 240 calories. Best Indian high-protein breakfast recipe — better than oats or eggs for muscle building.",
+    "schema_keywords": ["moong dal cheela recipe", "moong dal cheela protein", "Indian protein breakfast", "moong cheela calories", "vegetarian high protein breakfast India"]
+  },
+  {
+    "slug": "egg-bhurji-macros-recipe",
+    "title": "Egg Bhurji — The 3-Egg Version That Actually Fills You Up",
+    "subtitle": "30g protein. Under 300 calories. Ready in 7 minutes. The Indian scrambled eggs recipe you actually want to eat every day.",
+    "image_url": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80",
+    "image_alt": "Egg bhurji in a pan with tomatoes and onions",
+    "prep_time": "3 mins",
+    "cook_time": "7 mins",
+    "servings": 1,
+    "cuisine": "Street food / North Indian",
+    "tags": ["high-protein", "non-vegetarian", "breakfast", "quick", "weight-loss"],
+    "intro": "Mumbai street bhurji is cooked in a pool of oil on a tawa so hot it browns the eggs before they're set. The home version doesn't need to go that far. Three eggs, the right spice sequence, and a very hot pan gets you something that tastes like the real thing — 30 grams of protein, done in under 10 minutes, with no specialty equipment.",
+    "nutrition_per_serving": {
+      "calories": 295,
+      "protein_g": 30,
+      "carbs_g": 8,
+      "fat_g": 17,
+      "fibre_g": 2
+    },
+    "ingredients": [
+      { "group": "Main", "items": ["3 large eggs", "1 tsp oil", "1/2 small onion, finely diced", "1 medium tomato, finely chopped", "1 green chilli, finely chopped"] },
+      { "group": "Spices", "items": ["1/4 tsp cumin seeds", "1/4 tsp turmeric", "1/3 tsp red chilli powder", "1/2 tsp coriander powder", "Salt to taste"] },
+      { "group": "Finish", "items": ["Fresh coriander leaves", "Lemon wedge"] }
+    ],
+    "steps": [
+      "Beat the eggs with a pinch of salt just until the yolk and white combine — 15 seconds, no more. Over-beating makes the bhurji rubbery.",
+      "Heat oil in a non-stick pan over high heat. Add cumin seeds and let them sizzle for 5 seconds.",
+      "Add onion and cook for 90 seconds on high — you want some browning, not translucent. Add green chilli and cook 30 more seconds.",
+      "Add tomato and all the spices. Cook on high for 2 minutes, pressing the tomato down with the spatula, until it looks semi-dry. This is the most important step — wet tomato makes bhurji watery and bland.",
+      "Reduce to medium. Pour in the eggs. Do not stir immediately. Wait 20 seconds for the bottom to just set, then fold — not scramble — with a spatula, pulling the cooked edges inward.",
+      "Take off the heat while the eggs are still slightly underdone. The residual heat will finish them. Over-cooked bhurji is dry bhurji.",
+      "Top with fresh coriander. Eat immediately with 2 toasted multigrain bread slices or 1 roti."
+    ],
+    "pro_tips": [
+      "The difference between great bhurji and average bhurji is a very hot pan and tomatoes that are cooked all the way down before the eggs go in.",
+      "If you like the street-food char, use a cast iron or carbon steel pan and let the eggs catch very slightly on the bottom before you fold.",
+      "For a richer version, replace 1 whole egg with 2 egg whites — keeps protein the same, drops fat and calories."
+    ],
+    "variations": [
+      { "name": "Paneer bhurji", "description": "Replace 1 egg with 50g crumbled paneer. Add after the tomatoes are cooked down. Different texture, similar protein." },
+      { "name": "South Indian", "description": "Add 1/4 tsp mustard seeds before the cumin, and curry leaves with the chilli. Top with grated coconut. Changes the flavour entirely." }
+    ],
+    "cta_text": "Want a personalised Indian meal plan built around your goals and the food you love?",
+    "meta_description": "Egg bhurji recipe with full macros: 30g protein, 295 calories. Best Indian scrambled egg recipe for weight loss and muscle building.",
+    "schema_keywords": ["egg bhurji recipe", "egg bhurji calories", "egg bhurji protein", "Indian scrambled eggs", "anda bhurji recipe"]
+  },
+  {
+    "slug": "paneer-tikka-macros-calories",
+    "title": "Paneer Tikka — Grilled, Not Fried. The Version That Actually Fits Your Goals.",
+    "subtitle": "28g protein, 320 calories. All the flavour of restaurant paneer tikka with a macro profile that makes sense.",
+    "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
+    "image_alt": "Grilled paneer tikka with capsicum and onion",
+    "prep_time": "15 mins (+ 30 min marination)",
+    "cook_time": "15 mins",
+    "servings": 2,
+    "cuisine": "North Indian / Mughlai",
+    "tags": ["high-protein", "vegetarian", "dinner", "gym-friendly"],
+    "intro": "Restaurant paneer tikka is often fried in a tandoor with a thick layer of spiced cream — beautiful but 600+ calories a portion. This version uses a grill pan or oven, a lighter marinade, and fresh paneer instead of the frozen variety that sweats water when cooked. The result: 28g of protein and 320 calories, flavours that are fully intact, and no guilt gymnastics required.",
+    "nutrition_per_serving": {
+      "calories": 320,
+      "protein_g": 28,
+      "carbs_g": 12,
+      "fat_g": 18,
+      "fibre_g": 3
+    },
+    "ingredients": [
+      { "group": "Marinade", "items": ["3/4 cup thick Greek yogurt or hung curd", "1 tbsp ginger-garlic paste", "1 tsp kashmiri red chilli powder", "1 tsp coriander powder", "1/2 tsp cumin powder", "1/2 tsp garam masala", "1/2 tsp chaat masala", "1 tsp lemon juice", "1 tbsp oil", "Salt to taste"] },
+      { "group": "Main", "items": ["250g fresh paneer, cut into 1.5-inch cubes", "1 capsicum (green or red), cut into 1.5-inch squares", "1 large onion, cut into quarters and separated", "8 cherry tomatoes or 1 large tomato quartered"] }
+    ],
+    "steps": [
+      "Mix all marinade ingredients in a bowl. The yogurt must be hung or thick Greek yogurt — regular yogurt is 70% water and will make the paneer steam instead of char.",
+      "Add paneer, capsicum, onion, and tomatoes to the marinade. Toss gently — paneer is fragile. Let it sit for at least 30 minutes; 2 hours in the fridge is better.",
+      "Thread onto skewers or arrange on a wire rack if using the oven. If skewering, alternate paneer, capsicum, onion — the vegetables protect the paneer from direct heat.",
+      "Grill pan method: Heat a ridged grill pan over high heat until smoking. Do not oil the pan — the oil is in the marinade. Place skewers and cook 3-4 minutes per side, rotating once. You want char marks, not just browning.",
+      "Oven method: 220°C (430°F), top rack, 12-15 minutes. Switch to grill/broil for the last 3 minutes to get the char.",
+      "Rest for 2 minutes before serving. The spices need a moment. Serve with sliced onion, lemon wedge, and green chutney."
+    ],
+    "pro_tips": [
+      "The most common mistake is using fresh block paneer straight from the fridge. Cold paneer cracks when skewered. Leave it at room temperature for 20 minutes first.",
+      "Kashmiri chilli powder is not the same as regular chilli powder. It is mild and gives colour without heat. If you substitute regular chilli, halve the quantity.",
+      "A drop of kewra water or rose water in the marinade is the restaurant secret for the floral top note. Optional but transformative."
+    ],
+    "variations": [
+      { "name": "Malai paneer tikka", "description": "Replace yogurt with 50g cashew paste blended with 2 tbsp cream. White tikka, richer flavour, higher calories (420 kcal) but extraordinary." },
+      { "name": "Achari paneer tikka", "description": "Add 1 tsp each of kalonji (nigella seeds) and mustard seeds to the marinade. The pickling spices give a sharp, tangy note." }
+    ],
+    "cta_text": "Want a full Indian meal plan with meals like this — built around your protein targets and food preferences?",
+    "meta_description": "Paneer tikka recipe with macros: 28g protein, 320 calories. Healthy grilled paneer tikka recipe for weight loss — not deep fried.",
+    "schema_keywords": ["paneer tikka recipe", "paneer tikka calories", "paneer tikka protein macros", "healthy paneer tikka", "grilled paneer tikka"]
+  },
+  {
+    "slug": "rajma-chawal-high-protein",
+    "title": "Rajma Chawal — The Protein Numbers Will Surprise You",
+    "subtitle": "24g protein per bowl. The Delhi comfort food that also happens to be excellent for your goals.",
+    "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80",
+    "image_alt": "Rajma chawal served in a bowl — kidney bean curry with rice",
+    "prep_time": "10 mins (+ overnight soak)",
+    "cook_time": "40 mins",
+    "servings": 3,
+    "cuisine": "Punjabi / North Indian",
+    "tags": ["high-protein", "vegetarian", "comfort-food", "meal-prep"],
+    "intro": "Rajma is one of those dishes that everyone loves but few make from scratch because canned kidney beans have conditioned people to think dried beans are complicated. They are not. Soak overnight, pressure cook 20 minutes, build a real masala, and you get rajma with a texture and depth that no canned version can touch. One serving: 24 grams of protein, 8 grams of fibre, and the kind of satisfaction that lasts until your next meal.",
+    "nutrition_per_serving": {
+      "calories": 380,
+      "protein_g": 24,
+      "carbs_g": 58,
+      "fat_g": 7,
+      "fibre_g": 12
+    },
+    "ingredients": [
+      { "group": "Beans", "items": ["1.5 cups dried rajma / kidney beans, soaked overnight in plenty of water", "3 cups water for pressure cooking", "1 tsp salt", "1 bay leaf"] },
+      { "group": "Masala", "items": ["2 tbsp oil or 1 tbsp ghee", "2 medium onions, finely chopped", "1 tbsp ginger-garlic paste", "3 medium tomatoes, pureed", "1 tsp cumin seeds", "1 tsp coriander powder", "1 tsp red chilli powder", "1/2 tsp turmeric", "1 tsp garam masala", "Salt to taste"] },
+      { "group": "Finish", "items": ["1 tbsp butter (optional — adds richness)", "Fresh coriander leaves"] }
+    ],
+    "steps": [
+      "Drain the soaked rajma and pressure cook with fresh water, salt, and bay leaf. 4-5 whistles on medium flame, or 20 minutes in an Instant Pot. The beans should be completely soft — no bite at all. Reserve the cooking liquid.",
+      "Heat oil or ghee in a heavy-bottomed pan. Add cumin seeds and let them crackle. Add onion and cook on medium until deep golden — not just translucent. This is 15-18 minutes of patient cooking and cannot be skipped.",
+      "Add ginger-garlic paste. Cook 2 minutes until the raw smell disappears. Add tomato puree, then all the spices except garam masala. Cook on medium-high, stirring regularly, until the masala thickens and oil begins to separate — 10-12 minutes.",
+      "Add the cooked rajma along with 1 cup of the reserved cooking liquid. Stir to combine. The cooking liquid has the most flavour — do not drain and discard it.",
+      "Simmer uncovered for 15-20 minutes on medium, stirring every 5 minutes, mashing a few beans against the pan wall to thicken the gravy naturally.",
+      "Add garam masala, taste for salt. If using butter, stir it in off the heat. Garnish with coriander. Eat with basmati rice and sliced raw onion."
+    ],
+    "pro_tips": [
+      "Rajma from Jammu (small, dark variety) is better than the large red kidney beans for this recipe — it has a firmer skin that holds up in the masala.",
+      "The trick to restaurant-quality rajma is mashing 1/3 of the beans deliberately. This thickens the gravy without adding any starch.",
+      "Rajma improves dramatically the next day. Make a big batch on Sunday for the best Monday lunch you have had all month."
+    ],
+    "variations": [
+      { "name": "Rajma chawal thali", "description": "Serve with 150g cooked basmati rice, 1 small kachumber salad (onion, tomato, cucumber), and 1 tbsp raita on the side. Macro total: 650 kcal, 32g protein." },
+      { "name": "Rajma quesadilla", "description": "Leftover rajma, slightly mashed, spread on a roti with grated cheese. Pan toast both sides. Not traditional, but very good." }
+    ],
+    "cta_text": "Get a full week of meals like this — matched to your health goals and the cuisines you love.",
+    "meta_description": "Rajma chawal recipe with macros: 24g protein, 380 calories. Best authentic Punjabi rajma recipe for weight loss and high protein Indian diet.",
+    "schema_keywords": ["rajma chawal recipe", "rajma recipe", "rajma protein content", "rajma calories", "Punjabi rajma masala"]
+  }
+]
