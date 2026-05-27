@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>What's Cooking — Food You Love That Loves You Back</title>
+  <title>What to Cook — Food You Love That Loves You Back</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231A3A2A'/><text x='50' y='72' text-anchor='middle' font-size='64' font-family='Georgia,serif' fill='%23FAF7F2'>W</text></svg>" />
-  <meta property="og:title" content="What's Cooking — Food You Love That Loves You Back" />
+  <meta property="og:title" content="What to Cook — Food You Love That Loves You Back" />
   <meta property="og:description" content="AI meal planning built for Indian kitchens. A 2-minute conversation gives you a full week of personalised, delicious meals." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://foodi-ashen.vercel.app" />
   <meta property="og:image" content="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=80" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="What's Cooking — Food You Love That Loves You Back" />
+  <meta name="twitter:title" content="What to Cook — Food You Love That Loves You Back" />
   <meta name="twitter:description" content="AI meal planning built for Indian kitchens. A 2-minute conversation gives you a full week of personalised, delicious meals." />
   <meta name="twitter:image" content="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=80" />
   <!-- PWA -->
@@ -29,6 +29,9 @@
   <!--
   <script defer data-domain="foodi-ashen.vercel.app" src="https://plausible.io/js/script.js"></script>
   -->
+
+  <!-- Supabase — auth + database -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -312,6 +315,97 @@
       color: rgba(255,255,255,0.4);
       margin-top: 10px;
     }
+
+    /* ── Auth UI ── */
+    .btn-google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 13px 20px;
+      background: #fff;
+      color: #1C1C1C;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: box-shadow 0.2s, opacity 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    }
+    .btn-google:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.18); }
+    .btn-google:active { transform: scale(0.98); }
+    .btn-google svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 14px 0;
+      color: rgba(255,255,255,0.35);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.18);
+    }
+    .auth-email-row {
+      display: flex;
+      gap: 8px;
+    }
+    .auth-email-row .email-input { flex: 1; }
+    .btn-send-link {
+      padding: 0 16px;
+      background: var(--amber);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .btn-send-link:hover { background: #b06b22; }
+    .btn-send-link:disabled { opacity: 0.6; cursor: default; }
+    .magic-sent {
+      text-align: center;
+      padding: 10px 0 6px;
+      color: rgba(255,255,255,0.8);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .magic-sent-icon { font-size: 26px; display: block; margin-bottom: 6px; }
+    .magic-sent strong { color: #fff; }
+    .magic-sent-sub { color: rgba(255,255,255,0.45); font-size: 11px; margin-top: 4px; }
+    /* saved-plan banner on plan screen */
+    .plan-saved-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-light);
+      padding: 4px 0 8px;
+      letter-spacing: 0.02em;
+    }
+    /* sign-out button in profile */
+    .btn-sign-out {
+      display: block;
+      margin: 24px auto 0;
+      padding: 10px 24px;
+      background: transparent;
+      border: 1.5px solid var(--cream-dark);
+      border-radius: 20px;
+      color: var(--text-light);
+      font-family: var(--font-body);
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-sign-out:hover { border-color: #ccc; color: var(--text-mid); }
 
     /* ════════════════════════════════════════
        SCREEN 2 — ONBOARDING CHAT
@@ -1155,7 +1249,7 @@
 <div id="screen-landing" class="screen active">
 
   <nav class="nav">
-    <div class="nav-logo">What's Cooking</div>
+    <div class="nav-logo">What to Cook</div>
   </nav>
 
   <div class="hero">
@@ -1182,11 +1276,40 @@
     <div class="email-card">
       <h2 class="email-title"><em>Try it.</em> Takes 2 minutes.</h2>
       <p class="email-sub">No credit card. Just food you love.</p>
-      <div class="email-input-wrap">
-        <input type="email" id="user-email" class="email-input" placeholder="your@email.com" autocomplete="email" />
-        <button class="btn-try" onclick="startOnboarding()">Start now &rarr;</button>
+
+      <!-- Google OAuth -->
+      <button class="btn-google" onclick="signInWithGoogle()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <div class="auth-divider"><span>or</span></div>
+
+      <!-- Email magic link -->
+      <div id="magic-link-form">
+        <div class="auth-email-row">
+          <input type="email" id="magic-email" class="email-input" placeholder="your@email.com"
+            autocomplete="email"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();sendMagicLink();}" />
+          <button class="btn-send-link" id="btn-send-link" onclick="sendMagicLink()">Send link</button>
+        </div>
       </div>
-      <p class="email-note">We save your plan and send it to you.</p>
+
+      <!-- After link is sent -->
+      <div id="magic-link-sent" style="display:none;">
+        <div class="magic-sent">
+          <span class="magic-sent-icon">✉️</span>
+          <p>Link sent to <strong id="magic-sent-email"></strong></p>
+          <p class="magic-sent-sub">Check your inbox — click the link to continue</p>
+        </div>
+      </div>
+
+      <p class="email-note">Your plan is saved — come back any time.</p>
     </div>
   </div>
 
@@ -1199,7 +1322,7 @@
   <div class="chat-header">
     <div class="chat-avatar" id="chat-avatar">W</div>
     <div class="chat-header-info">
-      <h3>What's Cooking</h3>
+      <h3>What to Cook</h3>
       <div class="chat-status" id="chat-status">Getting to know you…</div>
     </div>
     <button class="btn-voice voice-on" id="btn-voice" onclick="toggleVoiceMode()" title="Voice on — tap to mute">
@@ -1244,7 +1367,7 @@
 
 <!-- ════════ SCREEN 3: HOLDING ════════ -->
 <div id="screen-holding" class="screen">
-  <div class="holding-logo">What's Cooking</div>
+  <div class="holding-logo">What to Cook</div>
   <p class="holding-sub">Building your week</p>
 
   <div class="holding-line-wrap">
@@ -1268,7 +1391,7 @@
 
   <div class="plan-header" id="plan-header">
     <div class="plan-header-top">
-      <div class="plan-logo">What's Cooking</div>
+      <div class="plan-logo">What to Cook</div>
     </div>
     <p class="week-vibe" id="week-vibe"></p>
     <div class="day-tabs" id="day-tabs"></div>
@@ -1344,6 +1467,14 @@
 // API key lives securely in Vercel environment variables - see deployment instructions
 const GOOGLE_SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbz6oMQILCy4vUpzbOvDZkfo99wjz5eUAfjYDZMGogwCfoFv5-Xlw4OWPVvH-iKKH6M1/exec'; // ← you'll paste this in after setting up the sheet
 
+// ── Supabase — paste your project URL + anon key here (safe to put in frontend) ──
+// Get these from: Supabase dashboard → Project Settings → API
+const SUPABASE_URL  = 'PASTE_YOUR_SUPABASE_URL_HERE';      // e.g. https://abc.supabase.co
+const SUPABASE_ANON = 'PASTE_YOUR_SUPABASE_ANON_KEY_HERE'; // starts with eyJ...
+const db = (SUPABASE_URL.startsWith('PASTE') || SUPABASE_ANON.startsWith('PASTE'))
+  ? null  // Supabase not configured yet — auth disabled, app still works
+  : window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
 // ═══════════════════════════════════════════
 // APP STATE
 // ═══════════════════════════════════════════
@@ -1380,15 +1511,7 @@ function showScreen(name) {
 // SCREEN 1 → START ONBOARDING
 // ═══════════════════════════════════════════
 function startOnboarding() {
-  const emailEl = document.getElementById('user-email');
-  const email = emailEl.value.trim();
-  if (!email || !email.includes('@')) {
-    emailEl.focus();
-    emailEl.style.borderColor = 'rgba(255,100,100,0.7)';
-    setTimeout(() => emailEl.style.borderColor = '', 1500);
-    return;
-  }
-  appState.email = email;
+  // Email is set by initAuth() from the Supabase session
   showScreen('onboarding');
   startChat();
 }
@@ -1396,7 +1519,7 @@ function startOnboarding() {
 // ═══════════════════════════════════════════
 // SYSTEM PROMPTS
 // ═══════════════════════════════════════════
-const ONBOARDING_SYSTEM = `You are What's Cooking's voice onboarding guide. Learn enough to build a personalised weekly meal plan. Ask ONE question at a time — warm, brief, like a smart friend. 2-3 sentences max.
+const ONBOARDING_SYSTEM = `You are What to Cook's voice onboarding guide. Learn enough to build a personalised weekly meal plan. Ask ONE question at a time — warm, brief, like a smart friend. 2-3 sentences max.
 
 Rules: ONE question per message. Never say "diet" (say "food goals"). Never invent. No JSON until the final message.
 
@@ -1406,7 +1529,7 @@ When done, give a warm 2-sentence wrap-up then output EXACTLY this (nothing afte
 <profile>{"personal":{"name":"","age":null,"city":"","grew_up_in":"","cultural_background":""},"household":{"members":[],"has_paid_cook":false,"cook_schedule":{"morning_minutes":null,"evening_minutes":null},"no_cook_day":null,"shared_meals":true},"body":{"current_weight_kg":null,"target_weight_kg":null,"primary_goal":""},"activity":{"level":"sedentary","description":""},"meal_timing":{"breakfast":"","lunch":"","snack":"","dinner":""},"cuisine_preferences":{"loves":[],"comfort_food":"","favourite_format":"","flavour_notes":""},"food_loves":[],"hard_nos":[],"dietary_restrictions":{"meat_preference":"","specific_avoids":[],"intolerances":[],"medical_avoids":[],"medical_context":""},"seeds_or_supplements":[],"joy_statement":"","macro_targets":{"calories":null,"protein_g":null,"carbs_g":null,"fat_g":null}}</profile>
 Fill every field. Macro targets: weight loss ~1400 kcal women/~1700 men; protein 1.1g/kg target weight; carbs 37% cals; fat 30% cals.`;
 
-const MEAL_PLAN_SYSTEM = `You are What's Cooking's meal planning engine. You generate weekly meal plans that are joy-first, deeply personal, health-aware, cook-friendly, and varied.
+const MEAL_PLAN_SYSTEM = `You are What to Cook's meal planning engine. You generate weekly meal plans that are joy-first, deeply personal, health-aware, cook-friendly, and varied.
 
 Critical rules:
 - Medical avoids are ABSOLUTE — never include them anywhere, even as a garnish
@@ -1489,6 +1612,7 @@ async function sendMessage() {
       if (displayText) appendMessage('savor', displayText);
       appState.chatMessages.push({ role: 'assistant', content: res });
       saveToSheet(appState.email, appState.userProfile);
+      saveProfileToSupabase(appState.userProfile);
       setTimeout(() => { showScreen('holding'); startHolding(); }, 800);
       return;
     } catch(e) {
@@ -1506,6 +1630,7 @@ async function sendMessage() {
       if (displayText) appendMessage('savor', displayText);
       appState.chatMessages.push({ role: 'assistant', content: res });
       saveToSheet(appState.email, appState.userProfile);
+      saveProfileToSupabase(appState.userProfile);
       setTimeout(() => { showScreen('holding'); startHolding(); }, 800);
       return;
     } catch(e) {
@@ -1804,6 +1929,7 @@ async function generateMealPlan(feedback = null, attempt = 1) {
     appState.chefMessages = []; // reset chef chat for fresh plan
     clearInterval(holdingInterval);
     renderPlan();
+    savePlanToSupabase(appState.mealPlan);
     showScreen('plan');
     selectBNav('menu');
   } catch(e) {
@@ -1974,7 +2100,7 @@ function showDish(dayIdx, mealIdx) {
 // ═══════════════════════════════════════════
 function shareDish(dayIdx, mealIdx) {
   const meal = appState.mealPlan.days[dayIdx].meals[mealIdx];
-  const text = `${meal.name}\n${meal.description}\n\n${meal.kcal} kcal · ${meal.protein_g}g protein\n\nvia What's Cooking — food you love that loves you back 🍃`;
+  const text = `${meal.name}\n${meal.description}\n\n${meal.kcal} kcal · ${meal.protein_g}g protein\n\nvia What to Cook — food you love that loves you back 🍃`;
 
   if (navigator.share) {
     navigator.share({ title: meal.name, text }).catch(() => {});
@@ -2230,6 +2356,7 @@ function renderProfile() {
   if (cuisines.length) html += '<div class="profile-card"><div class="profile-label">Cuisine loves</div><div class="profile-val">' + escapeHtml(cuisines.join(', ')) + '</div></div>';
   if (hardNos.length) html += '<div class="profile-card"><div class="profile-label">Avoids</div><div class="profile-val">' + escapeHtml(hardNos.join(', ')) + '</div></div>';
   if (meat) html += '<div class="profile-card"><div class="profile-label">Meat preference</div><div class="profile-val">' + escapeHtml(meat) + '</div></div>';
+  html += '<button class="btn-sign-out" onclick="signOut()">Sign out</button>';
   html += '</div>';
   el.innerHTML = html;
 }
@@ -2320,7 +2447,7 @@ function demoResponse(system, messages) {
         resolve("How active are you right now — gym, walking, or mostly at a desk?");
       } else {
         const demoProfile = JSON.stringify({"personal":{"name": appState.demoName||"Friend","age":32,"city":"Mumbai","grew_up_in":"Mumbai","cultural_background":"Indian"},"household":{"members":[],"has_paid_cook":false,"cook_schedule":{"morning_minutes":30,"evening_minutes":30},"no_cook_day":null,"shared_meals":true},"body":{"current_weight_kg":75,"target_weight_kg":65,"primary_goal":"weight loss"},"activity":{"level":"light","description":"walks daily"},"meal_timing":{"breakfast":"9:00 am","lunch":"1:30 pm","snack":"5:00 pm","dinner":"9:00 pm"},"cuisine_preferences":{"loves":["Indian","Mediterranean","Asian"],"comfort_food":"dal rice","favourite_format":"bowls","flavour_notes":"bold and savoury"},"food_loves":["paneer","chicken","salads"],"hard_nos":["bitter gourd"],"dietary_restrictions":{"meat_preference":"chicken and eggs","specific_avoids":[],"intolerances":[],"medical_avoids":[],"medical_context":""},"seeds_or_supplements":[],"joy_statement":"A week I actually look forward to","macro_targets":{"calories":1800,"protein_g":120,"carbs_g":160,"fat_g":58}});
-        resolve("Last one — if What's Cooking could do one thing that made you feel understood — what would that be? I have everything I need. <profile>" + demoProfile + "</profile>");
+        resolve("Last one — if What to Cook could do one thing that made you feel understood — what would that be? I have everything I need. <profile>" + demoProfile + "</profile>");
       }
     }, 900 + Math.random() * 600);
   });
@@ -2441,6 +2568,156 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+
+// ═══════════════════════════════════════════
+// SUPABASE AUTH
+// ═══════════════════════════════════════════
+
+// Initialise auth on page load — checks for existing session and handles OAuth redirects
+async function initAuth() {
+  if (!db) return; // Supabase not configured yet (PASTE_ placeholders still in constants)
+
+  // onAuthStateChange fires on initial load too, covering both fresh sessions and OAuth returns
+  db.auth.onAuthStateChange(async function(event, session) {
+    if (event === 'SIGNED_IN' && session) {
+      appState.email = session.user.email || '';
+      await loadUserData(session.user.id);
+    }
+    if (event === 'SIGNED_OUT') {
+      appState.email = '';
+      appState.userProfile = null;
+      appState.mealPlan = null;
+      appState.chatMessages = [];
+      appState.chefMessages = [];
+      appState.groceryItems = [];
+      showScreen('landing');
+    }
+  });
+}
+
+// Load profile + latest plan for a signed-in user; routes to onboarding or plan screen
+async function loadUserData(userId) {
+  try {
+    var profileRes = await db.from('profiles').select('profile_json').eq('id', userId).maybeSingle();
+    if (profileRes.data && profileRes.data.profile_json) {
+      appState.userProfile = profileRes.data.profile_json;
+      var planRes = await db.from('meal_plans').select('plan_json').eq('user_id', userId)
+        .order('created_at', { ascending: false }).limit(1).maybeSingle();
+      if (planRes.data && planRes.data.plan_json) {
+        appState.mealPlan = planRes.data.plan_json;
+        appState.groceryItems = [];
+        if (appState.mealPlan.groceries) {
+          appState.mealPlan.groceries.forEach(function(cat) {
+            (cat.items || []).forEach(function(item) {
+              appState.groceryItems.push({
+                id: 'g' + Math.random().toString(36).slice(2,8),
+                category: cat.category,
+                text: item,
+                done: false
+              });
+            });
+          });
+        }
+        renderPlan();
+        showScreen('plan');
+        selectBNav('menu');
+        return;
+      }
+    }
+    // New user or no plan yet — go to onboarding
+    startOnboarding();
+  } catch(e) {
+    console.warn('loadUserData error (non-critical):', e);
+    startOnboarding();
+  }
+}
+
+// Sign in with Google OAuth — redirects to Google then back to the app
+async function signInWithGoogle() {
+  if (!db) { alert('Auth not configured yet. Paste your Supabase keys.'); return; }
+  var btn = document.querySelector('.btn-google');
+  if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
+  var res = await db.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin }
+  });
+  if (res.error) {
+    console.error('Google sign-in error:', res.error);
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+  }
+}
+
+// Send a magic link (passwordless) to the user's email
+async function sendMagicLink() {
+  if (!db) { alert('Auth not configured yet. Paste your Supabase keys.'); return; }
+  var email = (document.getElementById('magic-email').value || '').trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('magic-email').focus();
+    return;
+  }
+  var btn = document.getElementById('btn-send-link');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  var res = await db.auth.signInWithOtp({
+    email: email,
+    options: { emailRedirectTo: window.location.origin }
+  });
+  if (res.error) {
+    console.error('Magic link error:', res.error);
+    btn.disabled = false;
+    btn.textContent = 'Send link';
+    return;
+  }
+  // Show "sent" confirmation
+  document.getElementById('magic-link-form').style.display = 'none';
+  document.getElementById('magic-sent-email').textContent = email;
+  document.getElementById('magic-link-sent').style.display = 'block';
+}
+
+// Save or update the user's profile in Supabase
+async function saveProfileToSupabase(profile) {
+  if (!db) return;
+  try {
+    var sessionRes = await db.auth.getSession();
+    var session = sessionRes.data && sessionRes.data.session;
+    if (!session) return;
+    await db.from('profiles').upsert({
+      id: session.user.id,
+      email: session.user.email,
+      profile_json: profile,
+      updated_at: new Date().toISOString()
+    });
+  } catch(e) {
+    console.warn('saveProfileToSupabase (non-critical):', e);
+  }
+}
+
+// Save a freshly generated meal plan to Supabase
+async function savePlanToSupabase(plan) {
+  if (!db) return;
+  try {
+    var sessionRes = await db.auth.getSession();
+    var session = sessionRes.data && sessionRes.data.session;
+    if (!session) return;
+    await db.from('meal_plans').insert({
+      user_id: session.user.id,
+      plan_json: plan
+    });
+  } catch(e) {
+    console.warn('savePlanToSupabase (non-critical):', e);
+  }
+}
+
+// Sign out and return to landing screen
+async function signOut() {
+  if (!db) return;
+  await db.auth.signOut(); // onAuthStateChange handles state reset + screen change
+}
+
+// Kick off auth on page load
+initAuth();
+
+// ─────────────────────────────────────────────
 
 // ?skip — dev shortcut: jumps straight to meal plan generation using a demo profile.
 // Disabled on the production URL so real users can't stumble into it.
