@@ -8,7 +8,8 @@
   <meta property="og:title" content="What to Cook — Food You Love That Loves You Back" />
   <meta property="og:description" content="AI meal planning built for Indian kitchens. A 2-minute conversation gives you a full week of personalised, delicious meals." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://foodi-ashen.vercel.app" />
+  <meta property="og:url" content="https://app.whattocook.life" />
+  <link rel="canonical" href="https://app.whattocook.life" />
   <meta property="og:image" content="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=80" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="What to Cook — Food You Love That Loves You Back" />
@@ -27,7 +28,7 @@
 
   <!-- Analytics — sign up at plausible.io, then uncomment -->
   <!--
-  <script defer data-domain="foodi-ashen.vercel.app" src="https://plausible.io/js/script.js"></script>
+  <script defer data-domain="app.whattocook.life" src="https://plausible.io/js/script.js"></script>
   -->
 
   <!-- Supabase — auth + database -->
@@ -2722,7 +2723,7 @@ initAuth();
 // ?skip — dev shortcut: jumps straight to meal plan generation using a demo profile.
 // Disabled on the production URL so real users can't stumble into it.
 if (new URLSearchParams(window.location.search).has('skip') &&
-    window.location.hostname !== 'foodi-ashen.vercel.app') {
+    window.location.hostname !== 'app.whattocook.life') {
   appState.email = 'test@skip.dev';
   appState.userProfile = {"personal":{"name":"Anshul","age":32,"city":"Mumbai","grew_up_in":"Mumbai","cultural_background":"Indian"},"household":{"members":[],"has_paid_cook":false,"cook_schedule":{"morning_minutes":30,"evening_minutes":30},"no_cook_day":null,"shared_meals":true},"body":{"current_weight_kg":75,"target_weight_kg":65,"primary_goal":"weight loss"},"activity":{"level":"light","description":"walks daily"},"meal_timing":{"breakfast":"9:00 am","lunch":"1:30 pm","snack":"5:00 pm","dinner":"9:00 pm"},"cuisine_preferences":{"loves":["Indian","Mediterranean"],"comfort_food":"dal rice","favourite_format":"bowls","flavour_notes":"bold and savoury"},"food_loves":["paneer","chicken","salads"],"hard_nos":["bitter gourd"],"dietary_restrictions":{"meat_preference":"chicken and eggs","specific_avoids":[],"intolerances":[],"medical_avoids":[],"medical_context":""},"seeds_or_supplements":[],"joy_statement":"A week I actually look forward to","macro_targets":{"calories":1800,"protein_g":120,"carbs_g":160,"fat_g":58}};
   showScreen('holding');
