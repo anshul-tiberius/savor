@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>What to Cook — Indian Recipes &amp; Nutrition for Real Food Goals</title>
-  <meta name="description" content="High-protein Indian recipes with real macros, evidence-based nutrition guides, and a free AI meal planner built for Indian kitchens." />
-  <meta name="keywords" content="Indian recipes protein, Indian meal plan weight loss, high protein Indian food" />
-  <meta property="og:title" content="What to Cook — Indian Recipes &amp; Nutrition for Real Food Goals" />
-  <meta property="og:description" content="High-protein Indian recipes with real macros, evidence-based nutrition guides, and a free AI meal planner built for Indian kitchens." />
-  <meta property="og:type" content="article" />
+  <title>What to Cook — AI Meal Planning for Indian Kitchens</title>
+  <meta name="description" content="A free AI meal planner built for Indian kitchens. Tell it your tastes, household, and goals — get a personalised 7-day Indian meal plan with real macros in 2 minutes." />
+  <meta name="keywords" content="Indian meal planner AI, Indian recipes protein, Indian meal plan weight loss, high protein Indian food" />
+  <meta property="og:title" content="What to Cook — AI Meal Planning for Indian Kitchens" />
+  <meta property="og:description" content="A free AI meal planner built for Indian kitchens. Tell it your tastes, household, and goals — get a personalised 7-day Indian meal plan with real macros in 2 minutes." />
+  <meta property="og:type" content="website" />
   <meta property="og:url" content="https://whattocook.life/" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="What to Cook — Indian Recipes &amp; Nutrition for Real Food Goals" />
-  <meta name="twitter:description" content="High-protein Indian recipes with real macros, evidence-based nutrition guides, and a free AI meal planner built for Indian kitchens." />
+  <meta name="twitter:title" content="What to Cook — AI Meal Planning for Indian Kitchens" />
+  <meta name="twitter:description" content="A free AI meal planner built for Indian kitchens. Tell it your tastes, household, and goals — get a personalised 7-day Indian meal plan with real macros in 2 minutes." />
   <link rel="canonical" href="https://whattocook.life/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,196 +24,264 @@
       --amber: #C47B2B; --amber-light: #FAEEDA; --text: #1C1C1C; --text-mid: #4A4A4A; --text-light: #8A8A8A;
       --font-display: 'Cormorant Garamond', Georgia, serif;
       --font-body: 'DM Sans', -apple-system, sans-serif;
-      --max: 720px;
     }
     body { background: var(--cream); color: var(--text); font-family: var(--font-body); font-size: 17px; line-height: 1.7; }
     a { color: var(--green-mid); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
     /* Nav */
-    .nav { background: var(--green); padding: 0 20px; height: 54px; display: flex; align-items: center; justify-content: space-between; }
-    .nav-logo { font-family: var(--font-display); font-size: 22px; color: #FAF7F2; font-weight: 400; }
-    .nav-links { display: flex; gap: 20px; }
-    .nav-links a { color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500; }
+    .nav { background: var(--green); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .nav-logo { font-family: var(--font-display); font-size: 22px; color: #FAF7F2; font-weight: 400; text-decoration: none; }
+    .nav-logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500; text-decoration: none; }
     .nav-links a:hover { color: #fff; text-decoration: none; }
+    .nav-cta { background: var(--amber) !important; color: #fff !important; padding: 8px 18px; border-radius: 50px; font-size: 14px !important; font-weight: 500 !important; }
+    .nav-cta:hover { opacity: 0.9; }
 
-    /* Article layout */
-    .article { max-width: var(--max); margin: 0 auto; padding: 40px 20px 80px; }
-    .article-header { margin-bottom: 32px; }
-    .article-label { font-size: 12px; font-weight: 500; color: var(--amber); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
-    .article-title { font-family: var(--font-display); font-size: clamp(28px, 5vw, 42px); font-weight: 600; line-height: 1.15; color: var(--green); margin-bottom: 16px; }
-    .article-subtitle { font-size: 18px; color: var(--text-mid); line-height: 1.5; margin-bottom: 20px; }
-    .article-meta { font-size: 13px; color: var(--text-light); }
-    .article-image { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 12px; margin-bottom: 32px; }
-    .article-intro { font-size: 18px; line-height: 1.7; color: var(--text-mid); border-left: 3px solid var(--amber); padding-left: 20px; margin-bottom: 36px; }
+    /* ── HERO ── */
+    .hero { background: var(--green); padding: 72px 24px 80px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 40%, rgba(196,123,43,0.12) 0%, transparent 65%); pointer-events: none; }
+    .hero-eyebrow { font-size: 12px; font-weight: 500; color: var(--amber); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 18px; }
+    .hero-headline { font-family: var(--font-display); font-size: clamp(38px, 7vw, 68px); color: #FAF7F2; line-height: 1.1; margin-bottom: 22px; }
+    .hero-headline em { color: #F0C580; font-style: italic; }
+    .hero-sub { color: rgba(255,255,255,0.72); font-size: clamp(16px, 2.2vw, 19px); max-width: 580px; margin: 0 auto 36px; line-height: 1.65; font-weight: 300; }
+    .hero-cta-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+    .btn-primary { display: inline-block; background: var(--amber); color: #fff; padding: 15px 32px; border-radius: 50px; font-size: 16px; font-weight: 500; text-decoration: none; transition: opacity 0.2s, transform 0.2s; }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); text-decoration: none; color: #fff; }
+    .btn-ghost { display: inline-block; background: transparent; color: rgba(255,255,255,0.75); border: 1px solid rgba(255,255,255,0.3); padding: 15px 28px; border-radius: 50px; font-size: 15px; font-weight: 400; text-decoration: none; transition: border-color 0.2s, color 0.2s; }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.65); color: #fff; text-decoration: none; }
+    .hero-footnote { color: rgba(255,255,255,0.4); font-size: 13px; }
 
-    /* Quick answer */
-    .quick-answer { background: var(--amber-light); border-left: 4px solid var(--amber); padding: 20px 24px; border-radius: 0 12px 12px 0; margin-bottom: 32px; }
-    .quick-answer-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--amber); margin-bottom: 10px; }
-    .quick-answer p { font-size: 16px; line-height: 1.65; color: var(--text); margin-bottom: 0; }
+    /* ── HOW IT WORKS ── */
+    .section-wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .how-it-works { padding: 80px 0; background: var(--cream); }
+    .section-eyebrow { font-size: 11px; font-weight: 600; color: var(--amber); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 10px; }
+    .section-title { font-family: var(--font-display); font-size: clamp(28px, 4.5vw, 44px); color: var(--green); line-height: 1.15; margin-bottom: 14px; }
+    .section-sub { color: var(--text-mid); font-size: 17px; max-width: 560px; line-height: 1.65; margin-bottom: 52px; font-weight: 300; }
+    .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
+    .step-card { background: #fff; border-radius: 18px; padding: 32px 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); position: relative; border: 1px solid var(--cream-dark); }
+    .step-num { font-family: var(--font-display); font-size: 48px; color: var(--amber); line-height: 1; margin-bottom: 16px; font-weight: 400; opacity: 0.9; }
+    .step-title { font-family: var(--font-display); font-size: 22px; color: var(--green); margin-bottom: 10px; font-weight: 600; }
+    .step-body { font-size: 15px; color: var(--text-mid); line-height: 1.65; }
 
-    /* Section */
-    .section { margin-bottom: 36px; }
-    .section h2 { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--green); margin-bottom: 14px; line-height: 1.3; }
-    .section p { margin-bottom: 14px; }
+    /* ── DIFFERENTIATORS ── */
+    .differentiators { background: var(--green); padding: 80px 0; }
+    .differentiators .section-title { color: #FAF7F2; }
+    .differentiators .section-eyebrow { color: #F0C580; }
+    .differentiators .section-sub { color: rgba(255,255,255,0.65); }
+    .diff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+    .diff-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 28px 24px; }
+    .diff-icon { font-size: 28px; margin-bottom: 14px; }
+    .diff-title { font-family: var(--font-display); font-size: 19px; color: #FAF7F2; margin-bottom: 8px; font-weight: 600; }
+    .diff-body { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; }
 
-    /* Macro table */
-    .macro-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin: 24px 0; }
-    .macro-box { background: var(--cream-dark); border-radius: 10px; padding: 14px; text-align: center; }
-    .macro-val { font-size: 24px; font-weight: 700; color: var(--green); display: block; }
-    .macro-lbl { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; }
+    /* ── CONTENT SECTIONS (recipes/articles) ── */
+    .content-section { padding: 72px 0; }
+    .content-section:nth-child(even) { background: #fff; }
+    .section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+    .see-all { color: var(--green-mid); font-size: 14px; font-weight: 500; text-decoration: none; }
+    .see-all:hover { text-decoration: underline; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+    .card { display: block; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.07); transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; }
+    .content-section:nth-child(even) .card { background: var(--cream); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.11); text-decoration: none; }
+    .card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+    .card-body { padding: 18px 18px 22px; }
+    .card-label { font-size: 11px; font-weight: 500; color: var(--amber); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .card-title { font-family: var(--font-display); font-size: 20px; color: var(--green); line-height: 1.25; margin-bottom: 6px; }
+    .card-sub { font-size: 13px; color: var(--text-light); }
 
-    /* Recipe specifics */
-    .recipe-meta { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }
-    .recipe-meta-item { font-size: 13px; color: var(--text-mid); }
-    .recipe-meta-item strong { color: var(--text); }
-    .ingredients-group { margin-bottom: 18px; }
-    .ingredients-group h3 { font-size: 14px; font-weight: 600; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-    .ingredients-group ul { list-style: disc; padding-left: 20px; }
-    .ingredients-group li { margin-bottom: 4px; font-size: 15px; }
-    .steps-list { counter-reset: steps; list-style: none; padding: 0; }
-    .steps-list li { counter-increment: steps; padding: 14px 0 14px 48px; position: relative; border-bottom: 1px solid var(--cream-dark); font-size: 16px; }
-    .steps-list li:last-child { border-bottom: none; }
-    .steps-list li::before { content: counter(steps); position: absolute; left: 0; top: 14px; width: 32px; height: 32px; background: var(--green); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
-    .tips-list { list-style: none; padding: 0; }
-    .tips-list li { padding: 10px 0 10px 28px; position: relative; border-bottom: 1px solid var(--cream-dark); font-size: 15px; color: var(--text-mid); }
-    .tips-list li:last-child { border-bottom: none; }
-    .tips-list li::before { content: '→'; position: absolute; left: 0; color: var(--amber); font-weight: 700; }
+    /* ── BOTTOM CTA ── */
+    .bottom-cta { background: var(--cream-dark); padding: 80px 24px; text-align: center; }
+    .bottom-cta-inner { max-width: 640px; margin: 0 auto; }
+    .bottom-cta h2 { font-family: var(--font-display); font-size: clamp(30px, 5vw, 48px); color: var(--green); margin-bottom: 16px; line-height: 1.15; }
+    .bottom-cta p { color: var(--text-mid); font-size: 17px; margin-bottom: 32px; line-height: 1.65; font-weight: 300; }
+    .bottom-cta-note { margin-top: 14px; font-size: 13px; color: var(--text-light); }
 
-    /* Takeaways */
-    .takeaways { background: var(--green); border-radius: 16px; padding: 28px 24px; margin: 36px 0; }
-    .takeaways h2 { color: #FAF7F2; font-family: var(--font-display); font-size: 22px; margin-bottom: 16px; }
-    .takeaways ul { list-style: none; padding: 0; }
-    .takeaways li { color: rgba(255,255,255,0.85); padding: 6px 0 6px 24px; position: relative; font-size: 15px; }
-    .takeaways li::before { content: '✓'; position: absolute; left: 0; color: #7DC99A; }
-
-    /* FAQ */
-    .faq-section h3 { font-family: var(--font-body); font-size: 17px; font-weight: 500; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
-    .faq-item { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--cream-dark); }
-    .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .faq-item p { color: var(--text-mid); font-size: 15px; line-height: 1.65; }
-
-    /* Author bio */
-    .author-bio { border-top: 1px solid var(--cream-dark); padding: 24px 0; margin-top: 32px; display: flex; gap: 16px; align-items: flex-start; }
-    .author-avatar { width: 44px; height: 44px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #FAF7F2; font-family: var(--font-display); font-size: 18px; font-weight: 600; flex-shrink: 0; }
-    .author-info strong { display: block; color: var(--text); font-size: 15px; margin-bottom: 2px; }
-    .author-info span { color: var(--text-light); font-size: 13px; line-height: 1.5; }
-
-    /* CTA */
-    .cta-block { background: var(--cream-dark); border-radius: 16px; padding: 28px 24px; margin: 36px 0; text-align: center; }
-    .cta-block p { font-size: 17px; color: var(--text-mid); margin-bottom: 16px; line-height: 1.5; }
-    .cta-btn { display: inline-block; background: var(--green); color: #FAF7F2; padding: 14px 28px; border-radius: 50px; font-family: var(--font-body); font-size: 15px; font-weight: 500; transition: background 0.2s; }
-    .cta-btn:hover { background: var(--green-mid); text-decoration: none; }
-
-    /* Footer */
-    .footer { background: var(--green); padding: 24px 20px; text-align: center; }
-    .footer p { color: rgba(255,255,255,0.5); font-size: 13px; }
-    .footer a { color: rgba(255,255,255,0.6); }
+    /* ── FOOTER ── */
+    .footer { background: var(--green); padding: 28px 24px; text-align: center; }
+    .footer p { color: rgba(255,255,255,0.45); font-size: 13px; }
+    .footer a { color: rgba(255,255,255,0.55); }
+    .footer a:hover { color: rgba(255,255,255,0.85); text-decoration: none; }
+    .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 10px; flex-wrap: wrap; }
   </style>
 </head>
 <body>
+
+<!-- NAV -->
 <nav class="nav">
   <a href="/" class="nav-logo">What to Cook</a>
   <div class="nav-links">
     <a href="/recipes/">Recipes</a>
     <a href="/articles/">Learn</a>
-    <a href="https://app.whattocook.life" target="_blank" rel="noopener">Try the app &#8594;</a>
+    <a href="https://app.whattocook.life" class="nav-cta" target="_blank" rel="noopener">Try the app &#8594;</a>
   </div>
 </nav>
 
-<section style="background:var(--green);padding:64px 20px;text-align:center;">
-  <h1 style="font-family:var(--font-display);font-size:clamp(34px,6vw,58px);color:#FAF7F2;line-height:1.12;margin-bottom:16px;">Your place to find great recipes<br>and eat well without giving up<br><em>the food you love.</em></h1>
-  <p style="color:rgba(255,255,255,0.72);font-size:18px;max-width:560px;margin:0 auto 28px;line-height:1.6;">Practical Indian recipes with real macros. Evidence-based guides on eating well. And an AI meal planner that builds your week around what you actually enjoy.</p>
-  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-    <a href="/recipes/" style="display:inline-block;background:var(--amber);color:#fff;padding:13px 28px;border-radius:50px;font-size:15px;font-weight:500;text-decoration:none;">Browse Recipes &#8594;</a>
-    <a href="/articles/" style="display:inline-block;background:transparent;color:#FAF7F2;border:1px solid rgba(255,255,255,0.35);padding:13px 28px;border-radius:50px;font-size:15px;font-weight:500;text-decoration:none;">Read Articles &#8594;</a>
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Free AI meal planning for Indian kitchens</p>
+  <h1 class="hero-headline">Food you love,<br>that loves <em>you</em> back.</h1>
+  <p class="hero-sub">Tell our AI about your tastes, your household, and your goals. Get a personalised 7-day Indian meal plan — with real macros — in under 2 minutes.</p>
+  <div class="hero-cta-group">
+    <a href="https://app.whattocook.life" class="btn-primary" target="_blank" rel="noopener">Build my meal plan — free &#8594;</a>
+    <a href="/recipes/" class="btn-ghost">Browse recipes</a>
+  </div>
+  <p class="hero-footnote">Takes 2 minutes &nbsp;&middot;&nbsp; No credit card &nbsp;&middot;&nbsp; Free forever</p>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works">
+  <div class="section-wrap">
+    <p class="section-eyebrow">How it works</p>
+    <h2 class="section-title">Your week, planned in minutes.</h2>
+    <p class="section-sub">A conversation that feels like talking to a friend who genuinely loves Indian food — and happens to know a lot about nutrition.</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h3 class="step-title">Have a chat</h3>
+        <p class="step-body">A short conversation about your kitchen — your cuisine, your household, your food loves and hard nos, your health goals. No forms. Just a real back-and-forth.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h3 class="step-title">Get your week</h3>
+        <p class="step-body">A full 7-day Indian meal plan lands instantly — breakfast, lunch, snack, and dinner, every day. With calories, protein, carbs, and fat for every single dish. No guessing.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h3 class="step-title">Cook it</h3>
+        <p class="step-body">Every meal links to a real YouTube recipe from a real creator. Nothing invented, nothing you can't actually make. If you don't like a meal, regenerate the whole week with one tap.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<main style="max-width:1100px;margin:0 auto;padding:56px 20px 80px;">
-
-  <section style="margin-bottom:60px;">
-    <p style="font-size:11px;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">RECIPES</p>
-    <h2 style="font-family:var(--font-display);font-size:30px;color:var(--green);margin-bottom:24px;">High-protein Indian recipes, with full macros</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;margin-bottom:20px;">
-    <a href="/recipes/high-protein-masoor-dal-tadka/" class="card">
-      <img src="https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="A bowl of masoor dal tadka with a swirl of ghee" loading="lazy" />
-      <div class="card-body">
-        <p class="card-label">North Indian</p>
-        <h2 class="card-title">Masoor Dal Tadka — The High-Protein Weekday Fix</h2>
-        <p class="card-sub">26g protein &middot; 280 kcal</p>
+<!-- DIFFERENTIATORS -->
+<section class="differentiators">
+  <div class="section-wrap">
+    <p class="section-eyebrow">Why What to Cook</p>
+    <h2 class="section-title">Built for the way Indians actually eat.</h2>
+    <p class="section-sub">Not a Western app with dal as an afterthought. Built from the ground up for Indian kitchens.</p>
+    <div class="diff-grid">
+      <div class="diff-card">
+        <div class="diff-icon">🍛</div>
+        <h4 class="diff-title">India-first</h4>
+        <p class="diff-body">Understands Marwari, Gujarati, Bengali, South Indian cuisines. Knows the masala dabba, the Sunday brunch, nani&rsquo;s kitchen.</p>
       </div>
-    </a>
-    <a href="/recipes/moong-dal-cheela-protein-pancakes/" class="card">
-      <img src="https://images.unsplash.com/photo-1555126634-323283e090fa?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="Crispy moong dal cheela with green chutney" loading="lazy" />
-      <div class="card-body">
-        <p class="card-label">North Indian</p>
-        <h2 class="card-title">Moong Dal Cheela — Indian Protein Pancakes That Actually Work</h2>
-        <p class="card-sub">22g protein &middot; 240 kcal</p>
+      <div class="diff-card">
+        <div class="diff-icon">❤️</div>
+        <h4 class="diff-title">Joy-first</h4>
+        <p class="diff-body">Healthy and delicious are not opposites. No guilt scoring, no &ldquo;cheat meal&rdquo; shame. Just food you love that also meets your goals.</p>
       </div>
-    </a>
-    <a href="/recipes/egg-bhurji-macros-recipe/" class="card">
-      <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&amp;q=80" alt="Egg bhurji in a pan with tomatoes and onions" loading="lazy" />
-      <div class="card-body">
-        <p class="card-label">Street food / North Indian</p>
-        <h2 class="card-title">Egg Bhurji — The 3-Egg Version That Actually Fills You Up</h2>
-        <p class="card-sub">30g protein &middot; 295 kcal</p>
+      <div class="diff-card">
+        <div class="diff-icon">📊</div>
+        <h4 class="diff-title">Real macros</h4>
+        <p class="diff-body">Calories and protein calculated per dish, not estimated. Know exactly what you&rsquo;re eating without ever opening a spreadsheet.</p>
       </div>
-    </a></div>
-    <a href="/recipes/" style="color:var(--green-mid);font-weight:500;font-size:15px;">See all recipes &#8594;</a>
-  </section>
-
-  <hr style="border:none;border-top:1px solid var(--cream-dark);margin-bottom:60px;" />
-
-  <section style="margin-bottom:60px;">
-    <p style="font-size:11px;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">LEARN</p>
-    <h2 style="font-family:var(--font-display);font-size:30px;color:var(--green);margin-bottom:24px;">Evidence-based guides for Indian eaters</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;margin-bottom:20px;">
-    <a href="/articles/protein-in-100g-paneer/" class="card">
-      <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="How Much Protein is in 100g Paneer? (And Why the Answer Matters for Indian Diets)" loading="lazy" />
-      <div class="card-body card-body-text">
-        <p class="card-label">Nutrition</p>
-        <h2 class="card-title">How Much Protein is in 100g Paneer? (And Why the Answer Matters for Indian Diets)</h2>
+      <div class="diff-card">
+        <div class="diff-icon">🆓</div>
+        <h4 class="diff-title">Free forever</h4>
+        <p class="diff-body">No subscription. No credit card. Build unlimited meal plans, regenerate as many times as you want. Yours, fully free.</p>
       </div>
-    </a>
-    <a href="/articles/is-ghee-healthy-for-weight-loss/" class="card">
-      <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="Is Ghee Healthy For Weight Loss? The Evidence (and the Nuance Indian Nutrition Misses)" loading="lazy" />
-      <div class="card-body card-body-text">
-        <p class="card-label">Nutrition</p>
-        <h2 class="card-title">Is Ghee Healthy For Weight Loss? The Evidence (and the Nuance Indian Nutrition Misses)</h2>
+    </div>
+  </div>
+</section>
+
+<!-- RECIPES SECTION -->
+<section class="content-section">
+  <div class="section-wrap">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow">Recipes</p>
+        <h2 class="section-title" style="margin-bottom:0;">High-protein Indian recipes,<br>with full macros.</h2>
       </div>
-    </a>
-    <a href="/articles/best-dal-for-weight-loss-ranked/" class="card">
-      <img src="https://images.unsplash.com/photo-1546548970-71785318a17b?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="Best Dal for Weight Loss, Ranked — With Actual Protein Numbers" loading="lazy" />
-      <div class="card-body card-body-text">
-        <p class="card-label">Nutrition</p>
-        <h2 class="card-title">Best Dal for Weight Loss, Ranked — With Actual Protein Numbers</h2>
+      <a href="/recipes/" class="see-all">See all recipes &#8594;</a>
+    </div>
+    <div class="cards-grid">
+      <a href="/recipes/high-protein-masoor-dal-tadka/" class="card">
+        <img src="https://images.unsplash.com/photo-1626500154744-e4b394ffea16?w=800&auto=format&fit=crop&q=80" alt="A bowl of masoor dal tadka with a swirl of ghee" loading="lazy" />
+        <div class="card-body">
+          <p class="card-label">North Indian</p>
+          <h3 class="card-title">Masoor Dal Tadka — The High-Protein Weekday Fix</h3>
+          <p class="card-sub">26g protein &middot; 280 kcal</p>
+        </div>
+      </a>
+      <a href="/recipes/moong-dal-cheela-protein-pancakes/" class="card">
+        <img src="https://images.unsplash.com/photo-1626500155537-93690c24099e?w=800&auto=format&fit=crop&q=80" alt="Moong dal cheela — Indian lentil pancakes" loading="lazy" />
+        <div class="card-body">
+          <p class="card-label">North Indian</p>
+          <h3 class="card-title">Moong Dal Cheela — Indian Protein Pancakes That Actually Work</h3>
+          <p class="card-sub">22g protein &middot; 240 kcal</p>
+        </div>
+      </a>
+      <a href="/recipes/egg-bhurji-macros-recipe/" class="card">
+        <img src="https://images.unsplash.com/photo-1673925962465-7bfd6339ab2e?w=800&auto=format&fit=crop&q=80" alt="Egg bhurji with tomatoes, onions and spices" loading="lazy" />
+        <div class="card-body">
+          <p class="card-label">Street food / North Indian</p>
+          <h3 class="card-title">Egg Bhurji — The 3-Egg Version That Actually Fills You Up</h3>
+          <p class="card-sub">30g protein &middot; 295 kcal</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES SECTION -->
+<section class="content-section" style="background:#fff;">
+  <div class="section-wrap">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow">Guides</p>
+        <h2 class="section-title" style="margin-bottom:0;">Evidence-based guides<br>for Indian eaters.</h2>
       </div>
-    </a></div>
-    <a href="/articles/" style="color:var(--green-mid);font-weight:500;font-size:15px;">See all articles &#8594;</a>
-  </section>
+      <a href="/articles/" class="see-all">See all guides &#8594;</a>
+    </div>
+    <div class="cards-grid">
+      <a href="/articles/protein-in-100g-paneer/" class="card" style="background:var(--cream);">
+        <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&auto=format&fit=crop&q=80" alt="Paneer butter masala — how much protein in 100g paneer" loading="lazy" />
+        <div class="card-body">
+          <p class="card-label">Nutrition</p>
+          <h3 class="card-title">How Much Protein is in 100g Paneer? (And Why the Answer Matters for Indian Diets)</h3>
+        </div>
+      </a>
+      <a href="/articles/is-ghee-healthy-for-weight-loss/" class="card" style="background:var(--cream);">
+        <img src="https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=800&auto=format&fit=crop&q=80" alt="Ghee — is ghee healthy for weight loss" loading="lazy" />
+        <div class="card-body">
+          <p class="card-label">Nutrition</p>
+          <h3 class="card-title">Is Ghee Healthy For Weight Loss? The Evidence (and the Nuance Indian Nutrition Misses)</h3>
+        </div>
+      </a>
+      <a href="/articles/best-dal-for-weight-loss-ranked/" class="card" style="background:var(--cream);">
+        <img src="https://images.unsplash.com/photo-1630409349416-24884761a307?w=800&auto=format&fit=crop&q=80" alt="Best dal for weight loss — lentil soup ranked" loading="lazy" />
+        <div class="card-body">
+          <p class="card-label">Nutrition</p>
+          <h3 class="card-title">Best Dal for Weight Loss, Ranked — With Actual Protein Numbers</h3>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
 
-  <hr style="border:none;border-top:1px solid var(--cream-dark);margin-bottom:60px;" />
+<!-- BOTTOM CTA -->
+<section class="bottom-cta">
+  <div class="bottom-cta-inner">
+    <h2>Ready to stop guessing<br>what to cook?</h2>
+    <p>Tell us about your kitchen once. Get a week of Indian meals you'll actually look forward to — with every macro counted and every recipe a YouTube search away.</p>
+    <a href="https://app.whattocook.life" class="btn-primary" style="font-size:17px;padding:16px 36px;" target="_blank" rel="noopener">Build my meal plan — free &#8594;</a>
+    <p class="bottom-cta-note">2 minutes &nbsp;&middot;&nbsp; No credit card &nbsp;&middot;&nbsp; Free forever</p>
+  </div>
+</section>
 
-  <section style="background:var(--green);border-radius:20px;padding:44px 36px;text-align:center;">
-    <h2 style="font-family:var(--font-display);font-size:36px;color:#FAF7F2;margin-bottom:14px;line-height:1.2;">Want a meal plan built for your kitchen?</h2>
-    <p style="color:rgba(255,255,255,0.72);max-width:520px;margin:0 auto 24px;font-size:17px;line-height:1.65;">Tell us about your tastes, your household, and your goals. You get a personalised week of Indian meals &#8212; breakfast to dinner, full macros, grocery list. Takes two minutes. Free.</p>
-    <a href="https://app.whattocook.life" style="display:inline-block;background:var(--amber);color:#fff;padding:14px 32px;border-radius:50px;font-size:16px;font-weight:500;text-decoration:none;" target="_blank" rel="noopener">Build my meal plan &#8212; free &#8594;</a>
-  </section>
-
-</main>
+<!-- FOOTER -->
 <footer class="footer">
-  <p>&copy; 2025 What to Cook &nbsp;&middot;&nbsp; <a href="https://app.whattocook.life">Build your personal meal plan</a></p>
+  <div class="footer-links">
+    <a href="/recipes/">Recipes</a>
+    <a href="/articles/">Guides</a>
+    <a href="https://app.whattocook.life" target="_blank" rel="noopener">AI Meal Planner</a>
+  </div>
+  <p>&copy; 2026 What to Cook &nbsp;&middot;&nbsp; <a href="https://app.whattocook.life">Build your personal meal plan</a></p>
 </footer>
-<style>
-  .card { display:block; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.07); transition:transform 0.2s,box-shadow 0.2s; text-decoration:none; color:inherit; }
-  .card:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,0.1); }
-  .card img { width:100%; aspect-ratio:16/9; object-fit:cover; }
-  .card-body { padding:16px; }
-  .card-body-text { padding:20px 20px 24px; }
-  .card-label { font-size:11px;font-weight:500;color:var(--amber);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px; }
-  .card-title { font-family:var(--font-display);font-size:19px;color:var(--green);line-height:1.25;margin-bottom:6px; }
-  .card-sub { font-size:13px;color:var(--text-light); }
-</style>
+
 </body>
 </html>
