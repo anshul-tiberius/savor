@@ -1470,8 +1470,8 @@ const GOOGLE_SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbz6oMQILCy
 
 // ── Supabase — paste your project URL + anon key here (safe to put in frontend) ──
 // Get these from: Supabase dashboard → Project Settings → API
-const SUPABASE_URL  = 'PASTE_YOUR_SUPABASE_URL_HERE';      // e.g. https://abc.supabase.co
-const SUPABASE_ANON = 'PASTE_YOUR_SUPABASE_ANON_KEY_HERE'; // starts with eyJ...
+const SUPABASE_URL  = 'https://xvhkhknhknhhldcsmtcz.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2aGtoa25oa25oaGxkY3NtdGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4Nzc0MzQsImV4cCI6MjA5NTQ1MzQzNH0.BGDkktN3gASY3YqqZANlDEcohM4EerJIw3Uhg11yifM';
 const db = (SUPABASE_URL.startsWith('PASTE') || SUPABASE_ANON.startsWith('PASTE'))
   ? null  // Supabase not configured yet — auth disabled, app still works
   : window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
