@@ -7,6 +7,22 @@
     "published_date": "2025-05-20",
     "category": "Nutrition",
     "read_time": "6 min read",
+    "hero_image_url": "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&auto=format&fit=crop&q=80",
+    "quick_answer": "100g of standard full-fat paneer contains 18–20g protein and 265–295 calories. For practical meal planning, use 18g protein per 100g as your baseline. Low-fat paneer gives 22–24g protein at roughly 150 kcal — better macros but worse texture for cooking.",
+    "faq": [
+      {
+        "question": "How much protein is in 100g paneer?",
+        "answer": "18–20g protein for full-fat paneer (265–295 kcal). Low-fat paneer contains 22–24g protein at 140–160 kcal per 100g. For practical purposes, use 18g protein per 100g as your baseline when tracking."
+      },
+      {
+        "question": "Is paneer a complete protein?",
+        "answer": "Yes. Paneer is a complete protein — it contains all 9 essential amino acids, including high leucine content which is important for muscle protein synthesis. This is unusual for a non-meat protein source, making paneer one of the most valuable proteins in a vegetarian Indian diet."
+      },
+      {
+        "question": "How much paneer should I eat per day for protein?",
+        "answer": "100g of paneer gives 18g protein — useful as one of several daily protein sources. Relying on paneer alone to hit 80g protein would require 400g+ (over 1000 kcal of paneer alone), which is unsustainable. The better approach: combine paneer with dal, curd, and eggs across meals."
+      }
+    ],
     "intro": "If you eat a vegetarian Indian diet and someone tells you to eat more protein, paneer is probably the first thing they mention. They are right. But the numbers are often wrong — or at least imprecise. Here is the complete answer, why it varies, and how to actually hit your protein targets with paneer without eating 300g of it every day.",
     "sections": [
       {
@@ -51,6 +67,22 @@
     "published_date": "2025-05-18",
     "category": "Nutrition",
     "read_time": "8 min read",
+    "hero_image_url": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=800&auto=format&fit=crop&q=80",
+    "quick_answer": "Ghee is not harmful for weight loss when used in moderate amounts — 1–2 teaspoons per day (45–90 kcal) is a reasonable range. It is not a superfood that burns fat, but it is not the villain it was made out to be in the 1990s. The short-chain fatty acids in ghee support gut health and satiety.",
+    "faq": [
+      {
+        "question": "Does ghee cause weight gain?",
+        "answer": "Not in moderate amounts. Like all fats, ghee provides about 9 kcal per gram. 1–2 teaspoons per day adds 45–90 kcal — roughly 3–5% of a 1800 kcal daily target. This does not cause weight gain unless it pushes you into a caloric surplus overall."
+      },
+      {
+        "question": "Is cow ghee better than butter for weight loss?",
+        "answer": "Ghee has a higher smoke point than butter, making it more stable for high-heat cooking. Nutritionally, ghee is almost entirely fat (butter is about 80% fat with some water and milk solids). For weight loss, the calorie count is similar and neither is preferable — quantity matters more than the type."
+      },
+      {
+        "question": "Can I use ghee instead of oil for cooking?",
+        "answer": "Yes. For high-temperature cooking like tadka, ghee is more stable than polyunsaturated vegetable oils. Keep quantities the same — 1 tsp for a tadka, not a tablespoon. For medium-heat cooking, mustard oil or ghee are both good choices in an Indian kitchen."
+      }
+    ],
     "intro": "Ghee has had two very different reputations in the last forty years. Until the 1980s, it was the cooking fat Indians had used for centuries — essential to the masala dabba, the roti, the dal. Then saturated fat became the nutritional villain of choice and ghee was quietly replaced by refined oils. Now ghee is back, repackaged as a superfood by wellness influencers claiming it burns belly fat and boosts metabolism. Both of these positions are wrong. Here is what the evidence actually says.",
     "sections": [
       {
@@ -91,6 +123,22 @@
     "published_date": "2025-05-15",
     "category": "Nutrition",
     "read_time": "7 min read",
+    "hero_image_url": "https://images.unsplash.com/photo-1546548970-71785318a17b?w=800&auto=format&fit=crop&q=80",
+    "quick_answer": "Masoor dal is the best dal for weight loss: 9g protein at 116 kcal per 100g cooked — the highest protein-to-calorie ratio of any common Indian dal. Chana dal is the runner-up if satiety is your priority: its slow-digesting starch keeps you full for 4–5 hours.",
+    "faq": [
+      {
+        "question": "Which dal has the most protein?",
+        "answer": "Masoor dal (split red lentil) and whole masoor (brown lentil) are tied at approximately 9g protein per 100g cooked — the highest of common Indian dals. Moong dal is close at 7.6g per 100g. All dals are improved nutritionally when paired with rice, which provides complementary amino acids."
+      },
+      {
+        "question": "Is moong dal or masoor dal better for weight loss?",
+        "answer": "Masoor dal has slightly more protein per calorie (9g at 116 kcal vs 7.6g at 113 kcal for moong). However, moong dal is much easier to digest, making it the better choice for digestive issues or post-illness recovery. For healthy adults specifically optimising protein per calorie, masoor is marginally better."
+      },
+      {
+        "question": "How much dal should I eat per day for weight loss?",
+        "answer": "A standard serving is 150–200g cooked. At 200g of masoor dal, you get 18g protein — roughly equivalent to 100g of paneer, at about one-third the calories. Most Indians eating 1–2 cups of dal per day are in the ideal range for a weight loss diet."
+      }
+    ],
     "intro": "Every Indian diet that tries to be healthier eventually says \"eat more dal.\" Which dal? The answer matters — the protein content varies by 40% between the lowest and highest options, and the texture and cooking method affect satiety significantly. Here is the honest ranking.",
     "sections": [
       {
@@ -135,6 +183,22 @@
     "published_date": "2025-05-12",
     "category": "Meal Plans",
     "read_time": "10 min read",
+    "hero_image_url": "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&auto=format&fit=crop&q=80",
+    "quick_answer": "A well-structured South Indian diet supports weight loss at 1550–1800 kcal/day while providing 85–100g protein. The key is pairing protein sources (dal, eggs, fish, curd) with traditional carbohydrate bases (idli, rice, roti) in the right proportions — not eliminating rice, which is neither necessary nor sustainable.",
+    "faq": [
+      {
+        "question": "Can you lose weight eating South Indian food?",
+        "answer": "Yes. South Indian food is not inherently high-calorie. The challenge is restaurant-style preparations (excess oil, oversized rice portions) rather than the cuisine itself. Home-cooked South Indian meals built around fermented foods, dal, and vegetables can support weight loss efficiently."
+      },
+      {
+        "question": "Is idli good for weight loss?",
+        "answer": "Yes, in reasonable portions. 3 steamed idlis with sambhar is approximately 380 kcal with 18g protein — a solid breakfast. The fermentation improves digestibility and nutrient absorption. The issue is pairing: plain idli with just chutney (no sambhar) is protein-thin. Always have sambhar with idli."
+      },
+      {
+        "question": "What is the highest-protein South Indian breakfast?",
+        "answer": "Pesarattu (moong dal dosa, popular in Andhra Pradesh) is the highest-protein South Indian breakfast at 22–24g protein per serving of two pieces. Egg dosa — a regular dosa with an egg cracked on top — is close behind at 18–20g. Regular fermented dosa with no filling is about 14g protein for two pieces."
+      }
+    ],
     "intro": "South Indian food has a reputation problem in the Indian health and fitness conversation. The assumption is that rice-heavy, coconut-heavy, and fermented dishes don't fit a weight loss framework. This is both wrong and impractical — if you grew up eating idli for breakfast and sambhar rice for lunch, telling you to eat oats and boiled chicken is not a meal plan. It is a fast path to giving up. Here is seven days of South Indian meals that average 1700 calories and 95 grams of protein per day.",
     "sections": [
       {
@@ -183,6 +247,22 @@
     "published_date": "2025-05-10",
     "category": "Nutrition",
     "read_time": "8 min read",
+    "hero_image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&auto=format&fit=crop&q=80",
+    "quick_answer": "The highest-protein vegetarian Indian foods per realistic serving: moong dal cheela (22g protein per 2 pieces), paneer (18g per 100g), masoor dal (18g per 200g cooked), chickpeas (15g per cup). A well-planned vegetarian Indian diet can reach 80–100g protein per day without supplements.",
+    "faq": [
+      {
+        "question": "How do vegetarian Indians get enough protein?",
+        "answer": "By distributing protein across all meals rather than concentrating it in one. A practical day: 2 moong dal cheelas at breakfast (22g), masoor dal at lunch (18g), Greek yogurt at snack (13g), rajma and paneer at dinner (28g combined) = 81g protein. No supplements required."
+      },
+      {
+        "question": "Is Indian vegetarian food enough for muscle building?",
+        "answer": "Yes, with planning. The main challenge is caloric density — high-protein vegetarian Indian foods tend to be more caloric than chicken breast. The solution is using lean sources like masoor dal, moong dal, and low-fat curd as the protein base, with paneer and soya as additions rather than the primary source."
+      },
+      {
+        "question": "What is the cheapest high-protein vegetarian food in India?",
+        "answer": "Sattu (roasted Bengal gram flour) is likely the best value: 8g protein at 95 kcal per glass (2 tbsp in water), at roughly Rs 40–60 per 500g pack. Masoor dal is close — Rs 80–100/kg, gives 18g protein per 200g cooked serving. Both outperform commercial protein supplements on protein-per-rupee."
+      }
+    ],
     "intro": "The standard advice for vegetarian Indians trying to eat more protein is 'eat paneer and dal.' This is not wrong, but it is incomplete. There are eight or nine high-protein vegetarian foods commonly available in Indian kitchens that most people under-use. Here they are, ranked by how much protein they actually deliver in a typical serving — not per 100g, which is how protein charts usually mislead you.",
     "sections": [
       {
@@ -195,11 +275,11 @@
       },
       {
         "heading": "The one nobody talks about: sattu",
-        "body": "Sattu is roasted Bengal gram flour — bihari piti, which is also used across UP, Rajasthan, and parts of Bengal. It is essentially roasted chana that has been ground. One glass of sattu sharbat (2 tablespoons sattu in water with lemon and black salt) delivers 8g protein at 95 calories.\n\nAs a pre-workout drink, sattu beats most commercial protein supplements on value. A 500g pack costs ₹40-60 and contains more protein per rupee than whey protein.\n\nFor cooking: sattu paratha (stuffed with spiced sattu) is one of the highest-protein Indian breakfast items at 18-20g protein per two parathas."
+        "body": "Sattu is roasted Bengal gram flour — bihari piti, which is also used across UP, Rajasthan, and parts of Bengal. It is essentially roasted chana that has been ground. One glass of sattu sharbat (2 tablespoons sattu in water with lemon and black salt) delivers 8g protein at 95 calories.\n\nAs a pre-workout drink, sattu beats most commercial protein supplements on value. A 500g pack costs Rs 40-60 and contains more protein per rupee than whey protein.\n\nFor cooking: sattu paratha (stuffed with spiced sattu) is one of the highest-protein Indian breakfast items at 18-20g protein per two parathas."
       },
       {
         "heading": "Soya chunks and tofu: the polarising options",
-        "body": "Soya chunks (nutri-nuggets) are extremely high in protein — 52g per 100g dry weight, dropping to about 16g per 100g when hydrated and cooked. A reasonable serving (50g dry, 150g cooked) gives 24-26g protein at about 200 calories.\n\nThe problem is texture and palatability — many people find the spongy texture off-putting, and soy has a strong flavour. In a good biryani or a well-spiced keema substitute, soya chunks work. Cooked in plain water with minimal spicing, they are unpleasant.\n\nFirm tofu is now available in most Indian cities at ₹60-100 per block. It is less polarising than soya chunks and more versatile — paneer tikka, bhurji, scrambled — but the protein content is meaningfully lower than paneer (12g vs 18g per 100g)."
+        "body": "Soya chunks (nutri-nuggets) are extremely high in protein — 52g per 100g dry weight, dropping to about 16g per 100g when hydrated and cooked. A reasonable serving (50g dry, 150g cooked) gives 24-26g protein at about 200 calories.\n\nThe problem is texture and palatability — many people find the spongy texture off-putting, and soy has a strong flavour. In a good biryani or a well-spiced keema substitute, soya chunks work. Cooked in plain water with minimal spicing, they are unpleasant.\n\nFirm tofu is now available in most Indian cities at Rs 60-100 per block. It is less polarising than soya chunks and more versatile — paneer tikka, bhurji, scrambled — but the protein content is meaningfully lower than paneer (12g vs 18g per 100g)."
       },
       {
         "heading": "How to actually hit 80g protein on a vegetarian Indian diet",

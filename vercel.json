@@ -7,7 +7,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/app", "destination": "/app.html" },
-    { "source": "/", "destination": "/index.html" }
+    { "source": "/app",    "destination": "/app.html"   },
+    { "source": "/launch", "destination": "/index.html" },
+    { "source": "/",       "destination": "/home.html"  }
   ]
 }

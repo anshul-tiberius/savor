@@ -9,11 +9,11 @@
   <meta property="og:title" content="Recipes — What to Cook" />
   <meta property="og:description" content="High-protein Indian recipes with full macros" />
   <meta property="og:type" content="article" />
-  <meta property="og:url" content="https://what-to-cook.in/recipes/" />
+  <meta property="og:url" content="https://whattocook.life/recipes/" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Recipes — What to Cook" />
   <meta name="twitter:description" content="High-protein Indian recipes with full macros" />
-  <link rel="canonical" href="https://what-to-cook.in/recipes/" />
+  <link rel="canonical" href="https://whattocook.life/recipes/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -21,7 +21,7 @@
     *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --cream: #FAF7F2; --cream-dark: #F2EDE4; --green: #1A3A2A; --green-mid: #2D5C42;
-      --amber: #C47B2B; --text: #1C1C1C; --text-mid: #4A4A4A; --text-light: #8A8A8A;
+      --amber: #C47B2B; --amber-light: #FAEEDA; --text: #1C1C1C; --text-mid: #4A4A4A; --text-light: #8A8A8A;
       --font-display: 'Cormorant Garamond', Georgia, serif;
       --font-body: 'DM Sans', -apple-system, sans-serif;
       --max: 720px;
@@ -46,6 +46,11 @@
     .article-meta { font-size: 13px; color: var(--text-light); }
     .article-image { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 12px; margin-bottom: 32px; }
     .article-intro { font-size: 18px; line-height: 1.7; color: var(--text-mid); border-left: 3px solid var(--amber); padding-left: 20px; margin-bottom: 36px; }
+
+    /* Quick answer */
+    .quick-answer { background: var(--amber-light); border-left: 4px solid var(--amber); padding: 20px 24px; border-radius: 0 12px 12px 0; margin-bottom: 32px; }
+    .quick-answer-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--amber); margin-bottom: 10px; }
+    .quick-answer p { font-size: 16px; line-height: 1.65; color: var(--text); margin-bottom: 0; }
 
     /* Section */
     .section { margin-bottom: 36px; }
@@ -82,6 +87,18 @@
     .takeaways li { color: rgba(255,255,255,0.85); padding: 6px 0 6px 24px; position: relative; font-size: 15px; }
     .takeaways li::before { content: '✓'; position: absolute; left: 0; color: #7DC99A; }
 
+    /* FAQ */
+    .faq-section h3 { font-family: var(--font-body); font-size: 17px; font-weight: 500; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
+    .faq-item { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--cream-dark); }
+    .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .faq-item p { color: var(--text-mid); font-size: 15px; line-height: 1.65; }
+
+    /* Author bio */
+    .author-bio { border-top: 1px solid var(--cream-dark); padding: 24px 0; margin-top: 32px; display: flex; gap: 16px; align-items: flex-start; }
+    .author-avatar { width: 44px; height: 44px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #FAF7F2; font-family: var(--font-display); font-size: 18px; font-weight: 600; flex-shrink: 0; }
+    .author-info strong { display: block; color: var(--text); font-size: 15px; margin-bottom: 2px; }
+    .author-info span { color: var(--text-light); font-size: 13px; line-height: 1.5; }
+
     /* CTA */
     .cta-block { background: var(--cream-dark); border-radius: 16px; padding: 28px 24px; margin: 36px 0; text-align: center; }
     .cta-block p { font-size: 17px; color: var(--text-mid); margin-bottom: 16px; line-height: 1.5; }
@@ -100,7 +117,7 @@
   <div class="nav-links">
     <a href="/recipes/">Recipes</a>
     <a href="/articles/">Learn</a>
-    <a href="https://foodi-ashen.vercel.app" target="_blank" rel="noopener">Try the app →</a>
+    <a href="https://app.whattocook.life" target="_blank" rel="noopener">Try the app &#8594;</a>
   </div>
 </nav>
 <main style="max-width:1100px;margin:0 auto;padding:40px 20px 80px;">
@@ -109,19 +126,19 @@
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;">
     
     <a href="/recipes/high-protein-masoor-dal-tadka/" class="card">
-      <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&amp;q=80" alt="A bowl of masoor dal tadka with a swirl of ghee" loading="lazy" />
+      <img src="https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="A bowl of masoor dal tadka with a swirl of ghee" loading="lazy" />
       <div class="card-body">
         <p class="card-label">North Indian</p>
         <h2 class="card-title">Masoor Dal Tadka — The High-Protein Weekday Fix</h2>
-        <p class="card-sub">26g protein · 280 kcal</p>
+        <p class="card-sub">26g protein &middot; 280 kcal</p>
       </div>
     </a>
     <a href="/recipes/moong-dal-cheela-protein-pancakes/" class="card">
-      <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&amp;q=80" alt="Crispy moong dal cheela with green chutney" loading="lazy" />
+      <img src="https://images.unsplash.com/photo-1555126634-323283e090fa?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="Crispy moong dal cheela with green chutney" loading="lazy" />
       <div class="card-body">
         <p class="card-label">North Indian</p>
         <h2 class="card-title">Moong Dal Cheela — Indian Protein Pancakes That Actually Work</h2>
-        <p class="card-sub">22g protein · 240 kcal</p>
+        <p class="card-sub">22g protein &middot; 240 kcal</p>
       </div>
     </a>
     <a href="/recipes/egg-bhurji-macros-recipe/" class="card">
@@ -129,35 +146,36 @@
       <div class="card-body">
         <p class="card-label">Street food / North Indian</p>
         <h2 class="card-title">Egg Bhurji — The 3-Egg Version That Actually Fills You Up</h2>
-        <p class="card-sub">30g protein · 295 kcal</p>
+        <p class="card-sub">30g protein &middot; 295 kcal</p>
       </div>
     </a>
     <a href="/recipes/paneer-tikka-macros-calories/" class="card">
-      <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&amp;q=80" alt="Grilled paneer tikka with capsicum and onion" loading="lazy" />
+      <img src="https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="Grilled paneer tikka with capsicum and onion" loading="lazy" />
       <div class="card-body">
         <p class="card-label">North Indian / Mughlai</p>
         <h2 class="card-title">Paneer Tikka — Grilled, Not Fried. The Version That Actually Fits Your Goals.</h2>
-        <p class="card-sub">28g protein · 320 kcal</p>
+        <p class="card-sub">28g protein &middot; 320 kcal</p>
       </div>
     </a>
     <a href="/recipes/rajma-chawal-high-protein/" class="card">
-      <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&amp;q=80" alt="Rajma chawal served in a bowl — kidney bean curry with rice" loading="lazy" />
+      <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="Rajma chawal served in a bowl — kidney bean curry with rice" loading="lazy" />
       <div class="card-body">
         <p class="card-label">Punjabi / North Indian</p>
         <h2 class="card-title">Rajma Chawal — The Protein Numbers Will Surprise You</h2>
-        <p class="card-sub">24g protein · 380 kcal</p>
+        <p class="card-sub">24g protein &middot; 380 kcal</p>
       </div>
     </a>
   </div>
 </main>
 <footer class="footer">
-  <p>© 2025 What to Cook &nbsp;·&nbsp; <a href="https://foodi-ashen.vercel.app">Build your personal meal plan</a></p>
+  <p>&copy; 2025 What to Cook &nbsp;&middot;&nbsp; <a href="https://app.whattocook.life">Build your personal meal plan</a></p>
 </footer>
 <style>
   .card { display:block; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.07); transition:transform 0.2s,box-shadow 0.2s; text-decoration:none; color:inherit; }
   .card:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,0.1); }
   .card img { width:100%; aspect-ratio:16/9; object-fit:cover; }
   .card-body { padding:16px; }
+  .card-body-text { padding:20px 20px 24px; }
   .card-label { font-size:11px;font-weight:500;color:var(--amber);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px; }
   .card-title { font-family:var(--font-display);font-size:19px;color:var(--green);line-height:1.25;margin-bottom:6px; }
   .card-sub { font-size:13px;color:var(--text-light); }
