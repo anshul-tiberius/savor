@@ -2641,7 +2641,7 @@ async function signInWithGoogle() {
   if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
   var res = await db.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin }
+    options: { redirectTo: 'https://app.whattocook.life' }
   });
   if (res.error) {
     console.error('Google sign-in error:', res.error);
@@ -2662,7 +2662,7 @@ async function sendMagicLink() {
   btn.textContent = 'Sending…';
   var res = await db.auth.signInWithOtp({
     email: email,
-    options: { emailRedirectTo: window.location.origin }
+    options: { emailRedirectTo: 'https://app.whattocook.life' }
   });
   if (res.error) {
     console.error('Magic link error:', res.error);
