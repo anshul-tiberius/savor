@@ -2667,7 +2667,7 @@ async function sendMagicLink() {
   if (res.error) {
     console.error('Magic link error:', res.error);
     btn.disabled = false;
-    btn.textContent = 'Send link';
+    btn.textContent = 'Continue →';
     return;
   }
   // Show "sent" confirmation
