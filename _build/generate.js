@@ -24,7 +24,8 @@ const e = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replac
 const nl2p = s => s.split('\n\n').filter(Boolean).map(p => `<p>${e(p.trim())}</p>`).join('\n');
 
 // ── Head template (shared) ─────────────────────────────────────────────────
-function head(title, desc, keywords, canonical) {
+function head(title, desc, keywords, canonical, image) {
+  const imgUrl = image ? `${image}?w=1200&auto=format&fit=crop&q=80` : '';
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +37,9 @@ function head(title, desc, keywords, canonical) {
   <meta property="og:title" content="${e(title)}" />
   <meta property="og:description" content="${e(desc)}" />
   <meta property="og:type" content="article" />
-  <meta property="og:url" content="${DOMAIN}${canonical}" />
+  <meta property="og:url" content="${DOMAIN}${canonical}" />${imgUrl ? `
+  <meta property="og:image" content="${imgUrl}" />
+  <meta name="twitter:image" content="${imgUrl}" />` : ''}
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${e(title)}" />
   <meta name="twitter:description" content="${e(desc)}" />

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Don't index the app shell — it requires auth and has no SEO value
+Disallow: /launch
+
+Sitemap: https://whattocook.life/sitemap.xml
