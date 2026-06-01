@@ -6,14 +6,14 @@
   <title>What to Cook — Food You Love That Loves You Back</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231A3A2A'/><text x='50' y='72' text-anchor='middle' font-size='64' font-family='Georgia,serif' fill='%23FAF7F2'>W</text></svg>" />
   <meta property="og:title" content="What to Cook — Food You Love That Loves You Back" />
-  <meta property="og:description" content="AI meal planning built for Indian kitchens. A 2-minute conversation gives you a full week of personalised, delicious meals." />
+  <meta property="og:description" content="Your personal AI builds a weekly menu around exactly how you eat. A 2-minute conversation gives you a full week of personalised, delicious meals." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://app.whattocook.life" />
   <link rel="canonical" href="https://app.whattocook.life" />
   <meta property="og:image" content="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=80" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="What to Cook — Food You Love That Loves You Back" />
-  <meta name="twitter:description" content="AI meal planning built for Indian kitchens. A 2-minute conversation gives you a full week of personalised, delicious meals." />
+  <meta name="twitter:description" content="Your personal AI builds a weekly menu around exactly how you eat. A 2-minute conversation gives you a full week of personalised, delicious meals." />
   <meta name="twitter:image" content="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=80" />
   <!-- PWA -->
   <link rel="manifest" href="/manifest.json" />
@@ -1255,7 +1255,7 @@
 
   <div class="hero">
     <h1 class="hero-headline">Food you love,<br>that loves <em>you</em> back.</h1>
-    <p class="hero-subhead">Create delicious meal plans that know you, and what you need.</p>
+    <p class="hero-subhead">Create a weekly menu that knows you, and what you love to eat.</p>
     <p class="hero-body">With just a 2-minute conversation I will learn about you, your health goals, what you love to eat, and what you don’t. At the end — a full week of meals that feels unmistakably, deliciously yours.</p>
 
     <div class="hero-images">
@@ -1275,8 +1275,8 @@
 
   <div class="email-section">
     <div class="email-card">
-      <h2 class="email-title"><em>Your meal plan</em> starts here.</h2>
-      <p class="email-sub">2 minutes of chat. A week of Indian meals made for you.</p>
+      <h2 class="email-title"><em>Your weekly menu</em> starts here.</h2>
+      <p class="email-sub">2 minutes of chat. A week of meals made exactly for you.</p>
 
       <!-- Google OAuth -->
       <button class="btn-google" onclick="signInWithGoogle()">
@@ -1521,7 +1521,7 @@ function startOnboarding() {
 // ═══════════════════════════════════════════
 // SYSTEM PROMPTS
 // ═══════════════════════════════════════════
-const ONBOARDING_SYSTEM = `You are What to Cook's voice onboarding guide. Learn enough to build a personalised weekly meal plan. Ask ONE question at a time — warm, brief, like a smart friend. 2-3 sentences max.
+const ONBOARDING_SYSTEM = `You are What to Cook's voice onboarding guide. Learn enough to build a personalised weekly menu. Ask ONE question at a time — warm, brief, like a smart friend. 2-3 sentences max.
 
 Rules: ONE question per message. Never say "diet" (say "food goals"). Never invent. No JSON until the final message.
 
@@ -1531,7 +1531,7 @@ When done, give a warm 2-sentence wrap-up then output EXACTLY this (nothing afte
 <profile>{"personal":{"name":"","age":null,"city":"","grew_up_in":"","cultural_background":""},"household":{"members":[],"has_paid_cook":false,"cook_schedule":{"morning_minutes":null,"evening_minutes":null},"no_cook_day":null,"shared_meals":true},"body":{"current_weight_kg":null,"target_weight_kg":null,"primary_goal":""},"activity":{"level":"sedentary","description":""},"meal_timing":{"breakfast":"","lunch":"","snack":"","dinner":""},"cuisine_preferences":{"loves":[],"comfort_food":"","favourite_format":"","flavour_notes":""},"food_loves":[],"hard_nos":[],"dietary_restrictions":{"meat_preference":"","specific_avoids":[],"intolerances":[],"medical_avoids":[],"medical_context":""},"seeds_or_supplements":[],"joy_statement":"","macro_targets":{"calories":null,"protein_g":null,"carbs_g":null,"fat_g":null}}</profile>
 Fill every field. Macro targets: weight loss ~1400 kcal women/~1700 men; protein 1.1g/kg target weight; carbs 37% cals; fat 30% cals.`;
 
-const MEAL_PLAN_SYSTEM = `You are What to Cook's meal planning engine. You generate weekly meal plans that are joy-first, deeply personal, health-aware, cook-friendly, and varied.
+const MEAL_PLAN_SYSTEM = `You are What to Cook's menu engine. You generate weekly menus that are joy-first, deeply personal, health-aware, cook-friendly, and varied.
 
 Critical rules:
 - Medical avoids are ABSOLUTE — never include them anywhere, even as a garnish
@@ -1852,21 +1852,21 @@ function updateChatStatus() {
 // HOLDING SCREEN
 // ═══════════════════════════════════════════
 const LOADING_LINES = [
-  "Shopping for vegetables...",
-  "Dipping into nostalgia...",
+  "Shopping for the good stuff...",
+  "Dipping into food memories...",
   "Going back to your childhood kitchen...",
-  "Sniffing the box of masala...",
-  "Asking your nani for the secret recipe...",
-  "Negotiating with the sabziwala...",
-  "Tasting the dal one more time...",
-  "Convincing the cook it is not too spicy...",
-  "Rummaging through the spice drawer...",
+  "Sniffing the spice drawer...",
+  "Asking grandma for the secret recipe...",
+  "Checking what's actually in the fridge...",
+  "Tasting the soup one more time...",
+  "Getting the seasoning just right...",
+  "Rummaging through the pantry...",
   "Dreaming up your Tuesday dinner...",
-  "Weighing the joy-to-guilt ratio...",
-  "Consulting the family WhatsApp group...",
-  "Finding the good ghee at the back of the shelf...",
-  "Arguing about whether it needs more jeera...",
-  "Packing tomorrows tiffin with love...",
+  "Weighing the joy-to-effort ratio...",
+  "Checking what's in season near you...",
+  "Finding the good olive oil at the back of the shelf...",
+  "Arguing about whether it needs more garlic...",
+  "Packing tomorrow's lunch with love...",
   "Making sure Sunday takes care of itself...",
 ];
 
@@ -1905,8 +1905,8 @@ function updateHoldingLine(override) {
 async function generateMealPlan(feedback = null, attempt = 1) {
   const profileStr = JSON.stringify(appState.userProfile);
   const userMsg = feedback
-    ? `User profile: ${profileStr}\n\nFeedback on previous plan: "${feedback}"\n\nGenerate a new 7-day meal plan incorporating this feedback.`
-    : `Generate a 7-day meal plan for this person: ${profileStr}`;
+    ? `User profile: ${profileStr}\n\nFeedback on previous weekly menu: "${feedback}"\n\nGenerate a new 7-day menu incorporating this feedback.`
+    : `Generate a 7-day weekly menu for this person: ${profileStr}`;
 
   try {
     const res = await callClaude(MEAL_PLAN_SYSTEM, [{ role: 'user', content: userMsg }], 6000, 'claude-haiku-4-5-20251001');
@@ -2184,7 +2184,7 @@ function renderGroceries() {
   });
 
   if (items.length === 0) {
-    html += '<p style="text-align:center;color:var(--text-light);margin-top:48px;font-size:14px;">Generate a plan to see your grocery list.</p>';
+    html += '<p style="text-align:center;color:var(--text-light);margin-top:48px;font-size:14px;">Generate your weekly menu to see the shopping list.</p>';
   }
 
   html += '</div>';
@@ -2215,7 +2215,7 @@ function deleteGrocery(id) {
 // ═══════════════════════════════════════════
 // ASK CHEF
 // ═══════════════════════════════════════════
-const CHEF_SYSTEM = 'You are What\'s Cooking\'s personal chef assistant. You know the user\'s current meal plan in detail. Help them swap meals, understand ingredients, adjust their week, or answer nutrition questions in a warm, direct way. If the user wants to change their plan, confirm what you\'d do differently and end your message with:\n<changes>Brief description of what to change.</changes>\nKeep responses short — 2-4 sentences. Never clinical. Never say "diet". Use Indian food references naturally.';
+const CHEF_SYSTEM = 'You are What to Cook\'s personal chef assistant. You know the user\'s current weekly menu in detail. Help them swap meals, understand ingredients, adjust their week, or answer nutrition questions in a warm, direct way. If the user wants to change their menu, confirm what you\'d do differently and end your message with:\n<changes>Brief description of what to change.</changes>\nKeep responses short — 2-4 sentences. Never clinical. Never say "diet". Match your food references to the user\'s own cuisine and food culture.';
 
 function initChefChat() {
   var msgs = document.getElementById('chef-messages');
@@ -2424,7 +2424,7 @@ function demoResponse(system, messages) {
 
       // Onboarding conversation
       if (count === 0) {
-        resolve("Hey! Before I put together your meal plan, I want to get to know you a little. Your food history, where you grew up, what kind of food reminds you of home — that's what makes a plan feel truly yours, not just another list of healthy meals.\n\nOne tip: hit the mic button and just talk. I find people express themselves so much better that way.\n\nLet's start simple — what's your name?");
+        resolve("Hey! Before I put together your weekly menu, I want to get to know you a little. Your food history, where you grew up, what kind of food reminds you of home — that's what makes a menu feel truly yours, not just another list of healthy meals.\n\nOne tip: hit the mic button and just talk. I find people express themselves so much better that way.\n\nLet's start simple — what's your name?");
       } else if (count === 1) {
         const name = last.split(' ')[0];
         appState.demoName = name.charAt(0).toUpperCase() + name.slice(1);
