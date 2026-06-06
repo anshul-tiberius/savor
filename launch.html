@@ -1090,9 +1090,9 @@
     }
 
     /* ════════════════════════════════════════
-       GROCERY VIEW
+       PANTRY VIEW
     ════════════════════════════════════════ */
-    #view-groceries { flex: 1; overflow-y: auto; display: none; }
+    #view-pantry { flex: 1; overflow-y: auto; display: none; }
     .grocery-view { padding: 16px; }
     .grocery-intro {
       font-size: 13px;
@@ -1404,7 +1404,7 @@
 
   <div class="plan-body" id="plan-body"></div>
 
-  <div id="view-groceries"></div>
+  <div id="view-pantry"></div>
 
   <div id="view-chef">
     <div class="chef-messages" id="chef-messages"></div>
@@ -1429,9 +1429,9 @@
       <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       <span>Menu</span>
     </button>
-    <button class="bnav-btn" id="bnav-groceries" onclick="selectBNav('groceries')">
+    <button class="bnav-btn" id="bnav-pantry" onclick="selectBNav('pantry')">
       <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-      <span>Groceries</span>
+      <span>Pantry</span>
     </button>
     <button class="bnav-btn" id="bnav-chef" onclick="selectBNav('chef')">
       <svg viewBox="0 0 24 24"><path d="M6 13.87A4 4 0 017.41 6a5.11 5.11 0 019.18 0A4 4 0 0118 13.87V21H6V13.87z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
@@ -1496,7 +1496,7 @@ let appState = {
   isRecording: false,
   voiceMode: true,         // voice-first by default
   isSpeaking: false,
-  groceryItems: [],        // [{id, category, text, done}]
+  pantryItems: [],        // [{id, category, text, done}]
   chefMessages: [],        // [{role, content}] for Ask Chef
   pendingChanges: null,    // text from <changes> tag in chef response
   activeBNav: 'menu',
@@ -1918,11 +1918,11 @@ async function generateMealPlan(feedback = null, attempt = 1) {
     const sanitized = clean.replace(/\r?\n/g, ' ');
     appState.mealPlan = JSON.parse(sanitized);
     // Build grocery items array from plan
-    appState.groceryItems = [];
+    appState.pantryItems = [];
     if (appState.mealPlan.groceries) {
       appState.mealPlan.groceries.forEach(function(cat) {
         (cat.items || []).forEach(function(item) {
-          appState.groceryItems.push({
+          appState.pantryItems.push({
             id: 'g' + Math.random().toString(36).slice(2, 8),
             category: cat.category,
             text: item,
@@ -1935,6 +1935,7 @@ async function generateMealPlan(feedback = null, attempt = 1) {
     clearInterval(holdingInterval);
     renderPlan();
     savePlanToSupabase(appState.mealPlan);
+    savePantryToSupabase();
     showScreen('plan');
     selectBNav('menu');
   } catch(e) {
@@ -2128,7 +2129,7 @@ function startHoldingLines() {
 // ═══════════════════════════════════════════
 function selectBNav(tab) {
   appState.activeBNav = tab;
-  ['menu', 'groceries', 'chef', 'profile'].forEach(function(t) {
+  ['menu', 'pantry', 'chef', 'profile'].forEach(function(t) {
     var btn = document.getElementById('bnav-' + t);
     if (btn) btn.classList.toggle('active', t === tab);
   });
@@ -2140,26 +2141,26 @@ function selectBNav(tab) {
   // Show/hide body areas
   var planBody = document.getElementById('plan-body');
   if (planBody) planBody.style.display = tab === 'menu' ? '' : 'none';
-  var vGroceries = document.getElementById('view-groceries');
-  if (vGroceries) vGroceries.style.display = tab === 'groceries' ? 'block' : 'none';
+  var vGroceries = document.getElementById('view-pantry');
+  if (vGroceries) vGroceries.style.display = tab === 'pantry' ? 'block' : 'none';
   var vChef = document.getElementById('view-chef');
   if (vChef) vChef.style.display = tab === 'chef' ? 'flex' : 'none';
   var vProfile = document.getElementById('view-profile');
   if (vProfile) vProfile.style.display = tab === 'profile' ? 'block' : 'none';
 
-  if (tab === 'groceries') renderGroceries();
+  if (tab === 'pantry') renderPantry();
   else if (tab === 'chef') initChefChat();
   else if (tab === 'profile') renderProfile();
 }
 
 // ═══════════════════════════════════════════
-// GROCERY VIEW
+// PANTRY VIEW
 // ═══════════════════════════════════════════
-function renderGroceries() {
-  var el = document.getElementById('view-groceries');
+function renderPantry() {
+  var el = document.getElementById('view-pantry');
   if (!el) return;
 
-  var items = appState.groceryItems || [];
+  var items = appState.pantryItems || [];
   var byCategory = {};
   var catOrder = [];
 
@@ -2172,30 +2173,30 @@ function renderGroceries() {
   });
 
   var html = '<div class="grocery-view">';
-  html += '<p class="grocery-intro">Your full week\'s shopping list &mdash; tap to check off, &times; to remove</p>';
+  html += '<p class="grocery-intro">Everything you need for this week\'s menu &mdash; tap to check off as you stock up</p>';
 
   catOrder.forEach(function(cat) {
     html += '<div class="gcat-title">' + escapeHtml(cat) + '</div>';
     byCategory[cat].forEach(function(item) {
       var dc = item.done ? ' done' : '';
       html += '<div class="gitem' + dc + '" id="' + item.id + '">';
-      html += '<div class="gcheck' + dc + '" onclick="toggleGrocery(\'' + item.id + '\')"></div>';
+      html += '<div class="gcheck' + dc + '" onclick="togglePantry(\'' + item.id + '\')"></div>';
       html += '<span class="gitem-text">' + escapeHtml(item.text) + '</span>';
-      html += '<button class="gdel" onclick="deleteGrocery(\'' + item.id + '\')">&times;</button>';
+      html += '<button class="gdel" onclick="deletePantry(\'' + item.id + '\')">&times;</button>';
       html += '</div>';
     });
   });
 
   if (items.length === 0) {
-    html += '<p style="text-align:center;color:var(--text-light);margin-top:48px;font-size:14px;">Generate your weekly menu to see the shopping list.</p>';
+    html += '<p style="text-align:center;color:var(--text-light);margin-top:48px;font-size:14px;">Generate your weekly menu to see your pantry list.</p>';
   }
 
   html += '</div>';
   el.innerHTML = html;
 }
 
-function toggleGrocery(id) {
-  var item = appState.groceryItems.find(function(i) { return i.id === id; });
+function togglePantry(id) {
+  var item = appState.pantryItems.find(function(i) { return i.id === id; });
   if (!item) return;
   item.done = !item.done;
   var el = document.getElementById(id);
@@ -2204,14 +2205,38 @@ function toggleGrocery(id) {
     var check = el.querySelector('.gcheck');
     if (check) check.classList.toggle('done', item.done);
   }
+  debouncedSavePantry();
 }
 
-function deleteGrocery(id) {
-  appState.groceryItems = appState.groceryItems.filter(function(i) { return i.id !== id; });
+function deletePantry(id) {
+  appState.pantryItems = appState.pantryItems.filter(function(i) { return i.id !== id; });
   var el = document.getElementById(id);
   if (el) {
     el.style.opacity = '0';
     setTimeout(function() { if (el.parentNode) el.remove(); }, 200);
+  }
+  debouncedSavePantry();
+}
+
+var _pantryDebounceTimer = null;
+function debouncedSavePantry() {
+  clearTimeout(_pantryDebounceTimer);
+  _pantryDebounceTimer = setTimeout(savePantryToSupabase, 1000);
+}
+
+async function savePantryToSupabase() {
+  if (!db) return;
+  try {
+    var sessionRes = await db.auth.getSession();
+    var session = sessionRes.data && sessionRes.data.session;
+    if (!session) return;
+    await db.from('profiles').upsert({
+      id: session.user.id,
+      pantry_json: appState.pantryItems,
+      updated_at: new Date().toISOString()
+    });
+  } catch(e) {
+    console.warn('savePantryToSupabase (non-critical):', e);
   }
 }
 
@@ -2594,7 +2619,7 @@ async function initAuth() {
       appState.mealPlan = null;
       appState.chatMessages = [];
       appState.chefMessages = [];
-      appState.groceryItems = [];
+      appState.pantryItems = [];
       showScreen('landing');
     }
   });
@@ -2603,25 +2628,30 @@ async function initAuth() {
 // Load profile + latest plan for a signed-in user; routes to onboarding or plan screen
 async function loadUserData(userId) {
   try {
-    var profileRes = await db.from('profiles').select('profile_json').eq('id', userId).maybeSingle();
+    var profileRes = await db.from('profiles').select('profile_json, pantry_json').eq('id', userId).maybeSingle();
     if (profileRes.data && profileRes.data.profile_json) {
       appState.userProfile = profileRes.data.profile_json;
       var planRes = await db.from('meal_plans').select('plan_json').eq('user_id', userId)
         .order('created_at', { ascending: false }).limit(1).maybeSingle();
       if (planRes.data && planRes.data.plan_json) {
         appState.mealPlan = planRes.data.plan_json;
-        appState.groceryItems = [];
-        if (appState.mealPlan.groceries) {
-          appState.mealPlan.groceries.forEach(function(cat) {
-            (cat.items || []).forEach(function(item) {
-              appState.groceryItems.push({
-                id: 'g' + Math.random().toString(36).slice(2,8),
-                category: cat.category,
-                text: item,
-                done: false
+        // Use saved pantry state if available, otherwise build fresh from plan
+        if (profileRes.data.pantry_json && profileRes.data.pantry_json.length > 0) {
+          appState.pantryItems = profileRes.data.pantry_json;
+        } else {
+          appState.pantryItems = [];
+          if (appState.mealPlan.groceries) {
+            appState.mealPlan.groceries.forEach(function(cat) {
+              (cat.items || []).forEach(function(item) {
+                appState.pantryItems.push({
+                  id: 'g' + Math.random().toString(36).slice(2,8),
+                  category: cat.category,
+                  text: item,
+                  done: false
+                });
               });
             });
-          });
+          }
         }
         renderPlan();
         showScreen('plan');
