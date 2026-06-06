@@ -29,10 +29,14 @@
   <script>Sentry.init({ dsn: 'https://YOUR_DSN@o0.ingest.sentry.io/0', tracesSampleRate: 0 });</script>
   -->
 
-  <!-- Analytics — sign up at plausible.io, then uncomment -->
-  <!--
-  <script defer data-domain="app.whattocook.life" src="https://plausible.io/js/script.js"></script>
-  -->
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DSVGWLH54Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DSVGWLH54Q');
+  </script>
 
   <!-- Supabase — auth + database -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
