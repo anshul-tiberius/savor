@@ -849,6 +849,15 @@
       color: #E65100;
       letter-spacing: 0.04em;
     }
+    .meal-card-img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      background: var(--cream-dark);
+      display: block;
+    }
     .meal-card-footer {
       display: flex;
       justify-content: space-between;
@@ -2026,7 +2035,12 @@ function renderDay(i) {
       ? `<div class="allergen-chips">${meal.allergens.map(a => `<span class="allergen-chip">${a}</span>`).join('')}</div>`
       : '';
 
+    const cardImgQuery = encodeURIComponent(meal.name + ' indian food');
     card.innerHTML = `
+      <img class="meal-card-img"
+           src="https://source.unsplash.com/featured/400x260/?${cardImgQuery}"
+           alt="${escapeHtml(meal.name)}"
+           onerror="this.style.display='none'">
       <div class="meal-type-badge">${meal.type} · ${meal.time || ''}</div>
       <div class="meal-name">${escapeHtml(meal.name)}</div>
       <div class="meal-desc">${escapeHtml(meal.description)}</div>
@@ -2066,8 +2080,12 @@ function showDish(dayIdx, mealIdx) {
   const recipeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(meal.name + ' recipe')}`;
   const tagsHtml = (meal.tags || []).map(t => `<span class="dish-tag">${t}</span>`).join('');
 
+  const dishImgQuery = encodeURIComponent(meal.name + ' indian food');
   body.innerHTML = `
-    <div class="dish-hero-ph">🍽️</div>
+    <img class="dish-hero-img"
+         src="https://source.unsplash.com/featured/800x440/?${dishImgQuery}"
+         alt="${escapeHtml(meal.name)}"
+         onerror="this.outerHTML='<div class=\'dish-hero-ph\'>🍽️</div>'">
     <div class="dish-type">${meal.type}</div>
     <h1 class="dish-name">${escapeHtml(meal.name)}</h1>
     <p class="dish-desc">${escapeHtml(meal.description)}</p>
