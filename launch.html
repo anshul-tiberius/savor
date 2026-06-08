@@ -1571,7 +1571,7 @@ async function startChat() {
   showTyping();
 
   try {
-    const res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500, 'claude-haiku-4-5-20251001');
+    const res = await callClaude('onboarding', appState.chatMessages);
     hideTyping();
     const clean = stripProfile(res);
     appendMessage('savor', clean);
@@ -1603,7 +1603,7 @@ async function sendMessage() {
 
   let res;
   try {
-    res = await callClaude(ONBOARDING_SYSTEM, appState.chatMessages, 1500, 'claude-haiku-4-5-20251001');
+    res = await callClaude('onboarding', appState.chatMessages);
   } catch(e) {
     hideTyping();
     appState.isTyping = false;
@@ -1932,17 +1932,12 @@ function updateHoldingLine(override) {
 }
 
 async function generateMealPlan(feedback = null, attempt = 1) {
-  const profileStr = JSON.stringify(appState.userProfile);
-  const userMsg = feedback
-    ? `User profile: ${profileStr}\n\nFeedback on previous weekly menu: "${feedback}"\n\nGenerate a new 7-day menu incorporating this feedback.`
-    : `Generate a 7-day weekly menu for this person: ${profileStr}`;
-
   try {
-    const res = await callClaude(MEAL_PLAN_SYSTEM, [{ role: 'user', content: userMsg }], 6000, 'claude-haiku-4-5-20251001');
-    const clean = res.replace(/```json|```/g, '').trim();
-    // Collapse literal newlines — invalid inside JSON string values when model uses "2-line" style
-    const sanitized = clean.replace(/\r?\n/g, ' ');
-    appState.mealPlan = JSON.parse(sanitized);
+    const res = await callClaude('meal_plan', [], {
+      profile: appState.userProfile,
+      feedback: feedback
+    });
+    appState.mealPlan = parseMealPlanResponse(res);
     // Build grocery items array from plan
     appState.pantryItems = [];
     if (appState.mealPlan.groceries) {
@@ -1974,6 +1969,16 @@ async function generateMealPlan(feedback = null, attempt = 1) {
         lineEl.style.opacity = 1;
         lineEl.style.color = 'rgba(255,230,180,0.95)';
         lineEl.textContent = rateLimitMessage(e);
+      }
+      return;
+    }
+    if (e.message === 'auth_required') {
+      clearInterval(holdingInterval);
+      const lineEl = document.getElementById('holding-line');
+      if (lineEl) {
+        lineEl.style.opacity = 1;
+        lineEl.style.color = 'rgba(255,230,180,0.95)';
+        lineEl.textContent = 'Please sign in again so I can make your weekly menu.';
       }
       return;
     }
@@ -2045,7 +2050,7 @@ function renderDay(i) {
     card.className = 'meal-card';
 
     const allergenHtml = (meal.allergens || []).length
-      ? `<div class="allergen-chips">${meal.allergens.map(a => `<span class="allergen-chip">${a}</span>`).join('')}</div>`
+      ? `<div class="allergen-chips">${meal.allergens.map(a => `<span class="allergen-chip">${escapeHtml(a)}</span>`).join('')}</div>`
       : '';
 
     const cardImgQuery = encodeURIComponent(meal.name + ' indian food');
@@ -2054,14 +2059,14 @@ function renderDay(i) {
            src="https://source.unsplash.com/featured/400x260/?${cardImgQuery}"
            alt="${escapeHtml(meal.name)}"
            onerror="this.style.display='none'">
-      <div class="meal-type-badge">${meal.type} · ${meal.time || ''}</div>
+      <div class="meal-type-badge">${escapeHtml(meal.type)} · ${escapeHtml(meal.time || '')}</div>
       <div class="meal-name">${escapeHtml(meal.name)}</div>
       <div class="meal-desc">${escapeHtml(meal.description)}</div>
       <div class="meal-macros">
-        <span class="macro-chip kcal">${meal.kcal} kcal</span>
-        <span class="macro-chip">P ${meal.protein_g}g</span>
-        <span class="macro-chip">C ${meal.carbs_g}g</span>
-        <span class="macro-chip">F ${meal.fat_g}g</span>
+        <span class="macro-chip kcal">${escapeHtml(meal.kcal)} kcal</span>
+        <span class="macro-chip">P ${escapeHtml(meal.protein_g)}g</span>
+        <span class="macro-chip">C ${escapeHtml(meal.carbs_g)}g</span>
+        <span class="macro-chip">F ${escapeHtml(meal.fat_g)}g</span>
       </div>
       ${allergenHtml}
       <div class="meal-card-footer">
@@ -2091,7 +2096,7 @@ function showDish(dayIdx, mealIdx) {
 
   const body = document.getElementById('dish-body');
   const recipeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(meal.name + ' recipe')}`;
-  const tagsHtml = (meal.tags || []).map(t => `<span class="dish-tag">${t}</span>`).join('');
+  const tagsHtml = (meal.tags || []).map(t => `<span class="dish-tag">${escapeHtml(t)}</span>`).join('');
 
   const dishImgQuery = encodeURIComponent(meal.name + ' indian food');
   body.innerHTML = `
@@ -2099,26 +2104,26 @@ function showDish(dayIdx, mealIdx) {
          src="https://source.unsplash.com/featured/800x440/?${dishImgQuery}"
          alt="${escapeHtml(meal.name)}"
          onerror="this.outerHTML='<div class=\'dish-hero-ph\'>🍽️</div>'">
-    <div class="dish-type">${meal.type}</div>
+    <div class="dish-type">${escapeHtml(meal.type)}</div>
     <h1 class="dish-name">${escapeHtml(meal.name)}</h1>
     <p class="dish-desc">${escapeHtml(meal.description)}</p>
 
     <p class="dish-section-title">Nutrition</p>
     <div class="dish-macros-grid">
       <div class="macro-box">
-        <div class="macro-box-val">${meal.kcal}</div>
+        <div class="macro-box-val">${escapeHtml(meal.kcal)}</div>
         <div class="macro-box-label">Calories</div>
       </div>
       <div class="macro-box">
-        <div class="macro-box-val">${meal.protein_g}g</div>
+        <div class="macro-box-val">${escapeHtml(meal.protein_g)}g</div>
         <div class="macro-box-label">Protein</div>
       </div>
       <div class="macro-box">
-        <div class="macro-box-val">${meal.carbs_g}g</div>
+        <div class="macro-box-val">${escapeHtml(meal.carbs_g)}g</div>
         <div class="macro-box-label">Carbs</div>
       </div>
       <div class="macro-box">
-        <div class="macro-box-val">${meal.fat_g}g</div>
+        <div class="macro-box-val">${escapeHtml(meal.fat_g)}g</div>
         <div class="macro-box-label">Fat</div>
       </div>
     </div>
@@ -2344,11 +2349,10 @@ async function sendChefMessage() {
   appState.chefMessages.push({ role: 'user', content: text });
   showChefTyping();
 
-  var planSnippet = appState.mealPlan ? JSON.stringify(appState.mealPlan).slice(0, 3500) : '';
-  var system = CHEF_SYSTEM + (planSnippet ? '\n\nCurrent meal plan:\n' + planSnippet : '');
-
   try {
-    var res = await callClaude(system, appState.chefMessages, 600, 'claude-haiku-4-5-20251001');
+    var res = await callClaude('chef', appState.chefMessages, {
+      plan: appState.mealPlan
+    });
     hideChefTyping();
 
     var changesMatch = res.match(/<changes>([\s\S]*?)<\/changes>/);
@@ -2429,11 +2433,22 @@ function renderProfile() {
 // ═══════════════════════════════════════════
 // CLAUDE API CALL
 // ═══════════════════════════════════════════
-async function callClaude(system, messages, maxTokens = 800, model = 'claude-sonnet-4-6') {
+async function callClaude(mode, messages, extra = {}) {
+  var headers = { 'Content-Type': 'application/json' };
+  if (db) {
+    try {
+      var sessionRes = await db.auth.getSession();
+      var session = sessionRes.data && sessionRes.data.session;
+      if (session && session.access_token) headers.Authorization = 'Bearer ' + session.access_token;
+    } catch(e) {
+      console.warn('Auth token unavailable for API call:', e);
+    }
+  }
+
   const res = await fetch('/api/chat', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ system, messages, max_tokens: maxTokens, model }),
+    headers: headers,
+    body: JSON.stringify(Object.assign({ mode, messages }, extra || {})),
   });
 
   // Rate limit — surface a structured error so callers can show friendly messages
@@ -2446,6 +2461,7 @@ async function callClaude(system, messages, maxTokens = 800, model = 'claude-son
 
   if (!res.ok) {
     const body = await res.text().catch(() => '');
+    if (res.status === 401) throw new Error('auth_required');
     throw new Error('API error ' + res.status + (body ? ': ' + body.slice(0, 120) : ''));
   }
 
@@ -2631,7 +2647,64 @@ function escapeHtml(str) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function parseMealPlanResponse(text) {
+  var clean = String(text || '').replace(/```json|```/g, '').trim();
+  var plan = null;
+
+  try {
+    plan = JSON.parse(clean);
+  } catch(e) {
+    var start = clean.indexOf('{');
+    var end = clean.lastIndexOf('}');
+    if (start === -1 || end === -1 || end <= start) throw e;
+    var objectText = clean.slice(start, end + 1).replace(/\r?\n/g, ' ');
+    plan = JSON.parse(objectText);
+  }
+
+  return validateMealPlan(plan);
+}
+
+function validateMealPlan(plan) {
+  if (!plan || typeof plan !== 'object') throw new Error('Meal plan was not valid JSON.');
+  if (!Array.isArray(plan.days) || plan.days.length < 1) throw new Error('Meal plan is missing days.');
+
+  plan.week_vibe = String(plan.week_vibe || '');
+  plan.days = plan.days.map(function(day, idx) {
+    if (!day || typeof day !== 'object') throw new Error('Meal plan day ' + (idx + 1) + ' is invalid.');
+    if (!Array.isArray(day.meals) || day.meals.length < 1) throw new Error('Meal plan day ' + (idx + 1) + ' has no meals.');
+    day.day = String(day.day || '');
+    day.vibe = String(day.vibe || '');
+    day.totals = day.totals && typeof day.totals === 'object' ? day.totals : {};
+    day.meals = day.meals.map(function(meal, mealIdx) {
+      if (!meal || typeof meal !== 'object') throw new Error('Meal ' + (mealIdx + 1) + ' on day ' + (idx + 1) + ' is invalid.');
+      meal.type = String(meal.type || '');
+      meal.time = String(meal.time || '');
+      meal.name = String(meal.name || '');
+      meal.description = String(meal.description || '');
+      meal.kcal = meal.kcal == null ? '' : meal.kcal;
+      meal.protein_g = meal.protein_g == null ? '' : meal.protein_g;
+      meal.carbs_g = meal.carbs_g == null ? '' : meal.carbs_g;
+      meal.fat_g = meal.fat_g == null ? '' : meal.fat_g;
+      meal.tags = Array.isArray(meal.tags) ? meal.tags.map(String) : [];
+      meal.allergens = Array.isArray(meal.allergens) ? meal.allergens.map(String) : [];
+      if (!meal.name) throw new Error('Meal ' + (mealIdx + 1) + ' on day ' + (idx + 1) + ' is missing a name.');
+      return meal;
+    });
+    return day;
+  });
+
+  plan.groceries = Array.isArray(plan.groceries) ? plan.groceries.map(function(cat) {
+    return {
+      category: String((cat && cat.category) || 'Pantry'),
+      items: Array.isArray(cat && cat.items) ? cat.items.map(String) : []
+    };
+  }) : [];
+
+  return plan;
 }
 
 // ═══════════════════════════════════════════
