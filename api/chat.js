@@ -30,7 +30,7 @@ Fill every field. Macro targets: weight loss ~1400 kcal women/~1700 men; protein
   },
   meal_plan: {
     tier: 'expensive',
-    model: 'claude-sonnet-4-6',
+    model: 'claude-haiku-4-5-20251001',
     max_tokens: 6000,
     system: `You are What to Cook's menu engine. You generate weekly menus that are joy-first, deeply personal, health-aware, cook-friendly, and varied.
 
