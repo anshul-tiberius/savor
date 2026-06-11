@@ -289,6 +289,7 @@ Mobile-first. Desktop: max-width 420px centred (app), max-width 720px (content p
 - [x] Analytics — GA4 added to launch.html + index.html; Measurement ID: G-DSVGWLH54Q; two data streams (app.whattocook.life + whattocook.life) under same property
 - [x] Error monitoring (Sentry) — loader script active in launch.html; project key b9494192e969009df74dfac17997c0e7
 - [x] Dish detail + meal cards — Unsplash images via source.unsplash.com searched by dish name + "indian food"; fallback to emoji/hidden on error
+- [x] Voice TTS markdown fix — `cleanForSpeech()` strips **, *, _, backticks, headings before SpeechSynthesisUtterance so asterisks are never read aloud
 - [ ] Google Sheet webhook (index.html) — fires but needs end-to-end testing
 - [ ] "Give feedback" modal is a plain textarea — could be a real chat interface
 - [ ] Real food photography — replace Unsplash placeholders with branded shots
