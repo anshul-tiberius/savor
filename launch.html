@@ -1019,6 +1019,29 @@
       background: var(--green-light);
       color: var(--green);
     }
+    .ingredients-list {
+      list-style: none;
+      margin: 0 0 24px;
+      padding: 0;
+    }
+    .ingredients-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--cream-dark);
+      font-size: 14px;
+    }
+    .ingredients-list li:last-child { border-bottom: none; }
+    .ing-item { color: var(--text); font-weight: 400; }
+    .ing-qty  { color: var(--text-light); font-size: 13px; font-weight: 300; }
+    .ing-prep { color: var(--text-light); font-size: 12px; font-style: italic; margin-left: 6px; }
+    .ingredients-loading {
+      color: var(--text-light);
+      font-size: 13px;
+      font-style: italic;
+      padding: 12px 0 24px;
+    }
     .btn-recipe {
       width: 100%;
       padding: 18px;
@@ -1631,7 +1654,7 @@ async function sendMessage() {
       appState.chatMessages.push({ role: 'assistant', content: res });
       saveToSheet(appState.email, appState.userProfile);
       saveProfileToSupabase(appState.userProfile);
-      setTimeout(() => { showScreen('holding'); startHolding(); }, 800);
+      waitForSpeechThenTransition();
       return;
     } catch(e) {
       console.warn('Profile parse error', e);
@@ -1649,7 +1672,7 @@ async function sendMessage() {
       appState.chatMessages.push({ role: 'assistant', content: res });
       saveToSheet(appState.email, appState.userProfile);
       saveProfileToSupabase(appState.userProfile);
-      setTimeout(() => { showScreen('holding'); startHolding(); }, 800);
+      waitForSpeechThenTransition();
       return;
     } catch(e) {
       console.warn('JSON parse error', e);
@@ -1760,7 +1783,7 @@ function toggleMic() {
     input.value = transcript;
     autoResize(input);
     if (appState.voiceMode) {
-      setTimeout(() => sendMessage(), 500);
+      setTimeout(() => sendMessage(), 1500);
     }
   };
   rec.onend = () => {
@@ -1790,6 +1813,23 @@ function getVoices() {
     if (v.length) { resolve(v); return; }
     window.speechSynthesis.onvoiceschanged = () => resolve(window.speechSynthesis.getVoices());
   });
+}
+
+// Wait for any in-progress TTS to finish before moving to the holding screen,
+// so the farewell message never gets cut off mid-sentence.
+function waitForSpeechThenTransition() {
+  if (!appState.isSpeaking) {
+    showScreen('holding');
+    startHolding();
+    return;
+  }
+  const poll = setInterval(() => {
+    if (!appState.isSpeaking) {
+      clearInterval(poll);
+      showScreen('holding');
+      startHolding();
+    }
+  }, 150);
 }
 
 function cleanForSpeech(text) {
@@ -2130,6 +2170,9 @@ function showDish(dayIdx, mealIdx) {
 
     ${tagsHtml ? `<p class="dish-section-title">Tags</p><div class="dish-tags">${tagsHtml}</div>` : ''}
 
+    <p class="dish-section-title">Ingredients <span style="font-weight:300;text-transform:none;letter-spacing:0">(serves 2)</span></p>
+    <div id="dish-ingredients"><p class="ingredients-loading">Fetching ingredients…</p></div>
+
     <a href="${recipeUrl}" target="_blank" rel="noopener" class="btn-recipe">
       <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
@@ -2139,6 +2182,40 @@ function showDish(dayIdx, mealIdx) {
     </a>`;
 
   showScreen('dish');
+  loadIngredients(meal.name);
+}
+
+async function loadIngredients(dishName) {
+  const el = document.getElementById('dish-ingredients');
+  if (!el) return;
+  try {
+    var headers = { 'Content-Type': 'application/json' };
+    if (db) {
+      try {
+        var s = await db.auth.getSession();
+        if (s.data && s.data.session && s.data.session.access_token) {
+          headers.Authorization = 'Bearer ' + s.data.session.access_token;
+        }
+      } catch(e) {}
+    }
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ mode: 'ingredients', dish: dishName, messages: [] })
+    });
+    const text = await res.text();
+    const clean = text.replace(/```json|```/g, '').trim();
+    const start = clean.indexOf('[');
+    const end = clean.lastIndexOf(']');
+    const ingredients = JSON.parse(clean.slice(start, end + 1));
+    el.innerHTML = '<ul class="ingredients-list">' +
+      ingredients.map(i =>
+        `<li><span class="ing-item">${escapeHtml(i.item)}${i.prep ? '<span class="ing-prep">' + escapeHtml(i.prep) + '</span>' : ''}</span><span class="ing-qty">${escapeHtml(i.qty)}</span></li>`
+      ).join('') +
+      '</ul>';
+  } catch(e) {
+    if (el) el.innerHTML = '';
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -2717,7 +2794,7 @@ async function initAuth() {
 
   // onAuthStateChange fires on initial load too, covering both fresh sessions and OAuth returns
   db.auth.onAuthStateChange(async function(event, session) {
-    if (event === 'SIGNED_IN' && session) {
+    if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
       appState.email = session.user.email || '';
       await loadUserData(session.user.id);
     }

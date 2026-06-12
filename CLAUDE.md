@@ -290,6 +290,11 @@ Mobile-first. Desktop: max-width 420px centred (app), max-width 720px (content p
 - [x] Error monitoring (Sentry) — loader script active in launch.html; project key b9494192e969009df74dfac17997c0e7
 - [x] Dish detail + meal cards — Unsplash images via source.unsplash.com searched by dish name + "indian food"; fallback to emoji/hidden on error
 - [x] Voice TTS markdown fix — `cleanForSpeech()` strips **, *, _, backticks, headings before SpeechSynthesisUtterance so asterisks are never read aloud
+- [x] Voice onboarding: screen no longer switches mid-speech — `waitForSpeechThenTransition()` polls until TTS finishes before showing holding screen
+- [x] Voice input pause extended 500ms → 1500ms to allow natural sentence pauses
+- [x] Meal plan always 4 meals/day — system prompt explicitly requires breakfast, lunch, snack, dinner; snack described as light evening bite
+- [x] Dish detail ingredients — lazy-loaded via `ingredients` mode in api/chat.js; shows per-dish ingredient list with quantities and prep notes
+- [x] Session restored on refresh — `onAuthStateChange` now handles `INITIAL_SESSION` (Supabase v2 fires this instead of SIGNED_IN on page load)
 - [ ] Google Sheet webhook (index.html) — fires but needs end-to-end testing
 - [ ] "Give feedback" modal is a plain textarea — could be a real chat interface
 - [ ] Real food photography — replace Unsplash placeholders with branded shots

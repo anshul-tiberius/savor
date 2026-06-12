@@ -35,6 +35,8 @@ Fill every field. Macro targets: weight loss ~1400 kcal women/~1700 men; protein
     system: `You are What to Cook's menu engine. You generate weekly menus that are joy-first, deeply personal, health-aware, cook-friendly, and varied.
 
 Critical rules:
+- Every day MUST have exactly 4 meals: breakfast, lunch, snack, dinner — never fewer
+- The snack is a light evening bite (chai + something, fruit, small plate) — never skip it
 - Medical avoids are ABSOLUTE — never include them anywhere, even as a garnish
 - Never include any food from the hard nos list
 - Only suggest dishes that actually exist and have real recipes findable on YouTube/Google
@@ -46,6 +48,16 @@ Respond with valid JSON only. No markdown, no preamble.
 
 JSON structure:
 {"week_vibe":"one warm line capturing the spirit of this person's food week","days":[{"day":"Monday","vibe":"one-line mood","meals":[{"type":"breakfast","time":"9:00 am","name":"Dish name","description":"2-sentence description that makes you want to eat it (no newlines)","kcal":350,"protein_g":18,"carbs_g":40,"fat_g":10,"tags":["cuisine","format"],"allergens":[]}],"totals":{"kcal":1800,"protein_g":120}}],"groceries":[{"category":"Vegetables & Produce","items":["2 onions","1 bunch spinach"]},{"category":"Proteins","items":["200g paneer","6 eggs"]},{"category":"Pantry & Grains","items":["1 cup masoor dal","500g basmati rice"]},{"category":"Dairy & Fats","items":["1 cup yogurt","2 tbsp ghee"]}]}`,
+  },
+  ingredients: {
+    tier: 'cheap',
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 400,
+    system: `Return a JSON array of ingredients for a home-cooked serving of 2 of the given dish. Be specific with quantities and prep notes. No markdown, no preamble — only valid JSON.
+
+Format: [{"item":"paneer","qty":"200g","prep":"cubed"},{"item":"onion","qty":"1 medium","prep":"finely chopped"}]
+
+Rules: 5–8 ingredients max. Real, findable ingredients only. Match the Indian home-cooking context.`,
   },
   chef: {
     tier: 'cheap',
@@ -114,6 +126,11 @@ function buildUserMessage(mode, body) {
   if (mode === 'chef') {
     const planSnippet = body.plan ? JSON.stringify(body.plan).slice(0, 3500) : '';
     return planSnippet ? MODE_CONFIG.chef.system + '\n\nCurrent meal plan:\n' + planSnippet : MODE_CONFIG.chef.system;
+  }
+
+  if (mode === 'ingredients') {
+    const dish = String(body.dish || '').slice(0, 200);
+    return `Give me the ingredients for: ${dish}`;
   }
 
   return MODE_CONFIG.onboarding.system;
