@@ -1818,18 +1818,23 @@ function getVoices() {
 // Wait for any in-progress TTS to finish before moving to the holding screen,
 // so the farewell message never gets cut off mid-sentence.
 function waitForSpeechThenTransition() {
-  if (!appState.isSpeaking) {
-    showScreen('holding');
-    startHolding();
-    return;
-  }
-  const poll = setInterval(() => {
+  // speakText() is async and sets isSpeaking AFTER awaiting getVoices().
+  // Wait 600ms for TTS to start before we begin polling, otherwise we'd
+  // always see isSpeaking=false and jump to the holding screen immediately.
+  setTimeout(() => {
     if (!appState.isSpeaking) {
-      clearInterval(poll);
       showScreen('holding');
       startHolding();
+      return;
     }
-  }, 150);
+    const poll = setInterval(() => {
+      if (!appState.isSpeaking) {
+        clearInterval(poll);
+        showScreen('holding');
+        startHolding();
+      }
+    }, 150);
+  }, 600);
 }
 
 function cleanForSpeech(text) {
