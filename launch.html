@@ -1445,7 +1445,7 @@
   <div id="view-chef">
     <div class="chef-messages" id="chef-messages"></div>
     <div id="chef-regen-wrap" style="display:none;">
-      <button class="btn-apply-changes" onclick="applyChefChanges()">Regenerate my plan with these changes &rarr;</button>
+      <button class="btn-apply-changes" onclick="applyChefChanges()">Update my plan with these changes &rarr;</button>
     </div>
     <div class="chef-input-area">
       <textarea id="chef-input" class="chat-input" rows="1" placeholder="Ask about your meals&hellip;" onkeydown="handleChefKey(event)" oninput="autoResize(this)"></textarea>
@@ -2438,12 +2438,16 @@ async function sendChefMessage() {
     hideChefTyping();
 
     var changesMatch = res.match(/<changes>([\s\S]*?)<\/changes>/);
-    var displayText = res;
+    var displayText = res.replace(/<changes>[\s\S]*?<\/changes>/g, '').trim();
+    var rw = document.getElementById('chef-regen-wrap');
     if (changesMatch) {
       appState.pendingChanges = changesMatch[1].trim();
-      displayText = res.replace(/<changes>[\s\S]*?<\/changes>/g, '').trim();
-      var rw = document.getElementById('chef-regen-wrap');
       if (rw) rw.style.display = 'block';
+    } else {
+      // Show the button anyway if the last user message sounds like a change request
+      var lastUserMsg = (appState.chefMessages.filter(function(m){ return m.role==='user'; }).pop() || {}).content || '';
+      var looksLikeChange = /swap|change|replace|remove|add|different|instead|swap|modify|update|new|switch/i.test(lastUserMsg);
+      if (looksLikeChange && rw) rw.style.display = 'block';
     }
 
     appendChefMessage('chef', displayText);
@@ -2464,7 +2468,15 @@ function handleChefKey(e) {
 }
 
 function applyChefChanges() {
-  var changes = appState.pendingChanges || 'Update the plan based on our conversation.';
+  // Build rich feedback: specific changes tag + full user requests from conversation
+  var userRequests = appState.chefMessages
+    .filter(function(m) { return m.role === 'user'; })
+    .map(function(m) { return m.content; })
+    .join(' | ');
+  var changes = appState.pendingChanges
+    ? appState.pendingChanges + (userRequests ? '. Context from conversation: ' + userRequests : '')
+    : userRequests || 'Update the plan based on our conversation.';
+
   appState.pendingChanges = null;
   appState.chefMessages = [];
   var rw = document.getElementById('chef-regen-wrap');
