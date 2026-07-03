@@ -95,11 +95,11 @@ Navigation handled by `showScreen(name)` toggling `.screen` divs.
 ### Screen 2 — Onboarding Chat (`#screen-onboarding`)
 - iMessage-style chat UI — "W" avatar on left (green), user on right (dark green bubble)
 - **Voice-first by default**: app speaks each message via `speechSynthesis` (browser TTS), then auto-starts mic. Mute toggle in header.
-- `SpeechRecognition` (lang: `en-IN`) — auto-starts after TTS ends. In voice mode, transcript auto-sends after 500ms.
+- `SpeechRecognition` (lang: `en-IN`) — auto-starts after TTS ends. In voice mode, transcript auto-sends after 1500ms pause.
 - On non-Chrome (no mic API): TTS still works, user types. Toast explains this.
 - Full conversation history sent each time (stateless API calls), using `claude-haiku-4-5-20251001` for cost efficiency
 - Profile detection: looks for `<profile>{...}</profile>` in Claude's response
-- On profile detected: strip JSON from display, save to Supabase, transition to Screen 3 after 800ms
+- On profile detected: strip JSON from display, save to Supabase, wait for TTS to finish (`waitForSpeechThenTransition()`), then transition to Screen 3
 - `appState.voiceMode` (default `true`) controls TTS + auto-mic. `appState.isSpeaking` tracks TTS state.
 - Status line reflects state: "Speaking…" / "Listening…" / "Thinking…" / progress messages. Avatar pulses when speaking.
 
@@ -112,13 +112,16 @@ Navigation handled by `showScreen(name)` toggling `.screen` divs.
 
 ### Screen 4 — Weekly Meal Plan (`#screen-plan`)
 - Mon–Sun day tabs (scrollable)
-- Each day: total kcal + protein bar, then meal cards (breakfast/lunch/snack/dinner)
-- Each meal card: type badge, dish name, 2-line description, macro chips (kcal/protein/carbs/fat), allergen chips
-- "Give feedback" button → feedback modal (bottom sheet)
-- Feedback modal: user types changes → "Regenerate Plan" → back to Screen 3 → new plan
+- Each day: total kcal + protein bar, then meal cards (breakfast/lunch/snack/dinner) — always 4 meals
+- Each meal card: Unsplash thumbnail image, type badge, dish name, 2-line description, macro chips (kcal/protein/carbs/fat), allergen chips
+- Bottom nav: Menu | Pantry | Ask Chef | Profile
+- Ask Chef tab: chat with AI to request menu changes; "Update my plan" button triggers regeneration with full conversation context
+- "Give feedback" button → feedback modal (bottom sheet) → "Regenerate Plan" → back to Screen 3 → new plan
 
 ### Screen 5 — Dish Detail (`#screen-dish`)
+- Unsplash hero image (220px, searched by dish name + "indian food"; fallback to 🍽️ emoji)
 - Dish type, full name, description, macro grid (4 boxes)
+- Ingredients section — lazy-loaded via `ingredients` mode API call on dish open (serves 2, item + qty + prep)
 - Tags
 - "Find Recipe on YouTube" → `https://www.youtube.com/results?search_query={meal.name} recipe` (derived clientside)
 - Back arrow → Screen 4
@@ -212,7 +215,7 @@ max_tokens: 6000. Client parsing strips optional markdown fences, extracts the J
 **Critical:** Only real dishes with findable recipes. Never invent fictional dishes.
 
 ### API hardening
-- Allowed modes: `onboarding`, `meal_plan`, `chef`
+- Allowed modes: `onboarding`, `meal_plan`, `chef`, `ingredients`
 - Production meal-plan calls require a valid Supabase bearer token
 - Models, prompts, and max tokens are selected server-side
 - Messages are role-filtered, length-limited, and capped to recent history
@@ -295,6 +298,7 @@ Mobile-first. Desktop: max-width 420px centred (app), max-width 720px (content p
 - [x] Meal plan always 4 meals/day — system prompt explicitly requires breakfast, lunch, snack, dinner; snack described as light evening bite
 - [x] Dish detail ingredients — lazy-loaded via `ingredients` mode in api/chat.js; shows per-dish ingredient list with quantities and prep notes
 - [x] Session restored on refresh — `onAuthStateChange` now handles `INITIAL_SESSION` (Supabase v2 fires this instead of SIGNED_IN on page load)
+- [x] Ask Chef → plan update fixed — chef prompt now requires `<changes>` tag; `applyChefChanges` passes full conversation context; keyword fallback shows "Update plan" button even if model misses the tag
 - [ ] Google Sheet webhook (index.html) — fires but needs end-to-end testing
 - [ ] "Give feedback" modal is a plain textarea — could be a real chat interface
 - [ ] Real food photography — replace Unsplash placeholders with branded shots
@@ -369,4 +373,4 @@ To add/change environment variables:
 
 **Tone of voice:** Warm, curious, like a smart friend. Never clinical. Never diet-culture coded. Use Indian food references naturally (dal, sabziwala, masala dabba, nani's kitchen).
 
-**Do not build yet:** Push notifications or payment. Pantry management and Supabase return-user persistence already exist. Focus next on core-loop reliability and trust: realistic dishes, dependable recipe links, medical/dietary guardrails, partial meal/day regeneration, and better feedback UX.
+**Do not build yet:** Push notifications or payment. Focus next on: real food photography, better feedback UX (chat-style instead of textarea), and partial meal/day regeneration (swap one day, not the whole week).
