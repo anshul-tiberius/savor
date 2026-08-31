@@ -24,8 +24,8 @@ const e = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replac
 const nl2p = s => s.split('\n\n').filter(Boolean).map(p => `<p>${e(p.trim())}</p>`).join('\n');
 
 // ── Head template (shared) ─────────────────────────────────────────────────
-function head(title, desc, keywords, canonical, image) {
-  const imgUrl = image ? `${image}?w=1200&auto=format&fit=crop&q=80` : '';
+function head(title, desc, keywords, canonical, image, breadcrumb) {
+  const imgUrl = image ? `${image.split('?')[0]}?w=1200&auto=format&fit=crop&q=80` : '';
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,7 +124,7 @@ function head(title, desc, keywords, canonical, image) {
     .faq-item p { color: var(--text-mid); font-size: 15px; line-height: 1.65; }
 
     /* Author bio */
-    .author-bio { border-top: 1px solid var(--cream-dark); padding: 24px 0; margin-top: 32px; display: flex; gap: 16px; align-items: flex-start; }
+    .author-bio { border-bottom: 1px solid var(--cream-dark); padding: 0 0 20px; margin-bottom: 24px; display: flex; gap: 16px; align-items: flex-start; }
     .author-avatar { width: 44px; height: 44px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #FAF7F2; font-family: var(--font-display); font-size: 18px; font-weight: 600; flex-shrink: 0; }
     .author-info strong { display: block; color: var(--text); font-size: 15px; margin-bottom: 2px; }
     .author-info span { color: var(--text-light); font-size: 13px; line-height: 1.5; }
@@ -139,7 +139,8 @@ function head(title, desc, keywords, canonical, image) {
     .footer { background: var(--green); padding: 24px 20px; text-align: center; }
     .footer p { color: rgba(255,255,255,0.5); font-size: 13px; }
     .footer a { color: rgba(255,255,255,0.6); }
-  </style>
+  </style>${breadcrumb ? `
+<script type="application/ld+json">${breadcrumb}</script>` : ''}
 </head>`;
 }
 
@@ -156,8 +157,20 @@ function nav() {
 
 function footer() {
   return `<footer class="footer">
-  <p>&copy; 2025 What to Cook &nbsp;&middot;&nbsp; <a href="${APP_URL}">Build your personal meal plan</a></p>
+  <p>&copy; 2025 What to Cook &nbsp;&middot;&nbsp; <a href="${APP_URL}">Build your weekly menu</a></p>
 </footer>`;
+}
+
+function breadcrumbSchema(sectionName, sectionPath, pageTitle, canonical) {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": `${DOMAIN}/` },
+      { "@type": "ListItem", "position": 2, "name": sectionName, "item": `${DOMAIN}${sectionPath}` },
+      { "@type": "ListItem", "position": 3, "name": pageTitle, "item": `${DOMAIN}${canonical}` }
+    ]
+  });
 }
 
 // ── Recipe page ────────────────────────────────────────────────────────────
@@ -171,7 +184,7 @@ function buildRecipePage(r) {
     "description": r.meta_description,
     "image": r.image_url,
     "author": { "@type": "Person", "name": "Anshul Tibrewala" },
-    "datePublished": new Date().toISOString().slice(0,10),
+    "datePublished": r.published_date,
     "prepTime": `PT${r.prep_time.replace(/\D+/g,'') || 15}M`,
     "cookTime": `PT${r.cook_time.replace(/\D+/g,'') || 20}M`,
     "recipeYield": String(r.servings),
@@ -209,7 +222,7 @@ function buildRecipePage(r) {
     ? `<div class="section"><h2>Variations</h2>${r.variations.map(v=>`<div style="margin-bottom:14px;"><strong>${e(v.name)}:</strong> ${e(v.description)}</div>`).join('')}</div>`
     : '';
 
-  return `${head(r.title + ' — What to Cook', r.meta_description, r.schema_keywords, canonical)}
+  return `${head(r.title + ' — What to Cook', r.meta_description, r.schema_keywords, canonical, r.image_url, breadcrumbSchema('Recipes', '/recipes/', r.title, canonical))}
 <body>
 <script type="application/ld+json">${schema}</script>
 ${nav()}
@@ -246,7 +259,7 @@ ${nav()}
 
   <div class="cta-block">
     <p>${e(r.cta_text)}</p>
-    <a href="${APP_URL}" class="cta-btn" target="_blank" rel="noopener">Build my meal plan &#8212; free &#8594;</a>
+    <a href="${APP_URL}" class="cta-btn" target="_blank" rel="noopener">Build my weekly menu &#8212; free &#8594;</a>
   </div>
 </main>
 ${footer()}
@@ -302,6 +315,14 @@ function buildArticlePage(a) {
   const heroImageHTML = a.hero_image_url ? `
     <img src="${e(a.hero_image_url)}" alt="${e(a.title)}" class="article-image" loading="lazy" />` : '';
 
+  const authorBioHTML = `<div class="author-bio">
+    <div class="author-avatar">A</div>
+    <div class="author-info">
+      <strong>Anshul Tibrewala</strong>
+      <span>Founder of What to Cook. Building India-first AI nutrition tools. Based in Bangalore.</span>
+    </div>
+  </div>`;
+
   const faqHTML = a.faq && a.faq.length ? `
     <div class="section faq-section">
       <h2>Frequently asked questions</h2>
@@ -312,7 +333,7 @@ function buildArticlePage(a) {
       </div>`).join('')}
     </div>` : '';
 
-  return `${head(a.title + ' — What to Cook', a.meta_description, (a.meta_keywords||'').split(',').map(s=>s.trim()), canonical)}
+  return `${head(a.title + ' — What to Cook', a.meta_description, (a.meta_keywords||'').split(',').map(s=>s.trim()), canonical, a.hero_image_url, breadcrumbSchema('Guides', '/articles/', a.title, canonical))}
 <body>
 <script type="application/ld+json">${schema}</script>
 ${faqSchema ? `<script type="application/ld+json">${faqSchema}</script>` : ''}
@@ -322,22 +343,16 @@ ${nav()}
     <p class="article-label">${e(a.category)} &middot; ${e(a.read_time)}</p>
     <h1 class="article-title">${e(a.title)}</h1>
   </div>
+  ${authorBioHTML}
   ${heroImageHTML}
   ${quickAnswerHTML}
   <p class="article-intro">${e(a.intro)}</p>
   ${sectionsHTML}
   ${takeawaysHTML}
   ${faqHTML}
-  <div class="author-bio">
-    <div class="author-avatar">A</div>
-    <div class="author-info">
-      <strong>Anshul Tibrewala</strong>
-      <span>Founder of What to Cook. Building India-first AI nutrition tools. Based in Bangalore.</span>
-    </div>
-  </div>
   <div class="cta-block">
     <p>${e(a.cta_text)}</p>
-    <a href="${APP_URL}" class="cta-btn" target="_blank" rel="noopener">Build my meal plan &#8212; free &#8594;</a>
+    <a href="${APP_URL}" class="cta-btn" target="_blank" rel="noopener">Build my weekly menu &#8212; free &#8594;</a>
   </div>
 </main>
 ${footer()}
@@ -418,13 +433,13 @@ function buildHomepage() {
       </div>
     </a>`).join('');
 
-  return `${head('What to Cook — Indian Recipes & Nutrition for Real Food Goals', 'High-protein Indian recipes with real macros, evidence-based nutrition guides, and a free AI meal planner built for Indian kitchens.', ['Indian recipes protein', 'Indian meal plan weight loss', 'high protein Indian food'], '/')}
+  return `${head('What to Cook — Indian Recipes & Nutrition for Real Food Goals', 'High-protein Indian recipes with real macros, evidence-based nutrition guides, and a free AI weekly menu builder for Indian kitchens.', ['Indian recipes protein', 'Indian meal plan weight loss', 'high protein Indian food'], '/')}
 <body>
 ${nav()}
 
 <section style="background:var(--green);padding:64px 20px;text-align:center;">
   <h1 style="font-family:var(--font-display);font-size:clamp(34px,6vw,58px);color:#FAF7F2;line-height:1.12;margin-bottom:16px;">Your place to find great recipes<br>and eat well without giving up<br><em>the food you love.</em></h1>
-  <p style="color:rgba(255,255,255,0.72);font-size:18px;max-width:560px;margin:0 auto 28px;line-height:1.6;">Practical Indian recipes with real macros. Evidence-based guides on eating well. And an AI meal planner that builds your week around what you actually enjoy.</p>
+  <p style="color:rgba(255,255,255,0.72);font-size:18px;max-width:560px;margin:0 auto 28px;line-height:1.6;">Practical Indian recipes with real macros. Evidence-based guides on eating well. And an AI tool that builds your weekly menu around what you actually enjoy.</p>
   <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
     <a href="/recipes/" style="display:inline-block;background:var(--amber);color:#fff;padding:13px 28px;border-radius:50px;font-size:15px;font-weight:500;text-decoration:none;">Browse Recipes &#8594;</a>
     <a href="/articles/" style="display:inline-block;background:transparent;color:#FAF7F2;border:1px solid rgba(255,255,255,0.35);padding:13px 28px;border-radius:50px;font-size:15px;font-weight:500;text-decoration:none;">Read Articles &#8594;</a>
@@ -452,9 +467,9 @@ ${nav()}
   <hr style="border:none;border-top:1px solid var(--cream-dark);margin-bottom:60px;" />
 
   <section style="background:var(--green);border-radius:20px;padding:44px 36px;text-align:center;">
-    <h2 style="font-family:var(--font-display);font-size:36px;color:#FAF7F2;margin-bottom:14px;line-height:1.2;">Want a meal plan built for your kitchen?</h2>
+    <h2 style="font-family:var(--font-display);font-size:36px;color:#FAF7F2;margin-bottom:14px;line-height:1.2;">Want a weekly menu built for your kitchen?</h2>
     <p style="color:rgba(255,255,255,0.72);max-width:520px;margin:0 auto 24px;font-size:17px;line-height:1.65;">Tell us about your tastes, your household, and your goals. You get a personalised week of Indian meals &#8212; breakfast to dinner, full macros, grocery list. Takes two minutes. Free.</p>
-    <a href="${APP_URL}" style="display:inline-block;background:var(--amber);color:#fff;padding:14px 32px;border-radius:50px;font-size:16px;font-weight:500;text-decoration:none;" target="_blank" rel="noopener">Build my meal plan &#8212; free &#8594;</a>
+    <a href="${APP_URL}" style="display:inline-block;background:var(--amber);color:#fff;padding:14px 32px;border-radius:50px;font-size:16px;font-weight:500;text-decoration:none;" target="_blank" rel="noopener">Build my weekly menu &#8212; free &#8594;</a>
   </section>
 
 </main>

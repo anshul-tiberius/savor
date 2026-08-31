@@ -1,0 +1,128 @@
+[
+  {
+    "id": "protein-in-eggs-indian-diet",
+    "keyword_target": "protein in eggs Indian diet",
+    "angle": "nutrition_data",
+    "notes": "Whole egg vs egg white protein breakdown, cost per gram of protein vs paneer/chicken, calorie impact of common Indian egg preparations (bhurji, curry, boiled).",
+    "status": "published"
+  },
+  {
+    "id": "chicken-breast-vs-curry-chicken-protein",
+    "keyword_target": "chicken curry protein vs chicken breast",
+    "angle": "nutrition_data",
+    "notes": "How much protein survives in home-style Indian chicken curry vs plain grilled/boiled breast; oil and gravy calorie impact; practical portioning.",
+    "status": "pending"
+  },
+  {
+    "id": "soya-chunks-nutrition-deep-dive",
+    "keyword_target": "soya chunks protein nutrition",
+    "angle": "nutrition_data",
+    "notes": "Dry vs hydrated soya chunks macros, amino acid completeness, how to cook them so they don't taste spongy, cost per gram protein.",
+    "status": "pending"
+  },
+  {
+    "id": "curd-vs-paneer-protein-comparison",
+    "keyword_target": "curd vs paneer protein",
+    "angle": "nutrition_data",
+    "notes": "Dahi/curd/Greek yogurt protein density vs paneer, which is better for weight loss, practical daily combos.",
+    "status": "pending"
+  },
+  {
+    "id": "rajma-nutrition-protein-breakdown",
+    "keyword_target": "rajma protein nutrition facts",
+    "angle": "nutrition_data",
+    "notes": "Rajma macros per 100g cooked, fibre content, glycaemic index, rajma chawal calorie reality check.",
+    "status": "pending"
+  },
+  {
+    "id": "chole-chickpea-protein-breakdown",
+    "keyword_target": "chole chickpea protein calories",
+    "angle": "nutrition_data",
+    "notes": "Chole/chana macros, restaurant chole vs home-cooked calorie gap (oil content), chana as a snack (roasted vs boiled).",
+    "status": "pending"
+  },
+  {
+    "id": "millets-ragi-jowar-bajra-weight-loss",
+    "keyword_target": "millets for weight loss ragi jowar bajra",
+    "angle": "nutrition_data",
+    "notes": "Compare ragi, jowar, bajra macros and fibre vs wheat/rice, glycaemic index, practical swaps in daily meals.",
+    "status": "pending"
+  },
+  {
+    "id": "roti-vs-rice-carbs-calories",
+    "keyword_target": "roti vs rice calories carbs",
+    "angle": "nutrition_data",
+    "notes": "Direct comparison per serving, which is better for weight loss, why the 'roti is healthier' claim is oversimplified.",
+    "status": "pending"
+  },
+  {
+    "id": "sattu-nutrition-complete-guide",
+    "keyword_target": "sattu nutrition benefits protein",
+    "angle": "nutrition_data",
+    "notes": "Full macro breakdown, cost per gram protein vs whey, sattu sharbat vs sattu paratha calorie difference.",
+    "status": "pending"
+  },
+  {
+    "id": "besan-gram-flour-protein-nutrition",
+    "keyword_target": "besan gram flour protein nutrition",
+    "angle": "nutrition_data",
+    "notes": "Besan macros, use in chilla/pakora, protein contribution across common besan dishes.",
+    "status": "pending"
+  },
+  {
+    "id": "punjabi-diet-plan-weight-loss",
+    "keyword_target": "Punjabi diet plan for weight loss",
+    "angle": "regional",
+    "notes": "7-day style Punjabi meal structure built around dal, sarson da saag, tandoori proteins, roti portioning, ghee moderation.",
+    "status": "pending"
+  },
+  {
+    "id": "gujarati-thali-nutrition-weight-loss",
+    "keyword_target": "Gujarati thali nutrition weight loss",
+    "angle": "regional",
+    "notes": "Macro reality of a Gujarati thali, how sugar in shaak/dal affects things, high-protein Gujarati staples (khaman, kadhi, sprouts).",
+    "status": "pending"
+  },
+  {
+    "id": "bengali-fish-diet-protein-meal-plan",
+    "keyword_target": "Bengali diet plan fish protein",
+    "angle": "regional",
+    "notes": "Fish-forward Bengali meal plan with macros, mustard oil moderation, rice portioning, bhapa/jhol preparations.",
+    "status": "pending"
+  },
+  {
+    "id": "marwari-vegetarian-high-protein-plan",
+    "keyword_target": "Marwari vegetarian high protein diet",
+    "angle": "regional",
+    "notes": "Marwari thali built around dal-baati alternatives, besan-based dishes, ghee-heavy tradition vs modern protein targets.",
+    "status": "pending"
+  },
+  {
+    "id": "maharashtrian-diet-weight-loss",
+    "keyword_target": "Maharashtrian diet plan weight loss",
+    "angle": "regional",
+    "notes": "Varan bhaat, usal, thalipeeth as protein/fibre-forward staples; coconut and peanut moderation.",
+    "status": "pending"
+  },
+  {
+    "id": "north-indian-roti-sabzi-macros",
+    "keyword_target": "North Indian roti sabzi diet macros",
+    "angle": "regional",
+    "notes": "Standard north Indian home meal (roti + sabzi + dal) macro reality, portioning fixes, common mistakes.",
+    "status": "pending"
+  },
+  {
+    "id": "kerala-diet-plan-weight-loss",
+    "keyword_target": "Kerala diet plan weight loss coconut",
+    "angle": "regional",
+    "notes": "Coconut-forward Kerala cooking and weight loss compatibility, fish curry macros, appam/idiyappam portioning.",
+    "status": "pending"
+  },
+  {
+    "id": "andhra-telangana-high-protein-diet",
+    "keyword_target": "Andhra diet plan high protein",
+    "angle": "regional",
+    "notes": "Andhra/Telangana meal structure, pesarattu and gongura as protein/nutrient standouts, spice-heavy calorie traps.",
+    "status": "pending"
+  }
+]

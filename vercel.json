@@ -15,6 +15,11 @@
     }
   ],
   "rewrites": [
-    { "source": "/app", "destination": "/app.html" }
+    { "source": "/app", "destination": "/app.html" },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "whattocook.life" }],
+      "destination": "/home.html"
+    }
   ]
 }

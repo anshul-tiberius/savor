@@ -9,6 +9,7 @@
     "cook_time": "20 mins",
     "servings": 2,
     "cuisine": "North Indian",
+    "published_date": "2026-05-29",
     "tags": ["high-protein", "vegetarian", "weeknight", "weight-loss"],
     "intro": "There is no dal more misunderstood than masoor. People reach for moong or chana when they want protein, but cooked masoor dal — red lentils, not the whole brown ones — delivers 26 grams of protein per serving and practically cooks itself. My grandmother in Lucknow called it the poor man's meat. She was not wrong about the nutrition.",
     "nutrition_per_serving": {
@@ -54,6 +55,7 @@
     "cook_time": "15 mins",
     "servings": 2,
     "cuisine": "North Indian",
+    "published_date": "2026-05-29",
     "tags": ["high-protein", "vegetarian", "breakfast", "weight-loss", "gluten-free"],
     "intro": "Two cheelas made from soaked whole moong give you 22 grams of complete protein at breakfast — more than three eggs. This is not a health-food compromise. When made properly, the batter crisps at the edges while staying soft inside, and the cumin-ginger base makes it smell like Sunday morning in a Punjabi kitchen. The 4-hour soak is the only inconvenience; everything else takes 20 minutes.",
     "nutrition_per_serving": {
@@ -99,6 +101,7 @@
     "cook_time": "7 mins",
     "servings": 1,
     "cuisine": "Street food / North Indian",
+    "published_date": "2026-05-29",
     "tags": ["high-protein", "non-vegetarian", "breakfast", "quick", "weight-loss"],
     "intro": "Mumbai street bhurji is cooked in a pool of oil on a tawa so hot it browns the eggs before they're set. The home version doesn't need to go that far. Three eggs, the right spice sequence, and a very hot pan gets you something that tastes like the real thing — 30 grams of protein, done in under 10 minutes, with no specialty equipment.",
     "nutrition_per_serving": {
@@ -131,7 +134,7 @@
       { "name": "Paneer bhurji", "description": "Replace 1 egg with 50g crumbled paneer. Add after the tomatoes are cooked down. Different texture, similar protein." },
       { "name": "South Indian", "description": "Add 1/4 tsp mustard seeds before the cumin, and curry leaves with the chilli. Top with grated coconut. Changes the flavour entirely." }
     ],
-    "cta_text": "Want a personalised Indian meal plan built around your goals and the food you love?",
+    "cta_text": "Want a personalised weekly menu built around your goals and the food you love?",
     "meta_description": "Egg bhurji recipe with full macros: 30g protein, 295 calories. Best Indian scrambled egg recipe for weight loss and muscle building.",
     "schema_keywords": ["egg bhurji recipe", "egg bhurji calories", "egg bhurji protein", "Indian scrambled eggs", "anda bhurji recipe"]
   },
@@ -145,6 +148,7 @@
     "cook_time": "15 mins",
     "servings": 2,
     "cuisine": "North Indian / Mughlai",
+    "published_date": "2026-05-29",
     "tags": ["high-protein", "vegetarian", "dinner", "gym-friendly"],
     "intro": "Restaurant paneer tikka is often fried in a tandoor with a thick layer of spiced cream — beautiful but 600+ calories a portion. This version uses a grill pan or oven, a lighter marinade, and fresh paneer instead of the frozen variety that sweats water when cooked. The result: 28g of protein and 320 calories, flavours that are fully intact, and no guilt gymnastics required.",
     "nutrition_per_serving": {
@@ -175,7 +179,7 @@
       { "name": "Malai paneer tikka", "description": "Replace yogurt with 50g cashew paste blended with 2 tbsp cream. White tikka, richer flavour, higher calories (420 kcal) but extraordinary." },
       { "name": "Achari paneer tikka", "description": "Add 1 tsp each of kalonji (nigella seeds) and mustard seeds to the marinade. The pickling spices give a sharp, tangy note." }
     ],
-    "cta_text": "Want a full Indian meal plan with meals like this — built around your protein targets and food preferences?",
+    "cta_text": "Want a full week of meals like this — built around your protein targets and the food you love?",
     "meta_description": "Paneer tikka recipe with macros: 28g protein, 320 calories. Healthy grilled paneer tikka recipe for weight loss — not deep fried.",
     "schema_keywords": ["paneer tikka recipe", "paneer tikka calories", "paneer tikka protein macros", "healthy paneer tikka", "grilled paneer tikka"]
   },
@@ -189,6 +193,7 @@
     "cook_time": "40 mins",
     "servings": 3,
     "cuisine": "Punjabi / North Indian",
+    "published_date": "2026-05-29",
     "tags": ["high-protein", "vegetarian", "comfort-food", "meal-prep"],
     "intro": "Rajma is one of those dishes that everyone loves but few make from scratch because canned kidney beans have conditioned people to think dried beans are complicated. They are not. Soak overnight, pressure cook 20 minutes, build a real masala, and you get rajma with a texture and depth that no canned version can touch. One serving: 24 grams of protein, 8 grams of fibre, and the kind of satisfaction that lasts until your next meal.",
     "nutrition_per_serving": {
