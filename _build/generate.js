@@ -2,11 +2,9 @@
 /**
  * What to Cook — Static site generator
  * Reads _data/recipes.json and _data/articles.json
- * Outputs one HTML file per entry into recipes/ and articles/
+ * Outputs one HTML file per entry into recipes/ and articles/, plus the
+ * whattocook.life homepage at index.html.
  * Run: node _build/generate.js  (from savor-main/ or any directory)
- *
- * IMPORTANT: Writes to home.html, NOT index.html.
- * index.html is the meal-planning app — never overwrite it from here.
  */
 
 const fs   = require('fs');
@@ -499,8 +497,10 @@ function writeFile(filepath, content) {
   console.log('✓', filepath.replace(ROOT + '/', ''));
 }
 
-// Homepage — writes to home.html, NOT index.html (index.html is the app)
-writeFile(path.join(ROOT, 'home.html'), buildHomepage());
+// Homepage — index.html is the whattocook.life homepage. Vercel serves
+// literal files at "/" before any custom rewrite ever runs, so the
+// generated homepage has to live at this exact path — see CLAUDE.md.
+writeFile(path.join(ROOT, 'index.html'), buildHomepage());
 
 // Recipe index + individual pages
 writeFile(path.join(ROOT, 'recipes/index.html'), buildRecipeIndex());
