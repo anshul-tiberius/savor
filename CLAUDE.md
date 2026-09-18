@@ -101,6 +101,7 @@ Navigation handled by `showScreen(name)` toggling `.screen` divs.
 - 3 Unsplash food images (grid: 1 tall left + 2 stacked right, 260px height)
 - Email input + "Start now" CTA
 - Email stored in `appState.email`, not sent anywhere until onboarding completes
+- **Version chooser (2026-09-18).** Below the sign-in card, every visitor is offered a link to a parallel build of the same product at `https://taste-palette-planner.lovable.app/` (built on Lovable). `trackVersionChoice()` fires a GA4 `version_choice` event and stores `wtc_version_choice`, logged as `'a'` at both sign-in entry points and `'b'` on the outbound click. **This is a chooser, not a split test** — with alpha traffic a 50/50 split halves an already-tiny sample and yields no signal, and the other build is a separate domain whose code we do not control, so version B numbers mean "sent there", never "converted". Switching to a randomised split later is a small change once traffic justifies it.
 
 ### Screen 2 — Onboarding Chat (`#screen-onboarding`)
 - iMessage-style chat UI — "W" avatar on left (green), user on right (dark green bubble)
