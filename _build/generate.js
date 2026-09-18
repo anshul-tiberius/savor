@@ -156,8 +156,8 @@ function nav() {
   return `<nav class="nav">
   <a href="/" class="nav-logo">What to Cook</a>
   <div class="nav-links">
-    <a href="/recipes/">Recipes</a>
-    <a href="/articles/">Learn</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/articles">Learn</a>
     <a href="${APP_URL}" target="_blank" rel="noopener">Try the app &#8594;</a>
   </div>
 </nav>`;
@@ -183,7 +183,7 @@ function breadcrumbSchema(sectionName, sectionPath, pageTitle, canonical) {
 
 // ── Recipe page ────────────────────────────────────────────────────────────
 function buildRecipePage(r) {
-  const canonical = `/recipes/${r.slug}/`;
+  const canonical = `/recipes/${r.slug}`;
 
   const schema = JSON.stringify({
     "@context": "https://schema.org",
@@ -230,7 +230,7 @@ function buildRecipePage(r) {
     ? `<div class="section"><h2>Variations</h2>${r.variations.map(v=>`<div style="margin-bottom:14px;"><strong>${e(v.name)}:</strong> ${e(v.description)}</div>`).join('')}</div>`
     : '';
 
-  return `${head(r.title + ' — What to Cook', r.meta_description, r.schema_keywords, canonical, r.image_url, breadcrumbSchema('Recipes', '/recipes/', r.title, canonical))}
+  return `${head(r.title + ' — What to Cook', r.meta_description, r.schema_keywords, canonical, r.image_url, breadcrumbSchema('Recipes', '/recipes', r.title, canonical))}
 <body>
 <script type="application/ld+json">${schema}</script>
 ${nav()}
@@ -316,14 +316,14 @@ function relatedHTML(a) {
     <div class="related">
       <h2>Related reading</h2>
       <ul>${rel.map(r => `
-        <li><a href="/articles/${r.slug}/"><span class="related-label">${e(r.category)}</span>${e(r.title)}</a></li>`).join('')}
+        <li><a href="/articles/${r.slug}"><span class="related-label">${e(r.category)}</span>${e(r.title)}</a></li>`).join('')}
       </ul>
     </div>`;
 }
 
 // ── Article page ────────────────────────────────────────────────────────────
 function buildArticlePage(a) {
-  const canonical = `/articles/${a.slug}/`;
+  const canonical = `/articles/${a.slug}`;
 
   const schema = JSON.stringify({
     "@context": "https://schema.org",
@@ -387,7 +387,7 @@ function buildArticlePage(a) {
       </div>`).join('')}
     </div>` : '';
 
-  return `${head(a.title + ' — What to Cook', a.meta_description, (a.meta_keywords||'').split(',').map(s=>s.trim()), canonical, a.hero_image_url, breadcrumbSchema('Guides', '/articles/', a.title, canonical))}
+  return `${head(a.title + ' — What to Cook', a.meta_description, (a.meta_keywords||'').split(',').map(s=>s.trim()), canonical, a.hero_image_url, breadcrumbSchema('Guides', '/articles', a.title, canonical))}
 <body>
 <script type="application/ld+json">${schema}</script>
 ${faqSchema ? `<script type="application/ld+json">${faqSchema}</script>` : ''}
@@ -418,7 +418,7 @@ ${footer()}
 // ── Index pages ────────────────────────────────────────────────────────────
 function buildRecipeIndex() {
   const cards = RECIPES.map(r => `
-    <a href="/recipes/${r.slug}/" class="card">
+    <a href="/recipes/${r.slug}" class="card">
       <img src="${e(r.image_url)}" alt="${e(r.image_alt)}" loading="lazy" />
       <div class="card-body">
         <p class="card-label">${e(r.cuisine)}</p>
@@ -426,19 +426,19 @@ function buildRecipeIndex() {
         <p class="card-sub">${r.nutrition_per_serving.protein_g}g protein &middot; ${r.nutrition_per_serving.calories} kcal</p>
       </div>
     </a>`).join('');
-  return indexPage('Recipes', '/recipes/', 'High-protein Indian recipes with full macros', cards, false);
+  return indexPage('Recipes', '/recipes', 'High-protein Indian recipes with full macros', cards, false);
 }
 
 function buildArticleIndex() {
   const cards = ARTICLES.map(a => `
-    <a href="/articles/${a.slug}/" class="card">
+    <a href="/articles/${a.slug}" class="card">
       ${a.hero_image_url ? `<img src="${e(a.hero_image_url)}" alt="${e(a.title)}" loading="lazy" />` : ''}
       <div class="card-body card-body-text">
         <p class="card-label">${e(a.category)} &middot; ${e(a.read_time)}</p>
         <h2 class="card-title">${e(a.title)}</h2>
       </div>
     </a>`).join('');
-  return indexPage('Learn', '/articles/', 'Evidence-based Indian nutrition guides', cards, true);
+  return indexPage('Learn', '/articles', 'Evidence-based Indian nutrition guides', cards, true);
 }
 
 function indexPage(name, canonical, desc, cards, isArticles) {
@@ -470,7 +470,7 @@ ${footer()}
 // ── Homepage ───────────────────────────────────────────────────────────────
 function buildHomepage() {
   const recentRecipes = RECIPES.slice(0,3).map(r => `
-    <a href="/recipes/${r.slug}/" class="card">
+    <a href="/recipes/${r.slug}" class="card">
       <img src="${e(r.image_url)}" alt="${e(r.image_alt)}" loading="lazy" />
       <div class="card-body">
         <p class="card-label">${e(r.cuisine)}</p>
@@ -480,7 +480,7 @@ function buildHomepage() {
     </a>`).join('');
 
   const recentArticles = ARTICLES.slice(0,3).map(a => `
-    <a href="/articles/${a.slug}/" class="card">
+    <a href="/articles/${a.slug}" class="card">
       ${a.hero_image_url ? `<img src="${e(a.hero_image_url)}" alt="${e(a.title)}" loading="lazy" />` : ''}
       <div class="card-body card-body-text">
         <p class="card-label">${e(a.category)}</p>
@@ -496,8 +496,8 @@ ${nav()}
   <h1 style="font-family:var(--font-display);font-size:clamp(34px,6vw,58px);color:#FAF7F2;line-height:1.12;margin-bottom:16px;">Your place to find great recipes<br>and eat well without giving up<br><em>the food you love.</em></h1>
   <p style="color:rgba(255,255,255,0.72);font-size:18px;max-width:560px;margin:0 auto 28px;line-height:1.6;">Practical Indian recipes with real macros. Evidence-based guides on eating well. And an AI tool that builds your weekly menu around what you actually enjoy.</p>
   <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-    <a href="/recipes/" style="display:inline-block;background:var(--amber);color:#fff;padding:13px 28px;border-radius:50px;font-size:15px;font-weight:500;text-decoration:none;">Browse Recipes &#8594;</a>
-    <a href="/articles/" style="display:inline-block;background:transparent;color:#FAF7F2;border:1px solid rgba(255,255,255,0.35);padding:13px 28px;border-radius:50px;font-size:15px;font-weight:500;text-decoration:none;">Read Articles &#8594;</a>
+    <a href="/recipes" style="display:inline-block;background:var(--amber);color:#fff;padding:13px 28px;border-radius:50px;font-size:15px;font-weight:500;text-decoration:none;">Browse Recipes &#8594;</a>
+    <a href="/articles" style="display:inline-block;background:transparent;color:#FAF7F2;border:1px solid rgba(255,255,255,0.35);padding:13px 28px;border-radius:50px;font-size:15px;font-weight:500;text-decoration:none;">Read Articles &#8594;</a>
   </div>
 </section>
 
@@ -507,7 +507,7 @@ ${nav()}
     <p style="font-size:11px;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">RECIPES</p>
     <h2 style="font-family:var(--font-display);font-size:30px;color:var(--green);margin-bottom:24px;">High-protein Indian recipes, with full macros</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;margin-bottom:20px;">${recentRecipes}</div>
-    <a href="/recipes/" style="color:var(--green-mid);font-weight:500;font-size:15px;">See all recipes &#8594;</a>
+    <a href="/recipes" style="color:var(--green-mid);font-weight:500;font-size:15px;">See all recipes &#8594;</a>
   </section>
 
   <hr style="border:none;border-top:1px solid var(--cream-dark);margin-bottom:60px;" />
@@ -516,7 +516,7 @@ ${nav()}
     <p style="font-size:11px;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">LEARN</p>
     <h2 style="font-family:var(--font-display);font-size:30px;color:var(--green);margin-bottom:24px;">Evidence-based guides for Indian eaters</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;margin-bottom:20px;">${recentArticles}</div>
-    <a href="/articles/" style="color:var(--green-mid);font-weight:500;font-size:15px;">See all articles &#8594;</a>
+    <a href="/articles" style="color:var(--green-mid);font-weight:500;font-size:15px;">See all articles &#8594;</a>
   </section>
 
   <hr style="border:none;border-top:1px solid var(--cream-dark);margin-bottom:60px;" />
@@ -554,10 +554,10 @@ function buildSitemap() {
 
   const urls = [
     { loc: '/',          lastmod: newest([...ARTICLES, ...RECIPES]), changefreq: 'weekly',  priority: '1.0' },
-    { loc: '/recipes/',  lastmod: newest(RECIPES),                   changefreq: 'weekly',  priority: '0.8' },
-    { loc: '/articles/', lastmod: newest(ARTICLES),                  changefreq: 'weekly',  priority: '0.8' },
-    ...RECIPES.map(r  => ({ loc: `/recipes/${r.slug}/`,  lastmod: dateOf(r), changefreq: 'monthly', priority: '0.7' })),
-    ...ARTICLES.map(a => ({ loc: `/articles/${a.slug}/`, lastmod: dateOf(a), changefreq: 'monthly', priority: '0.7' })),
+    { loc: '/recipes',  lastmod: newest(RECIPES),                   changefreq: 'weekly',  priority: '0.8' },
+    { loc: '/articles', lastmod: newest(ARTICLES),                  changefreq: 'weekly',  priority: '0.8' },
+    ...RECIPES.map(r  => ({ loc: `/recipes/${r.slug}`,  lastmod: dateOf(r), changefreq: 'monthly', priority: '0.7' })),
+    ...ARTICLES.map(a => ({ loc: `/articles/${a.slug}`, lastmod: dateOf(a), changefreq: 'monthly', priority: '0.7' })),
   ];
 
   return `<?xml version="1.0" encoding="UTF-8"?>
