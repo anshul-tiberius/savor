@@ -127,6 +127,16 @@ function head(title, desc, keywords, canonical, image, breadcrumb) {
     .author-info strong { display: block; color: var(--text); font-size: 15px; margin-bottom: 2px; }
     .author-info span { color: var(--text-light); font-size: 13px; line-height: 1.5; }
 
+    /* Related reading */
+    .related { border-top: 1px solid var(--cream-dark); margin: 36px 0 0; padding-top: 28px; }
+    .related h2 { font-family: var(--font-display); font-size: 22px; color: var(--text); margin-bottom: 16px; }
+    .related ul { list-style: none; padding: 0; }
+    .related li { border-bottom: 1px solid var(--cream-dark); }
+    .related li:last-child { border-bottom: none; }
+    .related a { display: block; padding: 14px 0; color: var(--text); font-size: 16px; line-height: 1.4; }
+    .related a:hover { color: var(--green-mid); }
+    .related .related-label { display: block; color: var(--text-light); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+
     /* CTA */
     .cta-block { background: var(--cream-dark); border-radius: 16px; padding: 28px 24px; margin: 36px 0; text-align: center; }
     .cta-block p { font-size: 17px; color: var(--text-mid); margin-bottom: 16px; line-height: 1.5; }
@@ -265,6 +275,52 @@ ${footer()}
 </html>`;
 }
 
+// ── Related articles (internal linking) ───────────────────────
+// Scores every other article against this one and returns the top few.
+// Same category is worth more than any single shared keyword, so articles
+// cluster by topic first and by incidental keyword overlap second.
+const kw = a => (a.meta_keywords || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+
+function relatedArticles(a, limit = 3) {
+  const mine = kw(a);
+  const scored = ARTICLES
+    .filter(o => o.slug !== a.slug)
+    .map(o => {
+      const shared = kw(o).filter(k => mine.includes(k)).length;
+      const score = (o.category === a.category ? 3 : 0) + shared;
+      return { article: o, score };
+    })
+    .filter(x => x.score > 0)
+    .sort((x, y) => y.score - x.score || (y.article.published_date || '').localeCompare(x.article.published_date || ''))
+    .slice(0, limit)
+    .map(x => x.article);
+
+  // No page should be an orphan: if scoring finds nothing (a lone article in
+  // its category with no shared keywords), fall back to the newest others so
+  // every article still has a route out to the rest of the cluster.
+  if (scored.length < limit) {
+    const have = new Set(scored.map(x => x.slug));
+    const filler = ARTICLES
+      .filter(o => o.slug !== a.slug && !have.has(o.slug))
+      .sort((x, y) => (y.published_date || '').localeCompare(x.published_date || ''))
+      .slice(0, limit - scored.length);
+    return scored.concat(filler);
+  }
+  return scored;
+}
+
+function relatedHTML(a) {
+  const rel = relatedArticles(a);
+  if (!rel.length) return '';
+  return `
+    <div class="related">
+      <h2>Related reading</h2>
+      <ul>${rel.map(r => `
+        <li><a href="/articles/${r.slug}/"><span class="related-label">${e(r.category)}</span>${e(r.title)}</a></li>`).join('')}
+      </ul>
+    </div>`;
+}
+
 // ── Article page ────────────────────────────────────────────────────────────
 function buildArticlePage(a) {
   const canonical = `/articles/${a.slug}/`;
@@ -348,6 +404,7 @@ ${nav()}
   ${sectionsHTML}
   ${takeawaysHTML}
   ${faqHTML}
+  ${relatedHTML(a)}
   <div class="cta-block">
     <p>${e(a.cta_text)}</p>
     <a href="${APP_URL}" class="cta-btn" target="_blank" rel="noopener">Build my weekly menu &#8212; free &#8594;</a>
@@ -486,6 +543,30 @@ ${footer()}
 </html>`;
 }
 
+// ── Sitemap ─────────────────────────────────────────────────
+// sitemap.xml is generated from _data, never hand-edited. It used to be a
+// checked-in file that nothing updated, so new articles silently never made
+// it in -- see CLAUDE.md.
+function buildSitemap() {
+  const TODAY = new Date().toISOString().slice(0, 10);
+  const dateOf = x => x.published_date || TODAY;
+  const newest = list => list.map(dateOf).sort().pop() || TODAY;
+
+  const urls = [
+    { loc: '/',          lastmod: newest([...ARTICLES, ...RECIPES]), changefreq: 'weekly',  priority: '1.0' },
+    { loc: '/recipes/',  lastmod: newest(RECIPES),                   changefreq: 'weekly',  priority: '0.8' },
+    { loc: '/articles/', lastmod: newest(ARTICLES),                  changefreq: 'weekly',  priority: '0.8' },
+    ...RECIPES.map(r  => ({ loc: `/recipes/${r.slug}/`,  lastmod: dateOf(r), changefreq: 'monthly', priority: '0.7' })),
+    ...ARTICLES.map(a => ({ loc: `/articles/${a.slug}/`, lastmod: dateOf(a), changefreq: 'monthly', priority: '0.7' })),
+  ];
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(u => `  <url><loc>${DOMAIN}${u.loc}</loc><lastmod>${u.lastmod}</lastmod><changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`).join('\n')}
+</urlset>
+`;
+}
+
 // ── Write files ────────────────────────────────────────────────────────────
 let count = 0;
 
@@ -509,6 +590,9 @@ RECIPES.forEach(r => writeFile(path.join(ROOT, `recipes/${r.slug}/index.html`), 
 // Article index + individual pages
 writeFile(path.join(ROOT, 'articles/index.html'), buildArticleIndex());
 ARTICLES.forEach(a => writeFile(path.join(ROOT, `articles/${a.slug}/index.html`), buildArticlePage(a)));
+
+// Sitemap — generated last so it reflects everything above
+writeFile(path.join(ROOT, 'sitemap.xml'), buildSitemap());
 
 console.log(`\nDone — ${count} files written.`);
 console.log('Note: vercel.json is NOT touched by this script. Manage it separately.');

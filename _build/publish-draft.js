@@ -35,6 +35,17 @@ if (missing.length) {
   process.exit(1);
 }
 
+// SEO audit gate -- refuses to publish a draft with any ERROR. Warnings are
+// printed for review but do not block. See _build/seo-audit.js.
+console.log('Running SEO audit...');
+try {
+  execSync(`node "${path.join(__dirname, 'seo-audit.js')}" ${slug}`, { stdio: 'inherit', cwd: ROOT });
+} catch (_) {
+  console.error('\nSEO audit failed. Fix the errors above, then re-run.');
+  console.error(`Draft left in place at _data/drafts/${slug}.json -- nothing was published.`);
+  process.exit(1);
+}
+
 const articlesPath = path.join(ROOT, '_data/articles.json');
 const articles = JSON.parse(fs.readFileSync(articlesPath, 'utf8'));
 
@@ -68,4 +79,4 @@ console.log('Removed draft file');
 console.log('\nRebuilding site...');
 execSync(`node "${path.join(__dirname, 'generate.js')}"`, { stdio: 'inherit', cwd: ROOT });
 
-console.log(`\nDone. Review the diff, then:\n  git add . && git commit -m "Add article: ${draft.title}" && git push`);
+console.log(`\nDone. Review the diff, then ship it:\n  node _build/ship.js ${draft.slug}`);
