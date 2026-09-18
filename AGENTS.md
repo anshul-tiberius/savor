@@ -10,8 +10,22 @@ Target user: Indian households, 30–49 age group, self-cookers or homes with a 
 User-facing term is "weekly menu" (not "meal plan") — see the note under Things to Never Do. Internally, the API mode, `appState.mealPlan`, and `generateMealPlan()` are still named for the older term; this is a naming split, not a bug, until someone does the code rename.
 
 **Live URLs:**
-- `https://app.whattocook.life` — the weekly menu app (launch.html)
+- `https://app.whattocook.life` — **TEMPORARILY redirects to a Lovable build** (see below)
+- `https://app.whattocook.life/launch` — `launch.html`, the app in this repo; still fully live at this path
 - `https://whattocook.life` — SEO/content site (articles, recipes, homepage)
+
+> ### ⚠️ TEMPORARY REDIRECT — set 2026-09-18, revert when the demo is done
+> `app.whattocook.life` currently 307-redirects to `https://what-to-cookkk.lovable.app/`,
+> a parallel build made in Lovable, so it could be shown to colleagues from the
+> real domain. This was explicitly temporary.
+>
+> **To revert:** in `vercel.json`, change the `app.whattocook.life` root redirect
+> `destination` back to `"/launch"`. That is the whole change.
+>
+> `launch.html` is untouched and still served at `/launch`, so nothing in this
+> repo is dormant — only the bare domain points elsewhere. The redirect is 307
+> (`permanent: false`), so no browser has cached it and reverting takes effect
+> immediately.
 
 ---
 
@@ -101,7 +115,6 @@ Navigation handled by `showScreen(name)` toggling `.screen` divs.
 - 3 Unsplash food images (grid: 1 tall left + 2 stacked right, 260px height)
 - Email input + "Start now" CTA
 - Email stored in `appState.email`, not sent anywhere until onboarding completes
-- **Version chooser (2026-09-18).** Below the sign-in card, every visitor is offered a link to a parallel build of the same product at `https://taste-palette-planner.lovable.app/` (built on Lovable). `trackVersionChoice()` fires a GA4 `version_choice` event and stores `wtc_version_choice`, logged as `'a'` at both sign-in entry points and `'b'` on the outbound click. **This is a chooser, not a split test** — with alpha traffic a 50/50 split halves an already-tiny sample and yields no signal, and the other build is a separate domain whose code we do not control, so version B numbers mean "sent there", never "converted". Switching to a randomised split later is a small change once traffic justifies it.
 
 ### Screen 2 — Onboarding Chat (`#screen-onboarding`)
 - iMessage-style chat UI — "W" avatar on left (green), user on right (dark green bubble)
@@ -399,6 +412,8 @@ Mobile-first. Desktop: max-width 420px centred (app), max-width 720px (content p
 - [x] 2026-09-18 chat bubbles rendered literal `**asterisks**` — `appendMessage()` and `appendChefMessage()` escaped and never rendered markdown. Added `renderChatMarkdown()`: escapes FIRST, then converts bold/italic, so model output can never inject markup. Verified against an `<img onerror>` + `<script>` payload
 - [x] 2026-09-18 four onboarding bugs found on a real iPhone, reproduced in a new stub harness, fixed, and covered by regression tests. (1) **Doubled greeting**: Supabase v2 fires `INITIAL_SESSION` *and* `SIGNED_IN` on load, both ran `loadUserData` -> `startOnboarding()`, and the two async calls interleaved so two *different* greetings rendered. Guarded with `_handledAuthFor` plus an `_onboardingStarting` latch. (2) **Every answer sent twice**: iOS routinely delivers a trailing `onresult` after `stop()`; because the handler rebuilt the composer from the recognition's accumulated results and re-armed the silence timer, the same answer sent again. Each recognition session now carries a turn record and handlers ignore results from a turn that is already sent or cancelled. (3) **Mic opened for a split second then died**: iOS refuses `continuous` recognition and wants a user gesture per session. A session that ends within 900ms having heard nothing is now treated as a refusal — retry once with `continuous:false`, and if that also fails stop auto-opening, set the status to "Tap the mic to answer" and wait for a tap instead of flickering. An explicit mic tap clears the flag and re-enables auto-start. (4) **Conversation restarted after backgrounding Chrome**: iOS evicts backgrounded tabs and the reload looks like nothing happened to the user, but `chatMessages` was memory-only. Onboarding now persists to `localStorage` (2h window) and `resumeOnboarding()` replays it silently without re-speaking or re-fetching a greeting
 - [x] 2026-09-18 stub test harness added — `_test/` with fake mic/TTS/API/Supabase, a generated harness and a 14-assertion onboarding regression suite. See the Testing section
+- [x] 2026-09-18 landing-page version chooser added, then removed the same day — it offered `taste-palette-planner.lovable.app` alongside this build. Superseded when a newer Lovable build (`what-to-cookkk`) became the temporary main version, which made the chooser point at an outdated app. Removed rather than repointed, since the premise (compare two, pick one) no longer applied
+- [ ] **TEMPORARY: `app.whattocook.life` redirects to `what-to-cookkk.lovable.app`** (set 2026-09-18, for showing colleagues). Revert by setting the `vercel.json` root redirect `destination` back to `"/launch"`. `launch.html` remains live at `/launch` throughout
 - [ ] **Supabase migration needed for Discover:** `alter table profiles add column if not exists taste_json jsonb;` — without it, swipe preferences persist per-device only
 - [ ] Week vibe header repeats on Pantry / Ask Chef / Profile tabs where it is irrelevant, costing ~90px
 - [ ] Day tabs clip at Saturday with no scroll affordance — Sunday is not discoverable

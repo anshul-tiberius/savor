@@ -10,7 +10,7 @@
     {
       "source": "/",
       "has": [{ "type": "host", "value": "app.whattocook.life" }],
-      "destination": "/launch",
+      "destination": "https://what-to-cookkk.lovable.app/",
       "permanent": false
     }
   ],

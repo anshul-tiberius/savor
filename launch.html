@@ -317,23 +317,6 @@
       box-shadow: 0 4px 20px rgba(196,123,43,0.4);
     }
     .btn-try:active { transform: scale(0.98); }
-    /* Two parallel builds of the same product are being trialled; this has to
-       read as a deliberate invitation rather than a broken duplicate link. */
-    .version-switch {
-      margin-top: 22px; padding-top: 22px;
-      border-top: 1px solid var(--cream-dark);
-      text-align: center;
-    }
-    .version-switch-label { font-family: var(--font-display); font-size: 18px; color: var(--text); margin-bottom: 5px; }
-    .version-switch-sub { font-size: 13px; line-height: 1.55; color: var(--text-light); margin-bottom: 14px; }
-    .version-switch-btn {
-      display: inline-block; padding: 11px 22px; border-radius: 50px;
-      border: 1.5px solid var(--green); color: var(--green);
-      font-family: var(--font-body); font-size: 14px; font-weight: 500; text-decoration: none;
-      transition: background 0.15s, color 0.15s;
-    }
-    .version-switch-btn:active { background: var(--green); color: #FAF7F2; }
-
     .email-note {
       text-align: center;
       font-size: 11px;
@@ -1430,14 +1413,6 @@
       <p class="email-note">New here? We'll build your plan together in 2 minutes. &nbsp;Already have one? You'll go right back to it.</p>
     </div>
 
-    <div class="version-switch">
-      <p class="version-switch-label">We're building two versions of What to Cook</p>
-      <p class="version-switch-sub">You're on the first one. Try the other and tell us which felt better &#8212; genuinely, we can't decide.</p>
-      <a class="version-switch-btn"
-         href="https://taste-palette-planner.lovable.app/"
-         target="_blank" rel="noopener"
-         onclick="trackVersionChoice('b')">Try the other version &#8594;</a>
-    </div>
   </div>
 
 </div><!-- /screen-landing -->
@@ -3597,18 +3572,7 @@ async function loadUserData(userId) {
 }
 
 // Sign in with Google OAuth — redirects to Google then back to the app
-// Which of the two parallel builds someone chose. We can log the click away,
-// but not what happens inside the other app -- it is a separate domain we do
-// not control, so treat version B numbers as "sent there", not "converted".
-function trackVersionChoice(v) {
-  try { localStorage.setItem('wtc_version_choice', v); } catch (_) {}
-  if (window.gtag) {
-    gtag('event', 'version_choice', { version: v, build: v === 'a' ? 'whattocook' : 'lovable' });
-  }
-}
-
 async function signInWithGoogle() {
-  trackVersionChoice('a');
   if (!db) { alert('Auth not configured yet. Paste your Supabase keys.'); return; }
   var btn = document.querySelector('.btn-google');
   if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
@@ -3630,7 +3594,6 @@ async function sendMagicLink() {
     document.getElementById('magic-email').focus();
     return;
   }
-  trackVersionChoice('a');
   var btn = document.getElementById('btn-send-link');
   btn.disabled = true;
   btn.textContent = 'Sending…';
