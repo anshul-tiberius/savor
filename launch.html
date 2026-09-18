@@ -588,12 +588,15 @@
     .btn-send { background: var(--green); }
     .btn-send:active { transform: scale(0.93); }
     .btn-mic { background: var(--cream-dark); }
-    .btn-mic.recording { background: #ff4444; animation: pulse 1s infinite; }
-    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,68,68,0.4)} 50%{box-shadow:0 0 0 8px rgba(255,68,68,0)} }
+    /* Listening reads as on-brand and inviting, not as a red record light. */
+    .btn-mic.recording { background: var(--green); animation: pulse 1.4s infinite; }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(26,58,42,0.35)} 50%{box-shadow:0 0 0 9px rgba(26,58,42,0)} }
+    /* Words still being recognised show muted until they are finalised. */
+    .chat-input.interim { color: var(--text-light); font-style: italic; }
     .btn-send svg, .btn-mic svg { width: 18px; height: 18px; }
     .btn-send svg { stroke: white; }
     .btn-mic svg { stroke: var(--text-mid); }
-    .btn-mic.recording svg { stroke: white; }
+    .btn-mic.recording svg { stroke: #FAF7F2; }
 
     /* ════════════════════════════════════════
        SCREEN 3 — HOLDING / LOADING
@@ -1094,6 +1097,63 @@
     /* ════════════════════════════════════════
        BOTTOM NAV
     ════════════════════════════════════════ */
+    /* ── Discover: swipeable dish deck ───────────────────────────────── */
+    #view-discover { display: none; flex: 1; min-height: 0; flex-direction: column; }
+    .deck-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 12px 20px 0; }
+    .deck-intro { font-size: 13px; color: var(--text-light); text-align: center; margin-bottom: 10px; line-height: 1.45; }
+    .deck-stage { position: relative; flex: 1; min-height: 260px; max-height: 470px; }
+
+    .deck-card {
+      position: absolute; inset: 0;
+      background: var(--white); border-radius: 20px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+      padding: 22px 20px; display: flex; flex-direction: column;
+      cursor: grab; touch-action: pan-y; user-select: none;
+      will-change: transform;
+    }
+    .deck-card:active { cursor: grabbing; }
+    .deck-card.settling { transition: transform 0.28s ease, opacity 0.28s ease; }
+    .deck-card-type { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); margin-bottom: 8px; }
+    .deck-card-name { font-family: var(--font-display); font-size: 27px; line-height: 1.15; color: var(--text); margin-bottom: 12px; }
+    .deck-card-desc { font-size: 15px; line-height: 1.6; color: var(--text-mid); flex: 1; }
+    .deck-card-macros { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0 10px; }
+    .deck-card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .deck-tag { font-size: 11px; padding: 4px 10px; border-radius: 20px; background: var(--green-light); color: var(--green); }
+
+    /* Verdict stamps that fade in as the card is dragged */
+    /* Sat in the top corners originally, which collided with the meal-type
+       label. The card's mid-band is empty on every card, so it reads cleanly
+       there regardless of how long the dish name runs. */
+    .deck-stamp {
+      position: absolute; top: 46%; padding: 8px 18px; border-radius: 10px;
+      font-size: 19px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      opacity: 0; pointer-events: none; border: 3px solid; background: var(--white);
+    }
+    .deck-stamp.yes { left: 20px; transform: translateY(-50%) rotate(-12deg); color: var(--green); border-color: var(--green); }
+    .deck-stamp.no  { right: 20px; transform: translateY(-50%) rotate(12deg); color: #B4462F; border-color: #B4462F; }
+
+    .deck-actions { display: flex; justify-content: center; gap: 22px; padding: 16px 0 12px; }
+    .deck-btn {
+      width: 56px; height: 56px; border-radius: 50%; border: 1.5px solid var(--cream-dark);
+      background: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .deck-btn:active { transform: scale(0.92); }
+    .deck-btn svg { width: 24px; height: 24px; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .deck-btn.pass svg { stroke: #B4462F; }
+    .deck-btn.like svg { stroke: var(--green); }
+    .deck-btn.like { border-color: var(--green-light); }
+
+    .deck-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px 24px; }
+    .deck-empty-title { font-family: var(--font-display); font-size: 23px; color: var(--text); margin-bottom: 8px; }
+    .deck-empty-sub { font-size: 14px; color: var(--text-light); line-height: 1.6; margin-bottom: 20px; max-width: 280px; }
+    .deck-refresh {
+      background: var(--green); color: #FAF7F2; border: none; cursor: pointer;
+      padding: 12px 26px; border-radius: 50px;
+      font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    }
+    .deck-count { text-align: center; font-size: 12px; color: var(--text-light); padding-bottom: 8px; }
+
     .bottom-nav {
       flex-shrink: 0;
       display: flex;
@@ -1385,6 +1445,7 @@
       placeholder="Type your answer…"
       rows="1"
       onkeydown="handleChatKey(event)"
+      onpointerdown="handleComposerIntent()"
       oninput="autoResize(this)"
     ></textarea>
     <button class="btn-mic" id="btn-mic" onclick="toggleMic()" title="Voice input">
@@ -1460,6 +1521,8 @@
 
   <div id="view-profile"></div>
 
+  <div id="view-discover"></div>
+
   <nav class="bottom-nav">
     <button class="bnav-btn active" id="bnav-menu" onclick="selectBNav('menu')">
       <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1472,6 +1535,10 @@
     <button class="bnav-btn" id="bnav-chef" onclick="selectBNav('chef')">
       <svg viewBox="0 0 24 24"><path d="M6 13.87A4 4 0 017.41 6a5.11 5.11 0 019.18 0A4 4 0 0118 13.87V21H6V13.87z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
       <span>Ask Chef</span>
+    </button>
+    <button class="bnav-btn" id="bnav-discover" onclick="selectBNav('discover')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+      <span>Discover</span>
     </button>
     <button class="bnav-btn" id="bnav-profile" onclick="selectBNav('profile')">
       <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1530,7 +1597,18 @@ let appState = {
   isTyping: false,
   recognition: null,
   isRecording: false,
-  voiceMode: true,         // voice-first by default
+  voiceMode: true,         // does the app speak its replies (header mute toggle)
+  inputMode: 'voice',      // 'voice' | 'text' — how the user answers THIS turn; remembered
+  micPrefix: '',           // text already in the box when the mic opened
+  micFinal: '',            // finalised transcript so far this turn
+  micSilenceTimer: null,
+  micCancelled: false,
+  ttsKeepAlive: null,
+  deck: [],                // dishes still to swipe
+  deckSeen: [],            // names already shown, so refills do not repeat
+  deckLoading: false,
+  deckError: null,
+  taste: { liked: [], passed: [], tags: {} },
   isSpeaking: false,
   pantryItems: [],        // [{id, category, text, done}]
   chefMessages: [],        // [{role, content}] for Ask Chef
@@ -1686,8 +1764,14 @@ async function sendMessage() {
 }
 
 function handleChatKey(e) {
+  // Reaching for the keyboard switches this answer to text and drops the mic,
+  // keeping whatever has already been transcribed.
+  if (e.key !== 'Enter' && e.key !== 'Tab' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    handleComposerIntent();
+  }
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
+    stopListening({ cancelPending: true });
     sendMessage();
   }
 }
@@ -1695,6 +1779,18 @@ function handleChatKey(e) {
 function autoResize(el) {
   el.style.height = 'auto';
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// Render the light markdown the model actually emits. Escaping happens FIRST,
+// so the only tags that can reach innerHTML are the ones added here -- model
+// output can never inject markup of its own.
+function renderChatMarkdown(text) {
+  return escapeHtml(text)
+    .replace(/\*\*\*([^*]+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+    .replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[^*])\*([^*\n]+?)\*/g, '$1<em>$2</em>')
+    .replace(/`([^`]+?)`/g, '$1')
+    .replace(/\n/g, '<br>');
 }
 
 function appendMessage(role, text) {
@@ -1705,7 +1801,7 @@ function appendMessage(role, text) {
   if (role === 'savor') {
     div.innerHTML = `
       <div class="msg-avatar">W</div>
-      <div class="msg-bubble">${escapeHtml(text).replace(/\n/g, '<br>')}</div>`;
+      <div class="msg-bubble">${renderChatMarkdown(text)}</div>`;
     speakText(text);
   } else {
     div.innerHTML = `<div class="msg-bubble">${escapeHtml(text)}</div>`;
@@ -1756,52 +1852,162 @@ function showMicToast(msg) {
   setTimeout(() => { if (toast.parentNode) toast.remove(); }, 3500);
 }
 
-function toggleMic() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) {
-    showMicToast('Voice input works best in Chrome — please type your answer.');
-    return;
-  }
+// How long a pause ends the turn. People pause mid-sentence when they are
+// recalling something ("I grew up in... Bhopal"), so this has to be generous.
+const MIC_SILENCE_MS = 1800;
 
+function micSupported() {
+  return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+}
+
+// The user's choice of voice-or-text for this answer. Remembered, so whichever
+// they used last becomes the default next turn, but never locks them in.
+function setInputMode(mode, opts) {
+  opts = opts || {};
+  appState.inputMode = mode;
+  try { localStorage.setItem('wtc_input_mode', mode); } catch (_) {}
+
+  if (mode === 'text') {
+    stopListening({ cancelPending: true });
+    if (opts.focus !== false) {
+      const el = document.getElementById('chat-input');
+      el && el.focus();
+    }
+  }
+  updateMicButton();
+  updateChatStatus();
+}
+
+function updateMicButton() {
   const btn = document.getElementById('btn-mic');
+  if (!btn) return;
+  btn.classList.toggle('recording', !!appState.isRecording);
+  btn.title = appState.isRecording
+    ? 'Listening — tap to stop'
+    : (appState.inputMode === 'voice' ? 'Answer by voice' : 'Switch to voice');
+}
 
+function setComposerPlaceholder() {
+  const input = document.getElementById('chat-input');
+  if (!input) return;
+  input.placeholder = appState.isRecording
+    ? 'Listening… or type'
+    : 'Type your answer…';
+}
+
+function toggleMic() {
   if (appState.isRecording) {
-    appState.recognition.stop();
-    appState.isRecording = false;
-    btn.classList.remove('recording');
+    // Tapping the mic while it is listening means "I am done" — send what we have.
+    stopListening({ cancelPending: true });
+    const input = document.getElementById('chat-input');
+    if (input && input.value.trim()) sendMessage();
     return;
   }
+  setInputMode('voice', { focus: false });
+  startListening();
+}
 
-  const rec = new SpeechRecognition();
+function startListening() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    showMicToast('Voice input works best in Chrome — please type your answer.');
+    setInputMode('text');
+    return;
+  }
+  if (appState.isRecording) return;
+
+  const input = document.getElementById('chat-input');
+  const rec = new SR();
   rec.lang = 'en-IN';
-  rec.continuous = false;
-  rec.interimResults = false;
+  rec.continuous = true;      // do not end the turn at the first pause
+  rec.interimResults = true;  // show words as they are recognised
+  rec.maxAlternatives = 1;
+
+  appState.micPrefix = input && input.value.trim() ? input.value.trim() + ' ' : '';
+  appState.micFinal = '';
+  appState.micCancelled = false;
+
+  const armSilence = () => {
+    clearTimeout(appState.micSilenceTimer);
+    appState.micSilenceTimer = setTimeout(() => {
+      const hadText = input && input.value.trim();
+      stopListening({});
+      if (!appState.micCancelled && appState.inputMode === 'voice' && hadText) sendMessage();
+    }, MIC_SILENCE_MS);
+  };
 
   rec.onresult = (e) => {
-    const transcript = e.results[0][0].transcript;
-    const input = document.getElementById('chat-input');
-    input.value = transcript;
-    autoResize(input);
-    if (appState.voiceMode) {
-      setTimeout(() => sendMessage(), 1500);
+    // Rebuild from the whole result list each time. Accumulating by resultIndex
+    // double-counts when an interim result is later finalised.
+    let final = '', interim = '';
+    for (let i = 0; i < e.results.length; i++) {
+      const r = e.results[i];
+      if (r.isFinal) final += r[0].transcript + ' ';
+      else interim += r[0].transcript;
     }
+    appState.micFinal = final;
+    if (input) {
+      input.value = (appState.micPrefix + final + interim).replace(/\s{2,}/g, ' ').trimStart();
+      input.classList.toggle('interim', !!interim && !final);
+      autoResize(input);
+    }
+    armSilence();
   };
+
   rec.onend = () => {
     appState.isRecording = false;
-    btn.classList.remove('recording');
-    updateChatStatus();
-  };
-  rec.onerror = () => {
-    appState.isRecording = false;
-    btn.classList.remove('recording');
+    input && input.classList.remove('interim');
+    updateMicButton();
+    setComposerPlaceholder();
     updateChatStatus();
   };
 
-  rec.start();
+  rec.onerror = (e) => {
+    appState.isRecording = false;
+    clearTimeout(appState.micSilenceTimer);
+    input && input.classList.remove('interim');
+    // A denied mic permission is permanent for the session — fall back to typing
+    // rather than silently leaving the user with a dead button.
+    if (e && (e.error === 'not-allowed' || e.error === 'service-not-allowed')) {
+      showMicToast('Mic access is blocked — you can type your answer instead.');
+      setInputMode('text');
+    }
+    updateMicButton();
+    setComposerPlaceholder();
+    updateChatStatus();
+  };
+
+  try {
+    rec.start();
+  } catch (_) {
+    return; // already started
+  }
   appState.recognition = rec;
   appState.isRecording = true;
-  btn.classList.add('recording');
+  armSilence();
+  updateMicButton();
+  setComposerPlaceholder();
   updateChatStatus();
+}
+
+function stopListening(opts) {
+  opts = opts || {};
+  clearTimeout(appState.micSilenceTimer);
+  if (opts.cancelPending) appState.micCancelled = true;
+  if (appState.recognition && appState.isRecording) {
+    try { appState.recognition.stop(); } catch (_) {}
+  }
+  appState.isRecording = false;
+  const input = document.getElementById('chat-input');
+  input && input.classList.remove('interim');
+  updateMicButton();
+  setComposerPlaceholder();
+  updateChatStatus();
+}
+
+// The user reaching for the keyboard is an explicit choice to type this answer.
+function handleComposerIntent() {
+  if (appState.inputMode !== 'text' || appState.isRecording) setInputMode('text', { focus: false });
 }
 
 // ═══════════════════════════════════════════
@@ -1837,17 +2043,102 @@ function waitForSpeechThenTransition() {
   }, 600);
 }
 
+// Emoji, pictographs, dingbats, arrows and their modifiers.
+//
+// Deliberately does NOT touch General Punctuation (U+2000-206F) or Currency
+// (U+20A0-20CF): curly quotes, em dashes, ellipses and the rupee sign all need
+// to survive and be spoken normally.
+const SPEECH_SYMBOL_RE = /[\u{1F000}-\u{1FAFF}\u{1FB00}-\u{1FBFF}\u{2190}-\u{21FF}\u{2300}-\u{23FF}\u{2460}-\u{24FF}\u{25A0}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE00}-\u{FE0F}\u{200D}\u{20E3}\u{2122}\u{2139}]/gu;
+
+// Turn model output into something worth listening to. Browser TTS reads emoji
+// aloud by name ("waving hand"), reads stray asterisks as "asterisk", and will
+// happily recite a whole JSON blob, so all three have to go.
 function cleanForSpeech(text) {
-  return text
-    .replace(/\*\*(.+?)\*\*/g, '$1')   // **bold** → bold
-    .replace(/\*(.+?)\*/g, '$1')        // *italic* → italic
-    .replace(/_{1,2}(.+?)_{1,2}/g, '$1') // _italic_ / __bold__ → text
-    .replace(/`(.+?)`/g, '$1')          // `code` → code
-    .replace(/#+\s*/g, '')              // ## headings → plain
-    .replace(/\[(.+?)\]\(.+?\)/g, '$1') // [link](url) → link text
-    .replace(/\n{2,}/g, '. ')           // double newlines → pause
-    .replace(/\n/g, ' ')                // single newlines → space
+  let t = String(text || '');
+
+  // Safety net: the profile payload is normally stripped before display, but if
+  // JSON.parse throws upstream the raw response falls through to the chat and
+  // would otherwise be read out in full.
+  t = t.replace(/<profile>[\s\S]*?<\/profile>/gi, ' ')
+       .replace(/```[\s\S]*?```/g, ' ')
+       .replace(/\{[\s\S]*"macro_targets"[\s\S]*\}/g, ' ');
+
+  // Line structure first. Bullet and quote markers have to go before newlines
+  // collapse, otherwise they end up stranded mid-sentence and get spoken.
+  t = t
+    .replace(/^\s{0,3}#{1,6}\s*/gm, '')          // headings
+    .replace(/^\s{0,3}>\s?/gm, '')               // blockquotes
+    .replace(/^\s{0,3}([-*_]\s*){3,}$/gm, ' ')   // horizontal rules
+    // List markers are dropped, but each item keeps terminal punctuation so
+    // the items are not spoken as one breathless run-on sentence.
+    .replace(/^\s{0,3}[-*+•·]\s+(.*?)\s*$/gm, (m, b) => /[.!?:;,]$/.test(b) ? b : b + '.')
+    .replace(/^\s{0,3}\d+[.)]\s+(.*?)\s*$/gm, (m, b) => /[.!?:;,]$/.test(b) ? b : b + '.');
+
+  // Inline markdown to plain words. [\s\S] so emphasis spanning a line break
+  // still matches.
+  t = t
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')   // [link](url), ![alt](src)
+    .replace(/\*\*\*([\s\S]+?)\*\*\*/g, '$1')
+    .replace(/\*\*([\s\S]+?)\*\*/g, '$1')
+    .replace(/\*([\s\S]+?)\*/g, '$1')
+    .replace(/__([\s\S]+?)__/g, '$1')
+    .replace(/_([\s\S]+?)_/g, '$1')
+    .replace(/~~([\s\S]+?)~~/g, '$1')
+    .replace(/`([^`]+?)`/g, '$1');
+
+  t = t.replace(SPEECH_SYMBOL_RE, ' ');
+
+  // Whatever markup survived unpaired would be read as a symbol name.
+  t = t.replace(/[*_`~#|<>]/g, ' ');
+
+  // Sentence flow: a paragraph break becomes a spoken pause, a single newline
+  // just a space.
+  t = t
+    .replace(/\s*\n{2,}\s*/g, '. ')
+    .replace(/\s*\n\s*/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\s+([.,!?;:])/g, '$1')
+    .replace(/([.!?,;:])(\s*[.,;:])+/g, '$1')    // no doubled-up punctuation
     .trim();
+
+  return t;
+}
+
+// Pick the most natural-sounding English voice available.
+//
+// The old chain preferred v.localService, which is backwards: on Chrome the
+// "Google ..." voices are cloud-synthesised and markedly more natural, while
+// the local ones are the legacy robotic set. We score instead of taking the
+// first match, because voice availability varies wildly by OS and browser.
+const NATURAL_VOICE_NAMES = /google|neural|natural|premium|enhanced/i;
+const INDIAN_VOICE_NAMES    = /rishi|veena|neel|ravi|heera|neerja|aditi|kajal/i;
+
+function pickVoice(voices) {
+  const score = (v) => {
+    const name = v.name || '';
+    const lang = v.lang || '';
+    let s = 0;
+
+    // India-first: an Indian-English voice wins outright when one exists.
+    // Android ships "English India" via Google's engine and macOS ships Rishi;
+    // both beat a more polished British voice for this audience.
+    if (lang === 'en-IN')                 s += 100;
+    else if (lang === 'en-GB')            s += 20;
+    else if (lang === 'en-AU')            s += 10;
+    else if (lang.toLowerCase().startsWith('en')) s += 5;
+
+    if (NATURAL_VOICE_NAMES.test(name))   s += 60;
+    if (INDIAN_VOICE_NAMES.test(name))    s += 30;
+
+    // Demote the legacy compact voices (Microsoft Hazel, Apple's novelty set).
+    // Never applied to en-IN, whose local voices are the ones we actually want.
+    if (v.localService && lang !== 'en-IN' && !NATURAL_VOICE_NAMES.test(name)) s -= 25;
+    return s;
+  };
+
+  const english = voices.filter(v => (v.lang || '').toLowerCase().startsWith('en'));
+  if (!english.length) return null;
+  return english.slice().sort((a, b) => score(b) - score(a))[0];
 }
 
 async function speakText(text) {
@@ -1859,10 +2150,7 @@ async function speakText(text) {
   utterance.rate = 0.93;
 
   const voices = await getVoices();
-  const preferred = voices.find(v => v.lang === 'en-IN') ||
-                    voices.find(v => v.lang === 'en-GB' && v.localService) ||
-                    voices.find(v => v.lang.startsWith('en') && v.localService) ||
-                    null;
+  const preferred = pickVoice(voices);
   if (preferred) utterance.voice = preferred;
 
   appState.isSpeaking = true;
@@ -1870,18 +2158,41 @@ async function speakText(text) {
 
   utterance.onend = () => {
     appState.isSpeaking = false;
+    clearInterval(appState.ttsKeepAlive);
     updateChatStatus();
-    if (appState.voiceMode && !appState.isTyping) {
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (SR && !appState.isRecording) setTimeout(() => toggleMic(), 300);
-    }
+    handoffToUser();
   };
   utterance.onerror = () => {
     appState.isSpeaking = false;
+    clearInterval(appState.ttsKeepAlive);
     updateChatStatus();
+    handoffToUser();
   };
 
   window.speechSynthesis.speak(utterance);
+
+  // Chrome silently stops synthesis after ~15s unless it is nudged.
+  clearInterval(appState.ttsKeepAlive);
+  appState.ttsKeepAlive = setInterval(() => {
+    if (!window.speechSynthesis.speaking) { clearInterval(appState.ttsKeepAlive); return; }
+    window.speechSynthesis.pause();
+    window.speechSynthesis.resume();
+  }, 9000);
+}
+
+// Once the app has finished speaking, hand the turn over the way the user
+// last chose to answer. Voice opens the mic; text just focuses the box and
+// stays quiet. Either way both options remain one tap away.
+function handoffToUser() {
+  if (appState.isTyping) return;
+  if (appState.inputMode === 'voice' && micSupported()) {
+    setTimeout(() => {
+      if (appState.inputMode === 'voice' && !appState.isRecording && !appState.isSpeaking) startListening();
+    }, 300);
+  } else {
+    const el = document.getElementById('chat-input');
+    el && el.focus();
+  }
 }
 
 function toggleVoiceMode() {
@@ -1894,7 +2205,9 @@ function toggleVoiceMode() {
     btn.classList.remove('voice-on');
     btn.title = 'Voice off — tap to enable';
     window.speechSynthesis && window.speechSynthesis.cancel();
-    if (appState.isRecording && appState.recognition) appState.recognition.stop();
+    clearInterval(appState.ttsKeepAlive);
+    appState.isSpeaking = false;
+    stopListening({ cancelPending: true });
   }
   updateChatStatus();
 }
@@ -1908,7 +2221,7 @@ function updateChatStatus() {
     statusEl.textContent = 'Speaking…';
     avatar && avatar.classList.add('speaking');
   } else if (appState.isRecording) {
-    statusEl.textContent = 'Listening…';
+    statusEl.textContent = 'Listening… or type instead';
     avatar && avatar.classList.remove('speaking');
   } else if (appState.isTyping) {
     statusEl.textContent = 'Thinking…';
@@ -1980,7 +2293,8 @@ async function generateMealPlan(feedback = null, attempt = 1) {
   try {
     const res = await callClaude('meal_plan', [], {
       profile: appState.userProfile,
-      feedback: feedback
+      feedback: feedback,
+      taste: appState.taste
     });
     appState.mealPlan = parseMealPlanResponse(res);
     // Build grocery items array from plan
@@ -2098,12 +2412,7 @@ function renderDay(i) {
       ? `<div class="allergen-chips">${meal.allergens.map(a => `<span class="allergen-chip">${escapeHtml(a)}</span>`).join('')}</div>`
       : '';
 
-    const cardImgQuery = encodeURIComponent(meal.name + ' indian food');
     card.innerHTML = `
-      <img class="meal-card-img"
-           src="https://source.unsplash.com/featured/400x260/?${cardImgQuery}"
-           alt="${escapeHtml(meal.name)}"
-           onerror="this.style.display='none'">
       <div class="meal-type-badge">${escapeHtml(meal.type)} · ${escapeHtml(meal.time || '')}</div>
       <div class="meal-name">${escapeHtml(meal.name)}</div>
       <div class="meal-desc">${escapeHtml(meal.description)}</div>
@@ -2143,12 +2452,8 @@ function showDish(dayIdx, mealIdx) {
   const recipeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(meal.name + ' recipe')}`;
   const tagsHtml = (meal.tags || []).map(t => `<span class="dish-tag">${escapeHtml(t)}</span>`).join('');
 
-  const dishImgQuery = encodeURIComponent(meal.name + ' indian food');
   body.innerHTML = `
-    <img class="dish-hero-img"
-         src="https://source.unsplash.com/featured/800x440/?${dishImgQuery}"
-         alt="${escapeHtml(meal.name)}"
-         onerror="this.outerHTML='<div class=\'dish-hero-ph\'>🍽️</div>'">
+    <div class="dish-hero-ph" role="img" aria-label="${escapeHtml(meal.name)}">🍽️</div>
     <div class="dish-type">${escapeHtml(meal.type)}</div>
     <h1 class="dish-name">${escapeHtml(meal.name)}</h1>
     <p class="dish-desc">${escapeHtml(meal.description)}</p>
@@ -2251,7 +2556,7 @@ function startHoldingLines() {
 // ═══════════════════════════════════════════
 function selectBNav(tab) {
   appState.activeBNav = tab;
-  ['menu', 'pantry', 'chef', 'profile'].forEach(function(t) {
+  ['menu', 'pantry', 'chef', 'discover', 'profile'].forEach(function(t) {
     var btn = document.getElementById('bnav-' + t);
     if (btn) btn.classList.toggle('active', t === tab);
   });
@@ -2269,10 +2574,13 @@ function selectBNav(tab) {
   if (vChef) vChef.style.display = tab === 'chef' ? 'flex' : 'none';
   var vProfile = document.getElementById('view-profile');
   if (vProfile) vProfile.style.display = tab === 'profile' ? 'block' : 'none';
+  var vDiscover = document.getElementById('view-discover');
+  if (vDiscover) vDiscover.style.display = tab === 'discover' ? 'flex' : 'none';
 
   if (tab === 'pantry') renderPantry();
   else if (tab === 'chef') initChefChat();
   else if (tab === 'profile') renderProfile();
+  else if (tab === 'discover') { renderDiscover(); ensureDeck(false); }
 }
 
 // ═══════════════════════════════════════════
@@ -2363,6 +2671,266 @@ async function savePantryToSupabase() {
 }
 
 // ═══════════════════════════════════════════
+// DISCOVER — swipeable dish deck
+// ═══════════════════════════════════════════
+// Learns what someone actually responds to, which is usually truer than what
+// they managed to articulate during onboarding. Likes and passes are scored by
+// tag and fed back into weekly menu generation via the `taste` payload.
+
+const DECK_REFILL_AT   = 4;    // fetch more once the stack gets this thin
+const SWIPE_COMMIT_PX  = 95;   // drag past this and the card is gone
+
+function loadTaste() {
+  try {
+    const raw = localStorage.getItem('wtc_taste');
+    if (raw) appState.taste = JSON.parse(raw);
+  } catch (_) {}
+  if (!appState.taste || typeof appState.taste !== 'object') appState.taste = {};
+  appState.taste.liked  = Array.isArray(appState.taste.liked)  ? appState.taste.liked  : [];
+  appState.taste.passed = Array.isArray(appState.taste.passed) ? appState.taste.passed : [];
+  appState.taste.tags   = (appState.taste.tags && typeof appState.taste.tags === 'object') ? appState.taste.tags : {};
+}
+
+var _tasteDebounceTimer = null;
+function saveTaste() {
+  try { localStorage.setItem('wtc_taste', JSON.stringify(appState.taste)); } catch (_) {}
+  clearTimeout(_tasteDebounceTimer);
+  _tasteDebounceTimer = setTimeout(saveTasteToSupabase, 1000);
+}
+
+async function saveTasteToSupabase() {
+  if (!db) return;
+  try {
+    var sessionRes = await db.auth.getSession();
+    var session = sessionRes.data && sessionRes.data.session;
+    if (!session) return;
+    await db.from('profiles').upsert({
+      id: session.user.id,
+      taste_json: appState.taste,
+      updated_at: new Date().toISOString()
+    });
+  } catch (e) {
+    // profiles.taste_json may not exist yet. Swiping still works from
+    // localStorage, so this must never block the UI.
+    console.warn('saveTasteToSupabase (non-critical):', e);
+  }
+}
+
+function recordSwipe(dish, liked) {
+  const bucket = liked ? appState.taste.liked : appState.taste.passed;
+  if (dish.name && bucket.indexOf(dish.name) === -1) bucket.push(dish.name);
+  // Bounded so the prompt payload stays small and cheap.
+  if (bucket.length > 40) bucket.splice(0, bucket.length - 40);
+
+  (dish.tags || []).forEach(function (t) {
+    if (typeof t !== 'string') return;
+    const key = t.toLowerCase().trim();
+    if (!key) return;
+    const cur = appState.taste.tags[key] || 0;
+    // Clamped so one run of swipes cannot drown out every other signal.
+    appState.taste.tags[key] = Math.max(-5, Math.min(5, cur + (liked ? 1 : -1)));
+  });
+
+  appState.deckSeen = appState.deckSeen || [];
+  if (dish.name) appState.deckSeen.push(dish.name);
+  if (appState.deckSeen.length > 120) appState.deckSeen.splice(0, appState.deckSeen.length - 120);
+
+  saveTaste();
+}
+
+function parseDeckResponse(res) {
+  let text = String(res || '').trim()
+    .replace(/^```(?:json)?/i, '')
+    .replace(/```$/, '')
+    .trim();
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if (start > -1 && end > start) text = text.slice(start, end + 1);
+
+  const data = JSON.parse(text);
+  const dishes = Array.isArray(data) ? data : (data.dishes || []);
+  if (!Array.isArray(dishes)) throw new Error('deck response was not a list of dishes');
+
+  // Never render a half-formed card, and never re-show something already swiped.
+  const seen = appState.deckSeen || [];
+  return dishes.filter(function (d) {
+    return d && typeof d.name === 'string' && d.name
+      && typeof d.description === 'string' && d.description
+      && seen.indexOf(d.name) === -1;
+  });
+}
+
+async function ensureDeck(force) {
+  if (!force && appState.deck && appState.deck.length) return;
+  if (appState.deckLoading) return;
+  if (!appState.userProfile) return;
+
+  appState.deckLoading = true;
+  appState.deckError = null;
+  renderDiscover();
+
+  try {
+    const res = await callClaude('dish_deck', [], {
+      profile: appState.userProfile,
+      taste: appState.taste,
+      seen: (appState.deckSeen || []).slice(-60)
+    });
+    appState.deck = (appState.deck || []).concat(parseDeckResponse(res));
+  } catch (e) {
+    appState.deckError = (e && e.message && e.message.indexOf('rate_limit:') === 0)
+      ? rateLimitMessage(e)
+      : 'Could not load new dishes just now. Have another go in a moment.';
+    console.warn('ensureDeck:', e);
+  } finally {
+    appState.deckLoading = false;
+    renderDiscover();
+  }
+}
+
+function deckEmptyState(title, sub, btn) {
+  return '<div class="deck-empty">'
+    + '<div class="deck-empty-title">' + escapeHtml(title) + '</div>'
+    + '<p class="deck-empty-sub">' + escapeHtml(sub) + '</p>'
+    + (btn ? '<button class="deck-refresh" onclick="ensureDeck(true)">' + escapeHtml(btn) + '</button>' : '')
+    + '</div>';
+}
+
+function renderDiscover() {
+  const el = document.getElementById('view-discover');
+  if (!el) return;
+
+  const deck = appState.deck || [];
+
+  if (appState.deckLoading && !deck.length) {
+    el.innerHTML = deckEmptyState('Finding dishes for you…', 'Building a deck around what you have already told us.', '');
+    return;
+  }
+  if (appState.deckError && !deck.length) {
+    el.innerHTML = deckEmptyState('Hmm.', appState.deckError, 'Try again');
+    return;
+  }
+  if (!deck.length) {
+    const n = appState.taste.liked.length;
+    el.innerHTML = deckEmptyState(
+      n ? 'That is the deck for now' : 'Nothing here yet',
+      n ? 'You have liked ' + n + ' dish' + (n === 1 ? '' : 'es') + '. Your next weekly menu will lean on them.'
+        : 'Swipe through a few dishes and your weekly menus will start to lean your way.',
+      'Show me more'
+    );
+    return;
+  }
+
+  const stack = deck.slice(0, 3);
+  let html = '<div class="deck-wrap">'
+    + '<p class="deck-intro">Swipe right on anything you would happily eat. We build it into your weeks.</p>'
+    + '<div class="deck-stage" id="deck-stage">';
+
+  // Back to front, so the next card up ends on top of the stack.
+  for (let i = stack.length - 1; i >= 0; i--) {
+    const d = stack[i];
+    html += '<div class="deck-card" data-idx="' + i + '" style="transform: translateY(' + (i * 10) + 'px) scale(' + (1 - i * 0.04) + '); z-index:' + (10 - i) + ';">'
+      + '<div class="deck-stamp yes">Yes</div>'
+      + '<div class="deck-stamp no">Pass</div>'
+      + (d.meal_type ? '<div class="deck-card-type">' + escapeHtml(d.meal_type) + '</div>' : '')
+      + '<div class="deck-card-name">' + escapeHtml(d.name) + '</div>'
+      + '<div class="deck-card-desc">' + escapeHtml(d.description) + '</div>'
+      + '<div class="deck-card-macros">'
+        + '<span class="macro-chip kcal">' + escapeHtml(String(d.kcal || '—')) + ' kcal</span>'
+        + '<span class="macro-chip">P ' + escapeHtml(String(d.protein_g || 0)) + 'g</span>'
+        + '<span class="macro-chip">C ' + escapeHtml(String(d.carbs_g || 0)) + 'g</span>'
+        + '<span class="macro-chip">F ' + escapeHtml(String(d.fat_g || 0)) + 'g</span>'
+      + '</div>'
+      + '<div class="deck-card-tags">'
+        + (d.tags || []).slice(0, 4).map(function (t) { return '<span class="deck-tag">' + escapeHtml(t) + '</span>'; }).join('')
+      + '</div>'
+      + '</div>';
+  }
+
+  html += '</div>'
+    + '<div class="deck-actions">'
+      + '<button class="deck-btn pass" onclick="swipeTop(false)" aria-label="Pass on this dish">'
+        + '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+      + '</button>'
+      + '<button class="deck-btn like" onclick="swipeTop(true)" aria-label="Like this dish">'
+        + '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'
+      + '</button>'
+    + '</div>'
+    + '<div class="deck-count">' + deck.length + ' to go</div>'
+    + '</div>';
+
+  el.innerHTML = html;
+  attachSwipe();
+}
+
+function attachSwipe() {
+  const stage = document.getElementById('deck-stage');
+  if (!stage) return;
+  const card = stage.querySelector('.deck-card[data-idx="0"]');
+  if (!card) return;
+
+  const yes = card.querySelector('.deck-stamp.yes');
+  const no  = card.querySelector('.deck-stamp.no');
+  let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false;
+
+  card.addEventListener('pointerdown', function (e) {
+    dragging = true;
+    startX = e.clientX; startY = e.clientY; dx = 0; dy = 0;
+    card.classList.remove('settling');
+    try { card.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+
+  card.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    dx = e.clientX - startX;
+    dy = e.clientY - startY;
+    card.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + (dx / 18) + 'deg)';
+    const p = Math.min(1, Math.abs(dx) / SWIPE_COMMIT_PX);
+    if (yes) yes.style.opacity = dx > 0 ? p : 0;
+    if (no)  no.style.opacity  = dx < 0 ? p : 0;
+  });
+
+  function release() {
+    if (!dragging) return;
+    dragging = false;
+    if (Math.abs(dx) >= SWIPE_COMMIT_PX) {
+      commitSwipe(card, dx > 0);
+    } else {
+      // Snap back — the drag did not clear the threshold.
+      card.classList.add('settling');
+      card.style.transform = 'translateY(0) scale(1)';
+      if (yes) yes.style.opacity = 0;
+      if (no)  no.style.opacity  = 0;
+    }
+  }
+  card.addEventListener('pointerup', release);
+  card.addEventListener('pointercancel', release);
+}
+
+function commitSwipe(card, liked) {
+  const dish = (appState.deck || [])[0];
+  if (!dish || card.dataset.committed) return;
+  card.dataset.committed = '1';
+
+  card.classList.add('settling');
+  card.style.transform = 'translate(' + (liked ? 620 : -620) + 'px, 60px) rotate(' + (liked ? 28 : -28) + 'deg)';
+  card.style.opacity = '0';
+
+  recordSwipe(dish, liked);
+  appState.deck.shift();
+
+  setTimeout(function () {
+    renderDiscover();
+    if (appState.deck.length <= DECK_REFILL_AT && !appState.deckLoading) ensureDeck(true);
+  }, 240);
+}
+
+function swipeTop(liked) {
+  const stage = document.getElementById('deck-stage');
+  const card = stage && stage.querySelector('.deck-card[data-idx="0"]');
+  if (card) commitSwipe(card, liked);
+}
+
+// ═══════════════════════════════════════════
 // ASK CHEF
 // ═══════════════════════════════════════════
 const CHEF_SYSTEM = 'You are What to Cook\'s personal chef assistant. You know the user\'s current weekly menu in detail. Help them swap meals, understand ingredients, adjust their week, or answer nutrition questions in a warm, direct way. If the user wants to change their menu, confirm what you\'d do differently and end your message with:\n<changes>Brief description of what to change.</changes>\nKeep responses short — 2-4 sentences. Never clinical. Never say "diet". Match your food references to the user\'s own cuisine and food culture.';
@@ -2396,7 +2964,7 @@ function appendChefMessage(role, text, skipHistory) {
   var div = document.createElement('div');
   div.className = 'msg ' + (role === 'user' ? 'user' : 'savor');
   if (role !== 'user') {
-    div.innerHTML = '<div class="msg-avatar" style="font-size:14px;">&#x1F468;&#x200D;&#x1F373;</div><div class="msg-bubble">' + escapeHtml(text).replace(/\n/g, '<br>') + '</div>';
+    div.innerHTML = '<div class="msg-avatar" style="font-size:14px;">&#x1F468;&#x200D;&#x1F373;</div><div class="msg-bubble">' + renderChatMarkdown(text) + '</div>';
   } else {
     div.innerHTML = '<div class="msg-bubble">' + escapeHtml(text) + '</div>';
   }
@@ -2952,6 +3520,15 @@ async function signOut() {
 }
 
 // Kick off auth on page load
+// Restore how this user last chose to answer. Voice-first for newcomers, but a
+// returning typist is never put back in front of an open mic.
+try {
+  const savedMode = localStorage.getItem('wtc_input_mode');
+  if (savedMode === 'text' || savedMode === 'voice') appState.inputMode = savedMode;
+} catch (_) {}
+if (!micSupported()) appState.inputMode = 'text';
+loadTaste();
+
 initAuth();
 
 // ─────────────────────────────────────────────

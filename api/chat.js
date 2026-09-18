@@ -59,6 +59,28 @@ Format: [{"item":"paneer","qty":"200g","prep":"cubed"},{"item":"onion","qty":"1 
 
 Rules: 5–8 ingredients max. Real, findable ingredients only. Match the Indian home-cooking context.`,
   },
+  dish_deck: {
+    tier: 'cheap',
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 3500,
+    system: `You are What to Cook's dish discovery engine. Given a user profile, produce a varied deck of real Indian dishes for them to swipe through, so we can learn what they actually respond to rather than only what they were able to describe during onboarding.
+
+Critical rules:
+- Only dishes that genuinely exist and have real recipes findable on YouTube or Google. Never invent a dish.
+- Never include anything from their medical avoids or hard nos. These are absolute.
+- Respect their meat preference exactly.
+- Deliberately vary the deck: different regions, formats, meal types, effort levels and flavour profiles. The point is to learn their taste, so a deck where everything is similar is useless.
+- Include some dishes slightly outside their stated comfort zone. A deck that only confirms what we already know teaches us nothing.
+- Descriptions are 2 sentences, sensory and specific, no newlines. Same voice as the weekly menu: warm, never clinical.
+- Tags matter — they are how we learn. Use consistent lowercase tags covering region (marwari, south-indian, bengali, punjabi, gujarati, kerala), format (thali, bowl, wrap, dosa, curry, dry-sabzi, snack), and character (comfort, light, high-protein, festive, quick, slow-cooked).
+
+Respond with valid JSON only. No markdown, no preamble.
+
+JSON structure:
+{"dishes":[{"name":"Dish name","description":"Two sentences that make you want to eat it.","meal_type":"lunch","kcal":420,"protein_g":18,"carbs_g":52,"fat_g":14,"tags":["marwari","curry","comfort"],"allergens":["dairy"]}]}
+
+Produce exactly 18 dishes.`,
+  },
   chef: {
     tier: 'cheap',
     model: 'claude-haiku-4-5-20251001',
@@ -116,15 +138,59 @@ function cleanMessages(messages) {
     }));
 }
 
+// Condense swipe history into a short natural-language hint. Sent as text
+// rather than raw arrays so it stays cheap and the model can actually use it.
+function summariseTaste(taste) {
+  if (!taste || typeof taste !== 'object') return '';
+  const clean = (arr) => (Array.isArray(arr) ? arr : [])
+    .filter((x) => typeof x === 'string')
+    .slice(0, 25)
+    .map((x) => x.slice(0, 80));
+
+  const liked = clean(taste.liked);
+  const passed = clean(taste.passed);
+
+  const tagScores = taste.tags && typeof taste.tags === 'object' ? taste.tags : {};
+  const ranked = Object.keys(tagScores)
+    .filter((t) => typeof t === 'string' && Number.isFinite(tagScores[t]))
+    .sort((a, b) => tagScores[b] - tagScores[a]);
+  const lovedTags = ranked.filter((t) => tagScores[t] > 0).slice(0, 6);
+  const coldTags = ranked.filter((t) => tagScores[t] < 0).slice(-6);
+
+  const parts = [];
+  if (liked.length)     parts.push(`liked: ${liked.join(', ')}`);
+  if (passed.length)    parts.push(`passed on: ${passed.join(', ')}`);
+  if (lovedTags.length) parts.push(`leans toward ${lovedTags.join(', ')}`);
+  if (coldTags.length)  parts.push(`less keen on ${coldTags.join(', ')}`);
+  return parts.join(' | ').slice(0, 1200);
+}
+
 function buildUserMessage(mode, body) {
   if (mode === 'meal_plan') {
     const profile = body.profile || {};
     const feedback = body.feedback ? String(body.feedback).slice(0, 1200) : '';
     const profileStr = JSON.stringify(profile).slice(0, 6000);
 
+    // What they actually swiped on, which is often truer than what they said.
+    const taste = summariseTaste(body.taste);
+    const tasteStr = taste ? `\n\nLearned from dishes they have swiped on: ${taste}` : '';
+
     return feedback
-      ? `User profile: ${profileStr}\n\nFeedback on previous weekly menu: "${feedback}"\n\nGenerate a new 7-day menu incorporating this feedback.`
-      : `Generate a 7-day weekly menu for this person: ${profileStr}`;
+      ? `User profile: ${profileStr}${tasteStr}\n\nFeedback on previous weekly menu: "${feedback}"\n\nGenerate a new 7-day menu incorporating this feedback.`
+      : `Generate a 7-day weekly menu for this person: ${profileStr}${tasteStr}`;
+  }
+
+  if (mode === 'dish_deck') {
+    const profileStr = JSON.stringify(body.profile || {}).slice(0, 6000);
+    const taste = summariseTaste(body.taste);
+    const seen = Array.isArray(body.seen)
+      ? body.seen.filter((n) => typeof n === 'string').slice(0, 120).map((n) => n.slice(0, 120))
+      : [];
+
+    let msg = `Build a discovery deck for this person: ${profileStr}`;
+    if (taste) msg += `\n\nWhat we have learned so far: ${taste}`;
+    if (seen.length) msg += `\n\nAlready shown — do not repeat any of these: ${seen.join('; ')}`;
+    return msg;
   }
 
   if (mode === 'chef') {
@@ -226,7 +292,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const messages = mode === 'meal_plan'
+    const messages = (mode === 'meal_plan' || mode === 'dish_deck')
       ? [{ role: 'user', content: body.profile ? buildUserMessage(mode, body) : cleanMessages(body.messages)[0].content }]
       : cleanMessages(body.messages);
 
