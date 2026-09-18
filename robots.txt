@@ -3,5 +3,6 @@ Allow: /
 
 # Don't index the app shell — it requires auth and has no SEO value
 Disallow: /launch
+Disallow: /voice-test
 
 Sitemap: https://whattocook.life/sitemap.xml

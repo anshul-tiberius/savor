@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Voice audition — What to Cook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:#FAF7F2; --cream-dark:#F2EDE4; --green:#1A3A2A; --green-mid:#2D5C42;
+    --green-light:#E8F0EB; --amber:#C47B2B; --text:#1C1C1C; --text-mid:#4A4A4A; --text-light:#8A8A8A;
+    --font-display:'Cormorant Garamond',serif; --font-body:'DM Sans',sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:var(--font-body); background:var(--cream); color:var(--text); padding:20px 16px 60px; max-width:560px; margin:0 auto; }
+  h1 { font-family:var(--font-display); font-size:30px; margin-bottom:6px; }
+  .sub { color:var(--text-mid); font-size:14px; line-height:1.55; margin-bottom:20px; }
+  .panel { background:#fff; border-radius:16px; padding:16px; margin-bottom:18px; }
+  label { display:block; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-light); margin-bottom:8px; }
+  textarea { width:100%; border:1.5px solid var(--cream-dark); border-radius:12px; padding:12px; font-family:var(--font-body); font-size:15px; line-height:1.5; resize:vertical; background:var(--cream); color:var(--text); }
+  .row { display:flex; align-items:center; gap:12px; margin-top:14px; }
+  input[type=range] { flex:1; accent-color:var(--green); }
+  .val { font-size:14px; color:var(--text-mid); min-width:38px; text-align:right; font-variant-numeric:tabular-nums; }
+  .count { font-size:13px; color:var(--text-light); margin-bottom:10px; }
+  .voice { background:#fff; border-radius:14px; padding:14px 16px; margin-bottom:10px; display:flex; align-items:center; gap:12px; }
+  .voice.best { border:1.5px solid var(--green); }
+  .voice-info { flex:1; min-width:0; }
+  .voice-name { font-size:16px; font-weight:500; margin-bottom:3px; }
+  .voice-meta { font-size:12px; color:var(--text-light); }
+  .badge { display:inline-block; font-size:10px; letter-spacing:0.06em; text-transform:uppercase; background:var(--green-light); color:var(--green); padding:2px 7px; border-radius:20px; margin-left:6px; }
+  .play { flex-shrink:0; width:46px; height:46px; border-radius:50%; border:none; background:var(--green); color:#FAF7F2; font-size:17px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .play:active { transform:scale(0.93); }
+  .play.speaking { background:var(--amber); }
+  .pick { flex-shrink:0; background:none; border:1.5px solid var(--cream-dark); color:var(--text-mid); border-radius:20px; padding:7px 12px; font-size:12px; font-family:var(--font-body); cursor:pointer; }
+  .pick.chosen { background:var(--green); color:#fff; border-color:var(--green); }
+  #result { position:fixed; left:12px; right:12px; bottom:12px; background:var(--green); color:#FAF7F2; border-radius:14px; padding:14px 16px; font-size:13px; line-height:1.5; display:none; max-width:536px; margin:0 auto; }
+  #result strong { display:block; font-size:15px; margin-bottom:3px; }
+  .empty { color:var(--text-light); font-size:14px; padding:20px; text-align:center; }
+</style>
+</head>
+<body>
+
+<h1>Voice audition</h1>
+<p class="sub">Tap each voice to hear it read a real onboarding line. Pick the one you like least-badly, then tell Claude the name. Rate and pitch apply to every sample, so tune those first.</p>
+
+<div class="panel">
+  <label for="sample">Sample line</label>
+  <textarea id="sample" rows="3">Lovely to meet you, Anshul. Where did you grow up, and what did your nani usually cook?</textarea>
+  <div class="row">
+    <label style="margin:0;min-width:42px;">Rate</label>
+    <input type="range" id="rate" min="0.6" max="1.3" step="0.01" value="0.93" />
+    <span class="val" id="rate-val">0.93</span>
+  </div>
+  <div class="row">
+    <label style="margin:0;min-width:42px;">Pitch</label>
+    <input type="range" id="pitch" min="0.6" max="1.4" step="0.01" value="1" />
+    <span class="val" id="pitch-val">1.00</span>
+  </div>
+</div>
+
+<p class="count" id="count">Loading voices…</p>
+<div id="list"></div>
+
+<div id="result"></div>
+
+<script>
+// Mirrors pickVoice() in launch.html so the highlighted voice is the one the
+// app would actually choose on this device.
+const NATURAL = /google|neural|natural|premium|enhanced/i;
+const INDIAN  = /rishi|veena|neel|ravi|heera|neerja|aditi|kajal/i;
+function score(v) {
+  const name = v.name || '', lang = v.lang || '';
+  let s = 0;
+  if (lang === 'en-IN') s += 100;
+  else if (lang === 'en-GB') s += 20;
+  else if (lang === 'en-AU') s += 10;
+  else if (lang.toLowerCase().startsWith('en')) s += 5;
+  if (NATURAL.test(name)) s += 60;
+  if (INDIAN.test(name)) s += 30;
+  if (v.localService && lang !== 'en-IN' && !NATURAL.test(name)) s -= 25;
+  return s;
+}
+
+const $ = (id) => document.getElementById(id);
+let chosen = null;
+
+$('rate').addEventListener('input', e => $('rate-val').textContent = (+e.target.value).toFixed(2));
+$('pitch').addEventListener('input', e => $('pitch-val').textContent = (+e.target.value).toFixed(2));
+
+function speak(voice, btn) {
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance($('sample').value);
+  u.voice = voice;
+  u.lang = voice.lang;
+  u.rate = +$('rate').value;
+  u.pitch = +$('pitch').value;
+  document.querySelectorAll('.play.speaking').forEach(b => { b.classList.remove('speaking'); b.textContent = '▶'; });
+  btn.classList.add('speaking'); btn.textContent = '■';
+  u.onend = u.onerror = () => { btn.classList.remove('speaking'); btn.textContent = '▶'; };
+  speechSynthesis.speak(u);
+}
+
+function choose(voice, el) {
+  chosen = voice;
+  document.querySelectorAll('.pick').forEach(p => { p.classList.remove('chosen'); p.textContent = 'Pick'; });
+  el.classList.add('chosen'); el.textContent = 'Picked';
+  const r = $('result');
+  r.style.display = 'block';
+  r.innerHTML = '<strong>Tell Claude this:</strong>'
+    + 'Voice: <b>' + voice.name + '</b> (' + voice.lang + ') &middot; rate ' + (+$('rate').value).toFixed(2)
+    + ' &middot; pitch ' + (+$('pitch').value).toFixed(2);
+}
+
+function render() {
+  const all = speechSynthesis.getVoices();
+  const english = all.filter(v => (v.lang || '').toLowerCase().startsWith('en'));
+  if (!english.length) { $('count').textContent = 'No English voices found on this device.'; return; }
+
+  english.sort((a, b) => score(b) - score(a));
+  const topScore = score(english[0]);
+
+  $('count').textContent = english.length + ' English voices on this device · ' + all.length + ' total. The app currently picks the first one.';
+  const list = $('list');
+  list.innerHTML = '';
+
+  english.forEach((v, i) => {
+    const row = document.createElement('div');
+    row.className = 'voice' + (i === 0 ? ' best' : '');
+    row.innerHTML =
+      '<div class="voice-info">'
+        + '<div class="voice-name">' + v.name + (i === 0 ? '<span class="badge">app picks this</span>' : '') + '</div>'
+        + '<div class="voice-meta">' + v.lang + ' · ' + (v.localService ? 'on-device' : 'cloud') + ' · score ' + score(v) + '</div>'
+      + '</div>';
+
+    const play = document.createElement('button');
+    play.className = 'play'; play.textContent = '▶';
+    play.onclick = () => speak(v, play);
+
+    const pick = document.createElement('button');
+    pick.className = 'pick'; pick.textContent = 'Pick';
+    pick.onclick = () => choose(v, pick);
+
+    row.appendChild(play); row.appendChild(pick);
+    list.appendChild(row);
+  });
+}
+
+render();
+// Voice lists load asynchronously, and on iOS often arrive only after the event.
+speechSynthesis.onvoiceschanged = render;
+setTimeout(render, 600);
+</script>
+</body>
+</html>
