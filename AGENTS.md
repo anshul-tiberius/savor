@@ -51,6 +51,7 @@ User-facing term is "weekly menu" (not "meal plan") — see the note under Thing
     ├── landing-v1.html    ← old landing page, preserved — do not touch
     ├── hero-1.jpg         ← hero image assets
     ├── hero-2.jpg
+    ├── hero-spices.jpg    ← SEO homepage hero background (behind an 0.86-0.88 green overlay)
     ├── icon.svg           ← standalone SVG app icon (dark green "W")
     ├── voice-test.html    ← /voice-test — auditions every TTS voice on a device; noindex
     ├── manifest.json      ← PWA manifest (start_url: /launch)

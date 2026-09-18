@@ -497,7 +497,7 @@ function buildHomepage() {
 <body>
 ${nav()}
 
-<section style="background:var(--green);padding:64px 20px;text-align:center;">
+<section style="background:linear-gradient(rgba(26,58,42,0.86),rgba(26,58,42,0.88)),url('/hero-spices.jpg') center/cover no-repeat;background-color:var(--green);padding:64px 20px;text-align:center;">
   <h1 style="font-family:var(--font-display);font-size:clamp(34px,6vw,58px);color:#FAF7F2;line-height:1.12;margin-bottom:16px;">Your place to find great recipes<br>and eat well without giving up<br><em>the food you love.</em></h1>
   <p style="color:rgba(255,255,255,0.72);font-size:18px;max-width:560px;margin:0 auto 28px;line-height:1.6;">Practical Indian recipes with real macros. Evidence-based guides on eating well. And an AI tool that builds your weekly menu around what you actually enjoy.</p>
   <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
