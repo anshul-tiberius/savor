@@ -41,6 +41,10 @@ User-facing term is "weekly menu" (not "meal plan") — see the note under Thing
     │   ├── publish-draft.js ← merges a reviewed draft into _data/articles.json (audit-gated)
     │   ├── seo-audit.js   ← SEO/house-rule checks; blocks publishing on ERROR
     │   └── ship.js        ← rebuild + audit + confirm + commit + push
+    ├── _test/
+    │   ├── stubs.js       ← fake mic / TTS / API / Supabase for flow testing
+    │   ├── build-harness.js ← generates _test/harness.html from launch.html + stubs
+    │   └── flow-tests.js  ← onboarding regression suite (every case is a real reported bug)
     ├── _data/
     │   ├── articles.json  ← source data for article pages
     │   └── recipes.json   ← source data for recipe pages
@@ -144,6 +148,36 @@ Swipeable dish deck, reached from the bottom nav. Exists to learn what someone a
 - Back arrow → Screen 4
 
 ---
+
+## Testing the onboarding flow
+
+`launch.html` has no build step and the voice flow depends on browser APIs that
+cannot be driven headlessly, so there is a stub harness instead.
+
+```
+node _test/build-harness.js          # regenerate after ANY launch.html change
+# open http://localhost:4321/_test/harness.html
+# then in the console:
+#   const s=document.createElement('script'); s.src='/_test/flow-tests.js';
+#   document.head.appendChild(s); await new Promise(r=>s.onload=r);
+#   await __TESTS.runAll()
+```
+
+`_test/harness.html` is a generated copy of `launch.html` with `_test/stubs.js`
+injected after the Supabase CDN tag. It is gitignored — never hand-edit it, and
+rebuild it whenever `launch.html` changes or you will be testing stale code.
+
+The stubs replace the mic, speech synthesiser, `/api/chat` and Supabase auth with
+controllable fakes exposed on `window.__T`: `fireAuth(event)`, `finishSpeech()`,
+`activeMic._emit([{transcript, isFinal}])`, `activeMic._error(kind)`, `apiQueue`,
+and `trace()` for an ordered log of what the app did.
+
+Tests share one page, so `resetApp()` must clear `_handledAuthFor`,
+`_onboardingStarting` and the chat DOM between cases — without it later tests
+inherit an already-started conversation and fail misleadingly.
+
+Every case in `flow-tests.js` started as a bug reported from a real device.
+Reproduce first, then fix.
 
 ## Dev Shortcut
 
@@ -360,6 +394,8 @@ Mobile-first. Desktop: max-width 420px centred (app), max-width 720px (content p
 - [x] 2026-09-18 Discover — swipeable dish deck for preference learning. New `dish_deck` API mode (18 dishes/call, cheap tier), 5th bottom-nav tab, pointer-based swipe with verdict stamps, tag scoring clamped to ±5, and `taste` fed into every weekly menu generation via `summariseTaste()`. Persists to localStorage always and `profiles.taste_json` when the column exists
 - [x] 2026-09-18 dead meal imagery removed — `source.unsplash.com` returns 503, so every meal card rendered ~130px of empty grey and fired one doomed request per meal (28 per plan render). Meal cards are now text-first, which roughly doubles how many you see per screen and puts the descriptions first; dish detail renders the `.dish-hero-ph` gradient placeholder that already existed in the CSS but never appeared because its `onerror` handler was invalid JS. Restore an `<img>` in `renderPlan()`/`showDish()` when real photography exists
 - [x] 2026-09-18 chat bubbles rendered literal `**asterisks**` — `appendMessage()` and `appendChefMessage()` escaped and never rendered markdown. Added `renderChatMarkdown()`: escapes FIRST, then converts bold/italic, so model output can never inject markup. Verified against an `<img onerror>` + `<script>` payload
+- [x] 2026-09-18 four onboarding bugs found on a real iPhone, reproduced in a new stub harness, fixed, and covered by regression tests. (1) **Doubled greeting**: Supabase v2 fires `INITIAL_SESSION` *and* `SIGNED_IN` on load, both ran `loadUserData` -> `startOnboarding()`, and the two async calls interleaved so two *different* greetings rendered. Guarded with `_handledAuthFor` plus an `_onboardingStarting` latch. (2) **Every answer sent twice**: iOS routinely delivers a trailing `onresult` after `stop()`; because the handler rebuilt the composer from the recognition's accumulated results and re-armed the silence timer, the same answer sent again. Each recognition session now carries a turn record and handlers ignore results from a turn that is already sent or cancelled. (3) **Mic opened for a split second then died**: iOS refuses `continuous` recognition and wants a user gesture per session. A session that ends within 900ms having heard nothing is now treated as a refusal — retry once with `continuous:false`, and if that also fails stop auto-opening, set the status to "Tap the mic to answer" and wait for a tap instead of flickering. An explicit mic tap clears the flag and re-enables auto-start. (4) **Conversation restarted after backgrounding Chrome**: iOS evicts backgrounded tabs and the reload looks like nothing happened to the user, but `chatMessages` was memory-only. Onboarding now persists to `localStorage` (2h window) and `resumeOnboarding()` replays it silently without re-speaking or re-fetching a greeting
+- [x] 2026-09-18 stub test harness added — `_test/` with fake mic/TTS/API/Supabase, a generated harness and a 14-assertion onboarding regression suite. See the Testing section
 - [ ] **Supabase migration needed for Discover:** `alter table profiles add column if not exists taste_json jsonb;` — without it, swipe preferences persist per-device only
 - [ ] Week vibe header repeats on Pantry / Ask Chef / Profile tabs where it is irrelevant, costing ~90px
 - [ ] Day tabs clip at Saturday with no scroll affordance — Sunday is not discoverable

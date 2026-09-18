@@ -1,3 +1,4 @@
 .DS_Store
 .env.local
 _data/drafts/
+_test/harness.html

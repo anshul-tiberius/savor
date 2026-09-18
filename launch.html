@@ -1602,7 +1602,11 @@ let appState = {
   micPrefix: '',           // text already in the box when the mic opened
   micFinal: '',            // finalised transcript so far this turn
   micSilenceTimer: null,
-  micCancelled: false,
+  micTurn: null,                   // per-recognition-session guard
+  micQuickFails: 0,
+  micContinuousUnsupported: false, // iOS refuses continuous recognition
+  micNeedsGesture: false,          // iOS wants a tap per session
+  micGestureHintShown: false,
   ttsKeepAlive: null,
   deck: [],                // dishes still to swipe
   deckSeen: [],            // names already shown, so refills do not repeat
@@ -1629,10 +1633,52 @@ function showScreen(name) {
 // ═══════════════════════════════════════════
 // SCREEN 1 → START ONBOARDING
 // ═══════════════════════════════════════════
+var _handledAuthFor = null;
+var _onboardingStarting = false;
+
+// Onboarding lives only in memory, so an iOS tab eviction -- which happens on a
+// plain app switch, with no user-visible refresh -- used to drop the whole
+// conversation and start over. Persist it and pick up where we left off.
+const ONBOARDING_RESUME_MS = 2 * 60 * 60 * 1000;
+
+function saveOnboardingState() {
+  try {
+    if (!appState.chatMessages.length) return;
+    localStorage.setItem('wtc_onboarding', JSON.stringify({ at: Date.now(), messages: appState.chatMessages }));
+  } catch (_) {}
+}
+function loadOnboardingState() {
+  try {
+    const d = JSON.parse(localStorage.getItem('wtc_onboarding') || 'null');
+    if (!d || !Array.isArray(d.messages) || !d.messages.length) return null;
+    if (Date.now() - (d.at || 0) > ONBOARDING_RESUME_MS) return null;
+    return d.messages;
+  } catch (_) { return null; }
+}
+function clearOnboardingState() { try { localStorage.removeItem('wtc_onboarding'); } catch (_) {} }
+
 function startOnboarding() {
   // Email is set by initAuth() from the Supabase session
+  if (_onboardingStarting || appState.chatMessages.length) return;
+  _onboardingStarting = true;
   showScreen('onboarding');
+
+  const saved = loadOnboardingState();
+  if (saved) { resumeOnboarding(saved); return; }
   startChat();
+}
+
+// Rebuild the conversation without re-speaking it, then hand the turn back.
+function resumeOnboarding(messages) {
+  appState.chatMessages = messages.slice();
+  const wrap = document.getElementById('chat-messages');
+  if (wrap) wrap.innerHTML = '';
+  messages.forEach(function (m) {
+    const text = m.role === 'assistant' ? stripProfile(m.content) : m.content;
+    if (text && text.trim()) appendMessage(m.role === 'assistant' ? 'savor' : 'user', text, { silent: true });
+  });
+  updateChatStatus();
+  handoffToUser();
 }
 
 // ═══════════════════════════════════════════
@@ -1677,6 +1723,7 @@ async function startChat() {
     const clean = stripProfile(res);
     appendMessage('savor', clean);
     appState.chatMessages.push({ role: 'assistant', content: res });
+    saveOnboardingState();
   } catch(e) {
     hideTyping();
     if (e.message && e.message.startsWith('rate_limit:')) {
@@ -1697,6 +1744,7 @@ async function sendMessage() {
   autoResize(input);
   appendMessage('user', text);
   appState.chatMessages.push({ role: 'user', content: text });
+  saveOnboardingState();
 
   showTyping();
   appState.isTyping = true;
@@ -1730,6 +1778,7 @@ async function sendMessage() {
       const displayText = res.replace(/<profile>[\s\S]*?<\/profile>/g, '').trim();
       if (displayText) appendMessage('savor', displayText);
       appState.chatMessages.push({ role: 'assistant', content: res });
+      clearOnboardingState();  // onboarding complete
       saveToSheet(appState.email, appState.userProfile);
       saveProfileToSupabase(appState.userProfile);
       waitForSpeechThenTransition();
@@ -1748,6 +1797,7 @@ async function sendMessage() {
       const displayText = res.replace(/```json[\s\S]*?```/, '').replace(/(\{[\s\S]*"personal"[\s\S]*\})/, '').trim();
       if (displayText) appendMessage('savor', displayText);
       appState.chatMessages.push({ role: 'assistant', content: res });
+      clearOnboardingState();  // onboarding complete
       saveToSheet(appState.email, appState.userProfile);
       saveProfileToSupabase(appState.userProfile);
       waitForSpeechThenTransition();
@@ -1760,6 +1810,7 @@ async function sendMessage() {
   const clean = stripProfile(res);
   appendMessage('savor', clean);
   appState.chatMessages.push({ role: 'assistant', content: res });
+  saveOnboardingState();
   updateChatStatus();
 }
 
@@ -1793,7 +1844,7 @@ function renderChatMarkdown(text) {
     .replace(/\n/g, '<br>');
 }
 
-function appendMessage(role, text) {
+function appendMessage(role, text, opts) {
   const wrap = document.getElementById('chat-messages');
   const div = document.createElement('div');
   div.className = 'msg ' + role;
@@ -1802,7 +1853,7 @@ function appendMessage(role, text) {
     div.innerHTML = `
       <div class="msg-avatar">W</div>
       <div class="msg-bubble">${renderChatMarkdown(text)}</div>`;
-    speakText(text);
+    if (!(opts && opts.silent)) speakText(text);
   } else {
     div.innerHTML = `<div class="msg-bubble">${escapeHtml(text)}</div>`;
   }
@@ -1855,6 +1906,9 @@ function showMicToast(msg) {
 // How long a pause ends the turn. People pause mid-sentence when they are
 // recalling something ("I grew up in... Bhopal"), so this has to be generous.
 const MIC_SILENCE_MS = 1800;
+// A recognition session that dies this fast without hearing anything was
+// refused by the browser, not ended by the speaker.
+const MIC_QUICKFAIL_MS = 900;
 
 function micSupported() {
   return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
@@ -1890,19 +1944,22 @@ function updateMicButton() {
 function setComposerPlaceholder() {
   const input = document.getElementById('chat-input');
   if (!input) return;
-  input.placeholder = appState.isRecording
-    ? 'Listening… or type'
-    : 'Type your answer…';
+  input.placeholder = appState.isRecording ? 'Listening… or type' : 'Type your answer…';
 }
 
 function toggleMic() {
   if (appState.isRecording) {
     // Tapping the mic while it is listening means "I am done" — send what we have.
-    stopListening({ cancelPending: true });
     const input = document.getElementById('chat-input');
-    if (input && input.value.trim()) sendMessage();
+    const text = input && input.value.trim();
+    stopListening({ cancelPending: true });
+    if (text) sendMessage();
     return;
   }
+  // An explicit tap IS the user gesture some browsers insist on, so clear the
+  // flag and let auto-start be tried again next turn.
+  appState.micNeedsGesture = false;
+  appState.micQuickFails = 0;
   setInputMode('voice', { focus: false });
   startListening();
 }
@@ -1919,24 +1976,46 @@ function startListening() {
   const input = document.getElementById('chat-input');
   const rec = new SR();
   rec.lang = 'en-IN';
-  rec.continuous = true;      // do not end the turn at the first pause
-  rec.interimResults = true;  // show words as they are recognised
+  // iOS refuses continuous recognition and ends the session immediately. We
+  // find that out by trying, then retry without it — see handleMicQuickFail.
+  rec.continuous = !appState.micContinuousUnsupported;
+  rec.interimResults = true;
   rec.maxAlternatives = 1;
 
-  appState.micPrefix = input && input.value.trim() ? input.value.trim() + ' ' : '';
-  appState.micFinal = '';
-  appState.micCancelled = false;
-
-  const armSilence = () => {
-    clearTimeout(appState.micSilenceTimer);
-    appState.micSilenceTimer = setTimeout(() => {
-      const hadText = input && input.value.trim();
-      stopListening({});
-      if (!appState.micCancelled && appState.inputMode === 'voice' && hadText) sendMessage();
-    }, MIC_SILENCE_MS);
+  // Every recognition session gets its own turn record. Handlers check it
+  // before doing anything, so a late result from a finished turn -- which iOS
+  // delivers routinely after stop() -- can never repopulate the composer and
+  // re-send the same answer.
+  const turn = {
+    sent: false,
+    cancelled: false,
+    gotResult: false,
+    startedAt: Date.now(),
+    prefix: input && input.value.trim() ? input.value.trim() + ' ' : '',
   };
+  appState.micTurn = turn;
+  const isCurrent = function () { return appState.micTurn === turn; };
 
-  rec.onresult = (e) => {
+  function finishTurn() {
+    if (turn.sent || turn.cancelled) return;
+    turn.sent = true;
+    clearTimeout(appState.micSilenceTimer);
+    stopListening({ keepTurn: true });
+    const text = input && input.value.trim();
+    if (appState.inputMode === 'voice' && text) sendMessage();
+  }
+
+  function armSilence() {
+    clearTimeout(appState.micSilenceTimer);
+    appState.micSilenceTimer = setTimeout(function () {
+      if (isCurrent()) finishTurn();
+    }, MIC_SILENCE_MS);
+  }
+
+  rec.onresult = function (e) {
+    if (!isCurrent() || turn.sent || turn.cancelled) return;
+    turn.gotResult = true;
+
     // Rebuild from the whole result list each time. Accumulating by resultIndex
     // double-counts when an interim result is later finalised.
     let final = '', interim = '';
@@ -1945,29 +2024,39 @@ function startListening() {
       if (r.isFinal) final += r[0].transcript + ' ';
       else interim += r[0].transcript;
     }
-    appState.micFinal = final;
     if (input) {
-      input.value = (appState.micPrefix + final + interim).replace(/\s{2,}/g, ' ').trimStart();
+      input.value = (turn.prefix + final + interim).replace(/\s{2,}/g, ' ').trimStart();
       input.classList.toggle('interim', !!interim && !final);
       autoResize(input);
     }
     armSilence();
   };
 
-  rec.onend = () => {
+  rec.onend = function () {
+    if (!isCurrent()) return;
     appState.isRecording = false;
     input && input.classList.remove('interim');
     updateMicButton();
     setComposerPlaceholder();
     updateChatStatus();
+
+    if (turn.cancelled || turn.sent) return;
+
+    // Died instantly having heard nothing: the browser refused us.
+    if (!turn.gotResult && Date.now() - turn.startedAt < MIC_QUICKFAIL_MS) {
+      handleMicQuickFail();
+      return;
+    }
+    // Non-continuous recognition ends on its own at the first pause, so this
+    // is the normal end of turn rather than an interruption.
+    finishTurn();
   };
 
-  rec.onerror = (e) => {
+  rec.onerror = function (e) {
+    if (!isCurrent()) return;
     appState.isRecording = false;
     clearTimeout(appState.micSilenceTimer);
     input && input.classList.remove('interim');
-    // A denied mic permission is permanent for the session — fall back to typing
-    // rather than silently leaving the user with a dead button.
     if (e && (e.error === 'not-allowed' || e.error === 'service-not-allowed')) {
       showMicToast('Mic access is blocked — you can type your answer instead.');
       setInputMode('text');
@@ -1990,10 +2079,35 @@ function startListening() {
   updateChatStatus();
 }
 
+// Recognition that dies immediately without hearing anything has been refused.
+// Two known causes, tried in order: continuous mode is unsupported (iOS), or
+// the browser wants a fresh user gesture for every session (also iOS).
+function handleMicQuickFail() {
+  appState.micQuickFails = (appState.micQuickFails || 0) + 1;
+
+  if (appState.micQuickFails === 1 && !appState.micContinuousUnsupported) {
+    appState.micContinuousUnsupported = true;
+    startListening();
+    return;
+  }
+
+  // Stop auto-opening the mic. Fighting it just produces the flicker where the
+  // mic appears for a moment and dies before the user has said anything.
+  appState.micNeedsGesture = true;
+  updateMicButton();
+  updateChatStatus();
+  if (!appState.micGestureHintShown) {
+    appState.micGestureHintShown = true;
+    showMicToast('Tap the mic when you are ready to answer.');
+  }
+}
+
 function stopListening(opts) {
   opts = opts || {};
   clearTimeout(appState.micSilenceTimer);
-  if (opts.cancelPending) appState.micCancelled = true;
+  if (opts.cancelPending && appState.micTurn) appState.micTurn.cancelled = true;
+  if (!opts.keepTurn) appState.micTurn = null;
+
   if (appState.recognition && appState.isRecording) {
     try { appState.recognition.stop(); } catch (_) {}
   }
@@ -2185,7 +2299,7 @@ async function speakText(text) {
 // stays quiet. Either way both options remain one tap away.
 function handoffToUser() {
   if (appState.isTyping) return;
-  if (appState.inputMode === 'voice' && micSupported()) {
+  if (appState.inputMode === 'voice' && micSupported() && !appState.micNeedsGesture) {
     setTimeout(() => {
       if (appState.inputMode === 'voice' && !appState.isRecording && !appState.isSpeaking) startListening();
     }, 300);
@@ -2225,6 +2339,9 @@ function updateChatStatus() {
     avatar && avatar.classList.remove('speaking');
   } else if (appState.isTyping) {
     statusEl.textContent = 'Thinking…';
+    avatar && avatar.classList.remove('speaking');
+  } else if (appState.micNeedsGesture && appState.inputMode === 'voice') {
+    statusEl.textContent = 'Tap the mic to answer';
     avatar && avatar.classList.remove('speaking');
   } else {
     avatar && avatar.classList.remove('speaking');
@@ -3380,10 +3497,18 @@ async function initAuth() {
   // onAuthStateChange fires on initial load too, covering both fresh sessions and OAuth returns
   db.auth.onAuthStateChange(async function(event, session) {
     if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
+      // Supabase v2 fires INITIAL_SESSION and SIGNED_IN back to back on load
+      // (reliably so on iOS). Without this guard both ran loadUserData, which
+      // started onboarding twice and produced two different greetings.
+      if (_handledAuthFor === session.user.id) return;
+      _handledAuthFor = session.user.id;
       appState.email = session.user.email || '';
       await loadUserData(session.user.id);
     }
     if (event === 'SIGNED_OUT') {
+      _handledAuthFor = null;
+      _onboardingStarting = false;
+      clearOnboardingState();
       appState.email = '';
       appState.userProfile = null;
       appState.mealPlan = null;
