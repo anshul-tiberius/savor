@@ -26,6 +26,13 @@ User-facing term is "weekly menu" (not "meal plan") — see the note under Thing
 > repo is dormant — only the bare domain points elsewhere. The redirect is 307
 > (`permanent: false`), so no browser has cached it and reverting takes effect
 > immediately.
+>
+> **The SEO site's CTAs point there too.** `APP_URL` in `_build/generate.js` was
+> repointed from `https://app.whattocook.life` to the Lovable build, so all 40
+> CTAs across articles, recipes and the homepage link straight there instead of
+> taking the redirect hop. To revert that half: set `APP_URL` back, run
+> `node _build/generate.js`, and commit the regenerated pages. Canonicals,
+> `og:url` and `sitemap.xml` were not affected — only the outbound CTA links.
 
 ---
 

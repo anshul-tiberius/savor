@@ -15,7 +15,12 @@ const RECIPES = JSON.parse(fs.readFileSync(path.join(ROOT, '_data/recipes.json')
 const ARTICLES = JSON.parse(fs.readFileSync(path.join(ROOT, '_data/articles.json'), 'utf8'));
 
 const DOMAIN  = 'https://whattocook.life';
-const APP_URL = 'https://app.whattocook.life';
+// TEMPORARY (2026-09-18): every CTA on the SEO site points straight at the
+// Lovable build rather than app.whattocook.life, which currently redirects
+// there anyway -- this just removes the redirect hop.
+// To revert: set this back to 'https://app.whattocook.life' and re-run
+// `node _build/generate.js`, then commit the regenerated pages.
+const APP_URL = 'https://what-to-cookkk.lovable.app';
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 const e = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
