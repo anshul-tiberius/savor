@@ -2255,13 +2255,21 @@ function pickVoice(voices) {
   return english.slice().sort((a, b) => score(b) - score(a))[0];
 }
 
+// Tuned by ear on an iPhone against Rishi (en-IN) -- the only Indian-English
+// voice iOS exposes to the web, and therefore the one pickVoice() lands on for
+// our audience. Faster and higher-pitched than the defaults; at rate 0.93 and
+// pitch 1.0 it drones. Re-tune with /voice-test on a real device.
+const TTS_RATE  = 1.12;
+const TTS_PITCH = 1.36;
+
 async function speakText(text) {
   if (!window.speechSynthesis || !appState.voiceMode) return;
   window.speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(cleanForSpeech(text));
   utterance.lang = 'en-IN';
-  utterance.rate = 0.93;
+  utterance.rate = TTS_RATE;
+  utterance.pitch = TTS_PITCH;
 
   const voices = await getVoices();
   const preferred = pickVoice(voices);
